@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TaskManager_UniUpo</string>
+    <string name="text1">Sì Diego</string>
+    <string name="text2">Vai Diego</string>
+    <string name="button1">Premi Qui</string>
 </resources>
