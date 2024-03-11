@@ -1,7 +1,7 @@
 # Task Manager (App Mobili)
 ##TODO
 
-[ ] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)  
+[  ] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)  
 
 ##Testo Progetto
 Progetto Android
