@@ -1,56 +1,51 @@
 package it.polettomatteo.taskmanager_uniupo
 
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
-import android.widget.VideoView
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
+import android.widget.Button
+import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+
+var TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var tv: TextView
-    private lateinit var executor: ScheduledExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        tv = findViewById<TextView>(R.id.textView)
-        val vW = findViewById<VideoView>(R.id.videoView)
 
-        executor = Executors.newSingleThreadScheduledExecutor()
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        initToolbar(toolbar)
 
-        val videoPath = "android.resource://" + packageName + "/" + R.raw.diego
 
-        startTimer()
 
-        vW.setVideoURI(Uri.parse(videoPath))
-        vW.start()
-        vW.setOnPreparedListener{ mp ->
-            mp.isLooping = true
+
+    }
+
+    // --------------- FUNZIONI AUSILIARIE
+    private fun initToolbar(toolbar: Toolbar){
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_menu)
+            setHomeButtonEnabled(true)
         }
 
+        val mainLayout = findViewById<DrawerLayout>(R.id.mainLayout)
+        val navigationView = findViewById<NavigationView>(R.id.navigationView)
 
-    }
+        toolbar.setNavigationOnClickListener {
+            mainLayout.openDrawer(GravityCompat.START)
+        }
 
-    private fun startTimer(){
-        executor.scheduleAtFixedRate({
-            runOnUiThread{
-                if(tv.text == "Sì Diego"){
-                    tv.setText(R.string.text2)
-                    Log.d("MainActivity","Vai Diego!!!")
-                }else{
-                    tv.setText(R.string.text1)
-                }
-            }
-        }, 0, 1500, TimeUnit.MILLISECONDS)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        executor.shutdown()
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            true
+        }
     }
 }
