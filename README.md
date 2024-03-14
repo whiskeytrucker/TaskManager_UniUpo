@@ -2,7 +2,9 @@
 ## TODO
 
 - [ ] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
-- [ ] 
+
+- [ ] Menù laterale con progetto per progetto OPPURE videata con lista progetti
+  - [ ] Lista Task una volta clickato un progetto 
 
 ## Testo Progetto
 **Progetto Android**
