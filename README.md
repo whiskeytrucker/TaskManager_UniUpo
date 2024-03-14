@@ -7,7 +7,8 @@
   - [ ] Lista Task una volta clickato un progetto 
 
 ## Testo Progetto
-**Progetto Android**
+**Progetto Android**  
+
 Il progetto riguarda la realizzazione di una app per la gestione dei task in una azienda con un
 Projects Manager (PM) incaricato di assegnare progetti ai Project Leader (PL) e monitorarne lo stato di avanzamento
 il PL deve assegnare i task del progetto ai vari Developers (D) e monitorane lo stato di avanzamento
