@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">TaskManager_UniUpo</string>
+
+    <string name="login">Login</string>
+    <string name="emailHint">Email</string>
+    <string name="passwordHint">Password</string>
+    <string name="confirmPasswordHint">Conferma password</string>
+    <string name="admin">Admin</string>
+    <string name="signup">Iscriviti</string>
+    <string name="logout">Logout</string>
+
 </resources>
