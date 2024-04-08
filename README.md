@@ -1,17 +1,14 @@
 # Task Manager (App Mobili)
-##TODO
-[ ] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
-[ ]
-[ ]
-[ ]
-[ ]
-[ ]
-[ ]
-[ ]
-[ ]
+## TODO
 
-##Testo Progetto
-Progetto Android
+- [ ] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
+
+- [ ] Menù laterale con progetto per progetto OPPURE videata con lista progetti
+  - [ ] Lista Task una volta clickato un progetto 
+
+## Testo Progetto
+**Progetto Android**  
+
 Il progetto riguarda la realizzazione di una app per la gestione dei task in una azienda con un
 Projects Manager (PM) incaricato di assegnare progetti ai Project Leader (PL) e monitorarne lo stato di avanzamento
 il PL deve assegnare i task del progetto ai vari Developers (D) e monitorane lo stato di avanzamento
@@ -27,14 +24,14 @@ Quando avviene un sollecito da parte del PL nei confronti di un D o da parte del
 
 Un task e sui relativi sottotask possono essere: aggiunti/eliminati/aggiornati.
 Le chat tra i vari attori sono possibili secondo questo schema:
-D e D dello stesso progetto
-PL e D
-PM e PL
+- D e D dello stesso progetto
+- PL e D
+- PM e PL
 Con lo stesso schema sopra è possibile dare un voto e scrivere un commento su un lavoro svolto.
 Ad ogni sottotask è possibile assegnare una foto/documento relativa/o al task (tipo esempio dell'interfaccia grafica che si è sviluppato)
 Il PM può fare ricerche sui progetti mettendo filtri in base allo stato, al PL e alla scadenza.
 I PL possono fare qualcosa di analogo ma relativo ai task, quindi filtrando per stato, D, scadenza o priorità.
 
 
-##Autore
+## Autore
 [@whiskeytrucker](https://github.com/whiskeytrucker)
