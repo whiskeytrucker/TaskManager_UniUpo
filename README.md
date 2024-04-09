@@ -2,9 +2,9 @@
 ## TODO
 
 - [ ] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
-	- [ X ] Login / Logout e relativi tasti
+	- [X] Login / Logout e relativi tasti
 	- [ ] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
-	- Controllo input mail + password NO vuoto etc
+	- [ ] Controllo input mail + password NO vuoto etc
 
 - [ ] Menù laterale con progetto per progetto OPPURE videata con lista progetti
   - [ ] Lista Task una volta clickato un progetto 
