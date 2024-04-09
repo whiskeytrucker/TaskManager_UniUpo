@@ -60,29 +60,32 @@ class MainActivity : AppCompatActivity() {
                 R.id.logout -> {
                     if(currentUser != null){
                         auth.signOut()
-
                         Toast.makeText(baseContext, "Logout Effettuato", Toast.LENGTH_SHORT).show()
-
+                        updateUI(navigationView)
+                        mainLayout.closeDrawer(navigationView)
                     }
+                }
+                R.id.userpage -> {
+                    startActivity(Intent(this, UserPage::class.java))
                 }
 
             }
             true
         }
+
+        updateUI(navigationView)
     }
 
     fun updateUI(
         navigationView: NavigationView
     ){
         val isLoggedIn = currentUser != null
-        val isNotLoggedIn = ! isLoggedIn
-
-        Log.d("isLoggedIn", isLoggedIn.toString() + isNotLoggedIn.toString())
 
         val menu = navigationView.menu
 
-        menu.findItem(R.id.login)?.isVisible = isNotLoggedIn
+        menu.findItem(R.id.login)?.isVisible = !isLoggedIn
         menu.findItem(R.id.logout)?.isVisible = isLoggedIn
+        menu.findItem(R.id.userpage)?.isVisible = isLoggedIn
 
         recreate()
     }

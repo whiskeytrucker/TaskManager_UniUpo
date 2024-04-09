@@ -32,10 +32,12 @@ class AuthActivity : AppCompatActivity() {
         buttLogin.setOnClickListener {
             // mettere controllo mail e password
             var textInput = findViewById<TextInputEditText>(R.id.email)
-            val email = textInput.text.toString()
+            //val email = textInput.text.toString()
+            val email = "diego@miresse.com"
 
             textInput = findViewById(R.id.password)
-            var pass = textInput.text.toString()
+            //var pass = textInput.text.toString()
+            val pass = "admin123"
 
             Log.d("CURRENT_USER",currentUser?.email.toString())
             // check user already signed in
