@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "270587786743",
+    "project_id": "taskmanager-uniupo-bb5f9",
+    "storage_bucket": "taskmanager-uniupo-bb5f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270587786743:android:71a739eb5af4b077a86af2",
+        "android_client_info": {
+          "package_name": "it.polettomatteo.taskmanager_uniupo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3X4CTPyTKaWaBUZZyOifzQR0oMGLjNSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

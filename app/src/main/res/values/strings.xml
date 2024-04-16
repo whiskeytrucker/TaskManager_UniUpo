@@ -1,6 +1,14 @@
 <resources>
-    <string name="app_name">TaskManager_UniUpo</string>
-    <string name="text1">Sì Diego</string>
-    <string name="text2">Vai Diego</string>
-    <string name="button1">Premi Qui</string>
+    <string name="app_name">Task Manager</string>
+
+    <string name="login">Login</string>
+    <string name="emailHint">Email</string>
+    <string name="passwordHint">Password</string>
+    <string name="confirmPasswordHint">Conferma password</string>
+    <string name="admin">Admin</string>
+    <string name="signup">Iscriviti</string>
+    <string name="logout">Logout</string>
+    <string name="wb">Bentornato</string>
+    <string name="lorem_30w">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ac tortor dolor. Ut pharetra sollicitudin orci quis maximus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit. "</string>
+
 </resources>

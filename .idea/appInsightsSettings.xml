@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="it.polettomatteo.taskmanager_uniupo" />
+                  <option name="mobileSdkAppId" value="1:270587786743:android:71a739eb5af4b077a86af2" />
+                  <option name="projectId" value="taskmanager-uniupo-bb5f9" />
+                  <option name="projectNumber" value="270587786743" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
