@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TaskManager UniUpo</string>
+    <string name="app_name">Task Manager</string>
 
     <string name="login">Login</string>
     <string name="emailHint">Email</string>
@@ -9,5 +9,6 @@
     <string name="signup">Iscriviti</string>
     <string name="logout">Logout</string>
     <string name="wb">Bentornato</string>
+    <string name="lorem_30w">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ac tortor dolor. Ut pharetra sollicitudin orci quis maximus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit. "</string>
 
 </resources>
