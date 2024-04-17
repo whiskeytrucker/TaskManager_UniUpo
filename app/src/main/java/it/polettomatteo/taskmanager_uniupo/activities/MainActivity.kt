@@ -13,11 +13,11 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import it.polettomatteo.taskmanager_uniupo.R
-import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
+import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
 import it.polettomatteo.taskmanager_uniupo.fragments.RecyclerViewFragment
+import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 
 var TAG = "MainActivity"
 
@@ -49,6 +49,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onDestroy() {
+        if(currentUser != null){
+            auth.signOut()
+        }
+        super.onDestroy()
+    }
 
     private fun createFragments(){
         if(currentUser != null){
@@ -96,12 +103,28 @@ class MainActivity : AppCompatActivity() {
                     if(currentUser != null){
                         auth.signOut()
                         Toast.makeText(baseContext, "Logout Effettuato", Toast.LENGTH_SHORT).show()
-                        updateUI(navigationView)
-                        mainLayout.closeDrawer(navigationView)
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
                     }
                 }
+
+                R.id.home -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+
+
+
                 R.id.userpage -> {
-                    Toast.makeText(baseContext, "Non ancora implementato!", Toast.LENGTH_SHORT).show()
+                    if(currentUser != null) {
+                        UsersDB.getUserType(currentUser?.email.toString()) { bundle ->
+                            if (bundle != null) {
+                                bundle.putString("username", currentUser?.email)
+                                mainLayout.closeDrawer(navigationView)
+                                setupFragment(UserPageFragment(), bundle)
+                            }
+                        }
+                    }
                 }
 
                 R.id.chat -> {
@@ -140,7 +163,9 @@ class MainActivity : AppCompatActivity() {
         menu.findItem(R.id.chat)?.isVisible = isLoggedIn
         menu.findItem(R.id.updateDataset)?.isVisible = isLoggedIn
 
-        recreate()
+        //if(!isLoggedIn)setupFragment(RecyclerViewFragment(), Bundle())
+
+        this.recreate()
     }
 
 

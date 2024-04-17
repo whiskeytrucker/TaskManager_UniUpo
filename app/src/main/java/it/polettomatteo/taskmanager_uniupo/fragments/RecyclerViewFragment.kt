@@ -32,7 +32,7 @@ class RecyclerViewFragment: Fragment() {
 
         if(bundle != null){
             for(key in bundle.keySet()){
-                tmp.add(bundle[key] as Project)
+                tmp.add(bundle.getSerializable(key) as Project)
             }
         }
 

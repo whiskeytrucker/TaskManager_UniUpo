@@ -2,6 +2,11 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:title="Home"
+        android:id="@+id/home"
+        android:visible="true"
+        />
+
     <item android:title="@string/login"
           android:id="@+id/login"
           android:visible="true"
@@ -11,6 +16,7 @@
         android:id="@+id/logout"
         android:visible="false"
         />
+
 
     <item android:title="Chat"
         android:id="@+id/chat"
