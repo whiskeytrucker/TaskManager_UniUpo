@@ -24,8 +24,16 @@ class UserPageFragment: Fragment() {
 
         val bundle = this.arguments
         if(bundle != null){
-            text1.text = "Bentornato " + bundle["username"].toString() + "!"
-            textType.text = "Sei un " + bundle["tipo"].toString().toUpperCase() + "."
+            text1.text = "Bentornato ${bundle.getString("username").toString()}!"
+
+            val tipo = bundle.getString("tipo").toString()
+
+            val ty: String
+            ty = if(tipo.compareTo("pm") == 0) "Project Manager"
+            else if(tipo.compareTo("pl") == 0) "Project Leader"
+            else "Developer"
+
+            textType.text = "Sei un $ty."
         }
 
         return view

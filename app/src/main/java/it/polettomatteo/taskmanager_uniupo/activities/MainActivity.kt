@@ -59,9 +59,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun createFragments(){
         if(currentUser != null){
-            ProjectsDB.getProjects() { bundle ->
-                if (bundle != null) {
-                    this.setupFragment(RecyclerViewFragment(), bundle)
+            currentUser!!.email?.let {
+                ProjectsDB.getProjects(it) { bundle ->
+                    if (bundle != null) {
+                        this.setupFragment(RecyclerViewFragment(), bundle)
+                    }
                 }
             }
         }
@@ -154,10 +156,15 @@ class MainActivity : AppCompatActivity() {
 
         menu.findItem(R.id.login)?.isVisible = !isLoggedIn
 
-        var elements = arrayOf("logout","userpage","chat","updateDataset")
+        var elements = arrayOf("home","logout","userpage","chat","updateDataset")
 
+        /*
+        for(element in elements){
+            val str = "R.id.${element}"
+            menu.findItem(str.toInt())?.isVisible = isLoggedIn
+        }*/
 
-
+        menu.findItem(R.id.home)?.isVisible = isLoggedIn
         menu.findItem(R.id.logout)?.isVisible = isLoggedIn
         menu.findItem(R.id.userpage)?.isVisible = isLoggedIn
         menu.findItem(R.id.chat)?.isVisible = isLoggedIn

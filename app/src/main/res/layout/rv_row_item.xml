@@ -19,7 +19,9 @@
 
     <TextView
         android:id="@+id/content"
-        android:layout_width="370dp"
+        android:paddingStart="10sp"
+        android:paddingEnd="10sp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_marginTop="0dp"
@@ -28,13 +30,24 @@
 
     </TextView>
 
+    <TextView
+        android:id="@+id/assigned"
+        android:paddingStart="10sp"
+        android:paddingEnd="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/content"
+        android:layout_marginTop="0dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/lorem_30w"/>
+
 
     <TextView
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@id/content"
+        android:layout_marginBottom="0dp"
+        android:layout_below="@id/assigned"
         android:layout_centerHorizontal="true"
         android:textSize="16sp">
 
@@ -42,10 +55,10 @@
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_below="@id/content"
+        android:layout_below="@id/progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:max="100">
     </SeekBar>
 
@@ -56,6 +69,5 @@
         android:layout_width="370dp"
         android:layout_height="1dp"
         android:background="@color/black"/>
-
 
 </RelativeLayout>

@@ -10,10 +10,11 @@ var TAG = "Risultato query"
 
 class ProjectsDB {
     companion object{
-        fun getProjects(callback: (Bundle?) -> Unit) {
+        fun getProjects(username: String, callback: (Bundle?) -> Unit) {
             FirebaseFirestore
                 .getInstance()
                 .collection("projects")
+                .whereEqualTo("autore", username)
                 .get()
                 .addOnSuccessListener {results ->
                     val documents = results.documents
@@ -24,6 +25,8 @@ class ProjectsDB {
                             val tmp = Project(
                                 data["titolo"].toString(),
                                 data["descr"].toString(),
+                                data["assigned"].toString(),
+                                data["autore"].toString(),
                                 data["progress"].toString().toInt()
                             )
 

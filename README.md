@@ -10,16 +10,16 @@ PRINCIPALI
 
 
 FUN:
-- [ ] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
+- [X] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
 	- [X] Login / Logout e relativi tasti
-	- [ ] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
+	- [X] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
 	- [ ] Controllo input mail + password NO vuoto etc
 
 VIEW:
 - [ ] Menù laterale  E videata con lista progetti
   - [ ] Lista Task una volta clickato un progetto 
 
-- [ ] Pagina Utente -- Giusto da visualizzare il tipo di utente
+- [X] Pagina Utente -- Giusto da visualizzare il tipo di utente
 
 
 
