@@ -16,12 +16,16 @@ import com.google.firebase.auth.FirebaseUser
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
-import it.polettomatteo.taskmanager_uniupo.fragments.RecyclerViewFragment
+import it.polettomatteo.taskmanager_uniupo.fragments.ProjectsViewFragment
+import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
+import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
 var TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity() {
+
+
+class MainActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
     var currentUser: FirebaseUser? = null
 
@@ -62,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             currentUser!!.email?.let {
                 ProjectsDB.getProjects(it) { bundle ->
                     if (bundle != null) {
-                        this.setupFragment(RecyclerViewFragment(), bundle)
+                        this.setupFragment(ProjectsViewFragment(), bundle)
                     }
                 }
             }
@@ -70,13 +74,19 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+
     private fun setupFragment(fragment: Fragment, bundle: Bundle? = null) {
-        if(bundle != null) fragment.arguments = bundle
+        if(bundle != null){
+            bundle.putSerializable("interface",  taskListener)
+            fragment.arguments = bundle
+        }
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.frameLayout, fragment)
             .commit()
     }
+
 
 
     // --------------- FUNZIONI AUSILIARIE ---------------
@@ -178,21 +188,20 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    val taskListener = object: StartNewRecycler{
+        override fun onStartNewRecylcerView(data: Bundle){
+            var fragment = TasksViewFragment()
 
+            if(data != null){
+                Log.d(TAG, "Data: ${data}")
+                fragment.arguments = data
+            }
 
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .commit()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }
+    }
 
 }

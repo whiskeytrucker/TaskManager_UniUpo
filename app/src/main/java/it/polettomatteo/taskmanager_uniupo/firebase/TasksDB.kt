@@ -1,41 +1,38 @@
 package it.polettomatteo.taskmanager_uniupo.firebase
 
 import android.os.Bundle
-import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.getField
 import it.polettomatteo.taskmanager_uniupo.dataclass.Project
+import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 
-
-var TAG = "ProjectsDB"
-
-class ProjectsDB {
-    companion object{
-        fun getProjects(username: String, callback: (Bundle?) -> Unit) {
+class TasksDB {
+    companion object {
+        fun getTasks(idProject: String, callback: (Bundle?) -> Unit) {
             FirebaseFirestore
                 .getInstance()
                 .collection("projects")
-                .whereEqualTo("autore", username)
+                .document(idProject)
+                .collection("task")
                 .get()
-                .addOnSuccessListener {results ->
+                .addOnSuccessListener { results ->
                     val documents = results.documents
                     val bundle = Bundle()
                     for((index, doc) in documents.withIndex()){
                         val data = doc.data
                         if (data != null) {
-                            val tmp = Project(
+                            val tmp = Task(
                                 doc.id,
-                                data["titolo"].toString(),
+                                data["nome"].toString(),
                                 data["descr"].toString(),
-                                data["assigned"].toString(),
-                                data["autore"].toString(),
+                                data["dev"].toString(),
+                                data["scadenza"] as Timestamp,
                                 data["progress"].toString().toInt()
                             )
 
                             bundle.putSerializable(index.toString(), tmp)
                         }
                     }
-
                     callback(bundle)
                 }
                 .addOnFailureListener {
@@ -44,6 +41,4 @@ class ProjectsDB {
                 }
         }
     }
-
-
 }

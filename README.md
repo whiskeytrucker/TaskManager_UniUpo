@@ -2,7 +2,7 @@
 ## TODO
 PRINCIPALI
 - [ ] Progetti
-	- [ ] Task	(Aggiungere/Togliere/Modificare)
+	- [ ] Task
 		- [ ] Sottotask
 		
 - [ ] Notifiche
@@ -17,7 +17,8 @@ FUN:
 
 VIEW:
 - [ ] Menù laterale  E videata con lista progetti
-  - [ ] Lista Task una volta clickato un progetto 
+  - [X] Lista Task una volta clickato un progetto 
+  - [ ] Lista Sotto Task una volta clickata una Task
 
 - [X] Pagina Utente -- Giusto da visualizzare il tipo di utente
 
