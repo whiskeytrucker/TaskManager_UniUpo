@@ -5,6 +5,7 @@ import java.io.Serializable
 
 data class Task(
     var id: String = "",
+    var idPrg: String = "",
     var nome: String = "",
     var descr: String = "",
     var dev: String = "",

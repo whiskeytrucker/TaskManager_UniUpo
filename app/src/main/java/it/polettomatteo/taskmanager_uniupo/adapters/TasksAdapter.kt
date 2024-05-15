@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
+import it.polettomatteo.taskmanager_uniupo.firebase.SubtasksDB
+import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -19,7 +21,7 @@ import kotlin.reflect.typeOf
 
 
 val TAG = "TasksAdapter"
-class TasksAdapter(private var dataSet: ArrayList<Task>) : RecyclerView.Adapter<TasksAdapter.ViewHolder>(){
+class TasksAdapter(private var dataSet: ArrayList<Task>, private val listener: StartNewRecycler) : RecyclerView.Adapter<TasksAdapter.ViewHolder>(){
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -41,9 +43,6 @@ class TasksAdapter(private var dataSet: ArrayList<Task>) : RecyclerView.Adapter<
 
             seekBar.isEnabled = false
             seekBar.progress = 0
-
-            val perc = seekBar.progress
-
         }
 
 
@@ -68,6 +67,7 @@ class TasksAdapter(private var dataSet: ArrayList<Task>) : RecyclerView.Adapter<
         val ms = sec * 1000 + ns /  1000000
 
 
+
         // prendi l'elemento dal dataset e rimpazza i contenuti
         holder.nome.text = dataSet[position].nome
         holder.descr.text = dataSet[position].descr
@@ -76,16 +76,19 @@ class TasksAdapter(private var dataSet: ArrayList<Task>) : RecyclerView.Adapter<
         holder.progressTask.text = "${dataSet[position].progress}%"
         holder.seekBar.progress = dataSet[position].progress
 
-        val perc = dataSet[position].progress
 
+        val idTask = dataSet[position].id
+        val idProject = dataSet[position].idPrg
 
-        /*
         val view = holder.itemView
 
         holder.itemView.setOnClickListener {view.setOnClickListener {
-            Log.d(TAG, "Hai premuto la View, dio canaglia")
-            //
-        }}*/
+            SubtasksDB.getSubtasks(idProject, idTask){bundle ->
+                if(bundle != null){
+                    listener.onStartNewRecylcerView(bundle)
+                }
+            }
+        }}
     }
 
 
@@ -94,7 +97,7 @@ class TasksAdapter(private var dataSet: ArrayList<Task>) : RecyclerView.Adapter<
 
 
 
-    fun formatTimestamp(timestamp: Date): String{
+    private fun formatTimestamp(timestamp: Date): String{
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         return sdf.format(timestamp)
     }

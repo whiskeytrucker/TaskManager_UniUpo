@@ -15,10 +15,13 @@ FUN:
 	- [X] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
 	- [ ] Controllo input mail + password NO vuoto etc
 
+- [ ] Checkbox per le sotto task e cambi di valore
+
 VIEW:
-- [ ] Menù laterale  E videata con lista progetti
+- [X] Menù laterale  E videata con lista progetti
   - [X] Lista Task una volta clickato un progetto 
-  - [ ] Lista Sotto Task una volta clickata una Task
+  - [X] Lista Sotto Task una volta clickata una Task
+  - [ ] Tasto indietro per tornare alla "pagina" precedente
 
 - [X] Pagina Utente -- Giusto da visualizzare il tipo di utente
 
@@ -27,6 +30,7 @@ VIEW:
 
 ## BUG
 - [ ] Videata progetti non si aggiorna quando si fa logout/login
+- [ ] Tasto Home crasha quando cliccato dentro la Task
 
 ## Testo Progetto
 **Progetto Android**  

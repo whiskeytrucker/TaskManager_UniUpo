@@ -30,8 +30,11 @@ class ProjectsViewFragment: Fragment() {
         var listener: StartNewRecycler? = null
 
         if(bundle != null){
-            listener = bundle.getSerializable("interface") as StartNewRecycler
-            bundle.remove("interface")
+            if(bundle.getSerializable("task_interface") != null){
+                listener = bundle.getSerializable("task_interface") as StartNewRecycler
+                bundle.remove("task_interface")
+            }
+
 
             for(key in bundle.keySet()){
                 tmp.add(bundle.getSerializable(key) as Project)

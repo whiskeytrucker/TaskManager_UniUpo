@@ -17,6 +17,7 @@ import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
 import it.polettomatteo.taskmanager_uniupo.fragments.ProjectsViewFragment
+import it.polettomatteo.taskmanager_uniupo.fragments.SubtasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity(){
 
     private fun setupFragment(fragment: Fragment, bundle: Bundle? = null) {
         if(bundle != null){
-            bundle.putSerializable("interface",  taskListener)
+            bundle.putSerializable("task_interface",  taskListener)
             fragment.arguments = bundle
         }
 
@@ -193,7 +194,22 @@ class MainActivity : AppCompatActivity(){
             var fragment = TasksViewFragment()
 
             if(data != null){
-                Log.d(TAG, "Data: ${data}")
+                data.putSerializable("subtask_interface", subtaskListener)
+                fragment.arguments = data
+            }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .commit()
+
+        }
+    }
+
+    val subtaskListener = object: StartNewRecycler{
+        override fun onStartNewRecylcerView(data: Bundle){
+            var fragment = SubtasksViewFragment()
+
+            if(data != null){
                 fragment.arguments = data
             }
 

@@ -3,17 +3,19 @@ package it.polettomatteo.taskmanager_uniupo.firebase
 import android.os.Bundle
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import it.polettomatteo.taskmanager_uniupo.dataclass.Project
+import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 
-class TasksDB {
-    companion object {
-        fun getTasks(idProject: String, callback: (Bundle?) -> Unit) {
+class SubtasksDB {
+    companion object{
+        fun getSubtasks(idProject: String, idTask: String, callback: (Bundle?) -> Unit){
             FirebaseFirestore
                 .getInstance()
                 .collection("projects")
                 .document(idProject)
                 .collection("task")
+                .document(idTask)
+                .collection("sotto_task")
                 .get()
                 .addOnSuccessListener { results ->
                     val documents = results.documents
@@ -21,12 +23,10 @@ class TasksDB {
                     for((index, doc) in documents.withIndex()){
                         val data = doc.data
                         if (data != null) {
-                            val tmp = Task(
+                            val tmp = Subtask(
                                 doc.id,
-                                idProject,
-                                data["nome"].toString(),
-                                data["descr"].toString(),
-                                data["dev"].toString(),
+                                data["stato"].toString(),
+                                data["priorita"].toString(),
                                 data["scadenza"] as Timestamp,
                                 data["progress"].toString().toInt()
                             )
