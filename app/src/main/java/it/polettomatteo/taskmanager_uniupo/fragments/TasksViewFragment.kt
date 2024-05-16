@@ -49,8 +49,12 @@ class TasksViewFragment: Fragment() {
         recyclerView.adapter = customAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
+
+
+
         return view
     }
+
 
 
 }

@@ -1,6 +1,7 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,7 @@ class UserPageFragment: Fragment() {
 
         val bundle = this.arguments
         if(bundle != null){
-            text1.text = "Bentornato ${bundle.getString("username").toString()}!"
+            text1.text = "Bentornato ${bundle.getString("username").toString().substringBefore('@')}!"
 
             val tipo = bundle.getString("tipo").toString()
 

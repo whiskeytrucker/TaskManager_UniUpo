@@ -47,22 +47,12 @@ class MainActivity : AppCompatActivity(){
 
     override fun onStart(){
         super.onStart()
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.frameLayout)
 
-        if(currentFragment == null){
-            this.createFragments()
-        }
+        this.createFragment()
     }
 
 
-    override fun onDestroy() {
-        if(currentUser != null){
-            auth.signOut()
-        }
-        super.onDestroy()
-    }
-
-    private fun createFragments(){
+    private fun createFragment(){
         if(currentUser != null){
             currentUser!!.email?.let {
                 ProjectsDB.getProjects(it) { bundle ->
@@ -123,7 +113,9 @@ class MainActivity : AppCompatActivity(){
 
                 R.id.home -> {
                     val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
+                    finish()
                 }
 
 
@@ -206,6 +198,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     val subtaskListener = object: StartNewRecycler{
+
         override fun onStartNewRecylcerView(data: Bundle){
             var fragment = SubtasksViewFragment()
 
@@ -218,6 +211,8 @@ class MainActivity : AppCompatActivity(){
                 .commit()
 
         }
+
+
     }
 
 }

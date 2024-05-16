@@ -14,8 +14,11 @@ FUN:
 	- [X] Login / Logout e relativi tasti
 	- [X] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
 	- [ ] Controllo input mail + password NO vuoto etc
+	- [ ] Cambio valore dei sottotask
+	- [ ] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
 
-- [ ] Checkbox per le sotto task e cambi di valore
+- [X] Checkbox per le sotto task 
+	- [ ] Posizione buggata
 
 VIEW:
 - [X] Menù laterale  E videata con lista progetti
@@ -29,8 +32,8 @@ VIEW:
 
 
 ## BUG
-- [ ] Videata progetti non si aggiorna quando si fa logout/login
-- [ ] Tasto Home crasha quando cliccato dentro la Task
+- [X] Videata progetti non si aggiorna quando si fa logout/login
+- [X] Tasto Home crasha quando cliccato dentro la Task
 
 ## Testo Progetto
 **Progetto Android**  
@@ -54,6 +57,7 @@ Le **chat** tra i vari attori sono possibili secondo questo schema:
 - D e D dello stesso progetto
 - PL e D
 - PM e PL
+
 Con lo **stesso schema** sopra è possibile dare un **voto** e **scrivere un commento** su un lavoro svolto.
 Ad ogni **sottotask** è possibile assegnare una **foto/documento** relativa/o al task (tipo esempio dell'interfaccia grafica che si è sviluppato)
 Il **PM** può fare ricerche sui progetti mettendo filtri in base allo **stato**, al **PL** e alla **scadenza**.

@@ -4,27 +4,38 @@
     android:layout_height="wrap_content">
 
     <TextView
+        android:id="@+id/subDescr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10sp"
+        android:paddingStart="10sp"
+        android:paddingEnd="10sp"
+        android:textSize="20sp">
+    </TextView>
+
+    <TextView
         android:id="@+id/state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:paddingTop="10sp"
+        android:textSize="16sp"
         android:paddingStart="10sp"
-        android:paddingEnd="10sp">
-
+        android:paddingEnd="10sp"
+        android:layout_marginTop="0dp"
+        android:layout_below="@id/subDescr">
     </TextView>
+
 
 
     <TextView
         android:id="@+id/priority"
         android:paddingStart="10sp"
         android:paddingEnd="10sp"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/state"
         android:layout_marginTop="0dp"
         android:layout_centerHorizontal="true">
-
     </TextView>
 
 
@@ -32,10 +43,17 @@
         android:id="@+id/expiringSubtask"
         android:paddingStart="10sp"
         android:paddingEnd="10sp"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/priority"
         />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"/>
 
 
     <TextView
@@ -48,6 +66,8 @@
         android:textSize="16sp">
 
     </TextView>
+
+
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -67,5 +87,7 @@
         android:layout_width="370dp"
         android:layout_height="1dp"
         android:background="@color/black"/>
+
+
 
 </RelativeLayout>

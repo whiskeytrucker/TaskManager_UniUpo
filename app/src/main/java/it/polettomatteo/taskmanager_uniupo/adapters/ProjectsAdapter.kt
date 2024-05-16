@@ -68,6 +68,7 @@ class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val liste
         holder.itemView.setOnClickListener {view.setOnClickListener {
             TasksDB.getTasks(id){bundle ->
                 if(bundle != null){
+                    dataSet.clear()
                     listener.onStartNewRecylcerView(bundle)
                 }
 

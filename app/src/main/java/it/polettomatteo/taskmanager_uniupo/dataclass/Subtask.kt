@@ -6,6 +6,7 @@ import java.io.Serializable
 data class Subtask(
     val id: String = "",
     val stato: String = "",
+    val subDescr: String = "",
     val priorita: String = "",
     val scadenza: Timestamp,
     val progress: Int
