@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -75,18 +76,27 @@ class MainActivity : AppCompatActivity(){
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.frameLayout, fragment)
+            .addToBackStack(null)
             .commit()
     }
 
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.ses -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     // --------------- FUNZIONI AUSILIARIE ---------------
     private fun initToolbar(toolbar: Toolbar){
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
             setHomeButtonEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_menu)
         }
 
         val mainLayout = findViewById<DrawerLayout>(R.id.mainLayout)
@@ -111,7 +121,7 @@ class MainActivity : AppCompatActivity(){
                     }
                 }
 
-                R.id.home -> {
+                R.id.home2 -> {
                     val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
@@ -133,11 +143,12 @@ class MainActivity : AppCompatActivity(){
                 }
 
                 R.id.chat -> {
-                    Toast.makeText(baseContext, "Non ancora implementato!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ChatActivity::class.java)
+                    this.startActivity(intent)
                 }
 
-                R.id.updateDataset -> {
-                    Toast.makeText(baseContext, "Non ancora implementato!", Toast.LENGTH_SHORT).show()
+                R.id.ses -> {
+                    Toast.makeText(baseContext, "Dovresti essere tornato indietro, teoricamente.", Toast.LENGTH_LONG).show()
                     mainLayout.closeDrawer(navigationView)
                 }
 
@@ -159,7 +170,7 @@ class MainActivity : AppCompatActivity(){
 
         menu.findItem(R.id.login)?.isVisible = !isLoggedIn
 
-        var elements = arrayOf("home","logout","userpage","chat","updateDataset")
+        var elements = arrayOf("home","logout","userpage","chat","ses")
 
         /*
         for(element in elements){
@@ -167,11 +178,11 @@ class MainActivity : AppCompatActivity(){
             menu.findItem(str.toInt())?.isVisible = isLoggedIn
         }*/
 
-        menu.findItem(R.id.home)?.isVisible = isLoggedIn
+        menu.findItem(R.id.home2)?.isVisible = isLoggedIn
         menu.findItem(R.id.logout)?.isVisible = isLoggedIn
         menu.findItem(R.id.userpage)?.isVisible = isLoggedIn
         menu.findItem(R.id.chat)?.isVisible = isLoggedIn
-        menu.findItem(R.id.updateDataset)?.isVisible = isLoggedIn
+        menu.findItem(R.id.ses)?.isVisible = isLoggedIn
 
         //if(!isLoggedIn)setupFragment(RecyclerViewFragment(), Bundle())
 
@@ -190,15 +201,17 @@ class MainActivity : AppCompatActivity(){
                 fragment.arguments = data
             }
 
+            Log.d(TAG, supportFragmentManager.fragments.toString())
+
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, fragment)
+                .addToBackStack(null)
                 .commit()
 
         }
     }
 
     val subtaskListener = object: StartNewRecycler{
-
         override fun onStartNewRecylcerView(data: Bundle){
             var fragment = SubtasksViewFragment()
 

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Home"
-        android:id="@+id/home"
+        android:id="@+id/home2"
         android:visible="true"
         />
 
@@ -23,14 +23,14 @@
         android:visible="false"
         />
 
-    <item android:title="Aggiorna Dati (Esempio)"
-        android:id="@+id/updateDataset"
-        android:visible="false"
-        />
-
 
     <item android:title="Pagina Utente"
         android:id="@+id/userpage"
+        android:visible="false"
+        />
+
+    <item android:title="dioporco"
+        android:id="@+id/ses"
         android:visible="false"
         />
 

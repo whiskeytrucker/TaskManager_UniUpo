@@ -65,7 +65,7 @@ class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val liste
 
         val view = holder.itemView
 
-        holder.itemView.setOnClickListener {view.setOnClickListener {
+        holder.itemView.setOnClickListener {
             TasksDB.getTasks(id){bundle ->
                 if(bundle != null){
                     dataSet.clear()
@@ -74,7 +74,7 @@ class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val liste
 
             }
 
-        }}
+        }
     }
 
 

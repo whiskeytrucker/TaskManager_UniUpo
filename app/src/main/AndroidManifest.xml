@@ -30,7 +30,7 @@
         </activity>
 
         <activity
-            android:name=".activities.UserPage"
+            android:name=".activities.ChatActivity"
             android:exported="true">
         </activity>
 

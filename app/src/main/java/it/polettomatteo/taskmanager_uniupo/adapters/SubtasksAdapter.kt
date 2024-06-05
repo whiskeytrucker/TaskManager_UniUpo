@@ -19,7 +19,6 @@ class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Ada
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val state: TextView
-        val checkbox: CheckBox
         val subDescr: TextView
         val priority: TextView
         val expiring: TextView
@@ -28,14 +27,13 @@ class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Ada
 
         init{
             state = view.findViewById(R.id.state)
-            checkbox = view.findViewById(R.id.checkBox)
             subDescr = view.findViewById(R.id.subDescr)
             priority = view.findViewById(R.id.priority)
             expiring = view.findViewById(R.id.expiringSubtask)
             progress = view.findViewById(R.id.progressSubtask)
             seekBar = view.findViewById(R.id.seekBar)
 
-            seekBar.isEnabled = false
+            seekBar.isEnabled = true
             seekBar.progress = 0
 
 
@@ -64,25 +62,16 @@ class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Ada
         holder.expiring.text = "Scadenza: ${formatTimestamp(Date(ms))}"
 
 
-        if(dataSet[position].stato.compareTo("assigned") != 0){
-            holder.progress.visibility = View.GONE
-            holder.seekBar.visibility = View.GONE
-            holder.checkbox.visibility = View.GONE
-        }else if(dataSet[position].stato.compareTo("completed") != 0){
-            holder.checkbox.isChecked = true
-            holder.expiring.visibility = View.GONE
+        if(dataSet[position].stato.compareTo("assigned") == 0){
+            holder.progress.text = "${dataSet[position].progress}%"
+            holder.seekBar.progress = dataSet[position].progress
+        }else if(dataSet[position].stato.compareTo("completed") == 0){
             holder.priority.visibility = View.GONE
             holder.progress.visibility = View.GONE
             holder.seekBar.visibility = View.GONE
-        }else {
-            holder.progress.text = "${dataSet[position].progress}%"
-            holder.seekBar.progress = dataSet[position].progress
-            holder.checkbox.isChecked = false
+        }else if(dataSet[position].stato.compareTo("todo") == 0){
+            holder.seekBar.isEnabled = false
         }
-
-
-
-
     }
 
 

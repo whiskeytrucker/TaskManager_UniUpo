@@ -82,14 +82,14 @@ class TasksAdapter(private var dataSet: ArrayList<Task>, private val listener: S
 
         val view = holder.itemView
 
-        holder.itemView.setOnClickListener {view.setOnClickListener {
+        holder.itemView.setOnClickListener {
             SubtasksDB.getSubtasks(idProject, idTask){bundle ->
                 if(bundle != null){
                     dataSet.clear()
                     listener.onStartNewRecylcerView(bundle)
                 }
             }
-        }}
+        }
     }
 
 
