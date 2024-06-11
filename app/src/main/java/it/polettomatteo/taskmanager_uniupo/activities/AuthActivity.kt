@@ -18,10 +18,7 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-
         auth = FirebaseAuth.getInstance()
-
-
     }
 
     public override fun onStart(){
@@ -33,7 +30,7 @@ class AuthActivity : AppCompatActivity() {
             // mettere controllo mail e password
             var textInput = findViewById<TextInputEditText>(R.id.email)
             //val email = textInput.text.toString()
-            val email = "diego@miresse.com"
+            val email = "pm1@testapp.com"
 
             textInput = findViewById(R.id.password)
             //var pass = textInput.text.toString()
@@ -58,13 +55,11 @@ class AuthActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this){task ->
                 if(task.isSuccessful){
-                    Log.d(TAG, "signInWithEmailAndPassword: Success!")
                     Toast.makeText(baseContext, "Login effettuato!", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
 
                 }else{
-                    Log.w(TAG, "signInWithEmailAndPassword: Failure.", task.exception)
                     Toast.makeText(baseContext, "Autenticazione fallita.", Toast.LENGTH_SHORT).show()
                 }
             }

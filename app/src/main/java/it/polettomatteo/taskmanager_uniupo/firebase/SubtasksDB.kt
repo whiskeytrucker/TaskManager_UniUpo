@@ -2,40 +2,42 @@ package it.polettomatteo.taskmanager_uniupo.firebase
 
 import android.os.Bundle
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.getField
-import it.polettomatteo.taskmanager_uniupo.dataclass.Project
+import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
+import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 
-
-var TAG = "ProjectsDB"
-
-class ProjectsDB {
+class SubtasksDB {
     companion object{
-        fun getProjects(username: String, callback: (Bundle?) -> Unit) {
+        fun getSubtasks(idProject: String, idTask: String, callback: (Bundle?) -> Unit){
             FirebaseFirestore
                 .getInstance()
                 .collection("projects")
-                .whereEqualTo("autore", username)
+                .document(idProject)
+                .collection("task")
+                .document(idTask)
+                .collection("sotto_task")
                 .get()
-                .addOnSuccessListener {results ->
+                .addOnSuccessListener { results ->
                     val documents = results.documents
                     val bundle = Bundle()
                     for((index, doc) in documents.withIndex()){
                         val data = doc.data
                         if (data != null) {
-                            val tmp = Project(
+                            Log.d(TAG, data.toString())
+
+                            val tmp = Subtask(
                                 doc.id,
-                                data["titolo"].toString(),
-                                data["descr"].toString(),
-                                data["assigned"].toString(),
-                                data["autore"].toString(),
+                                data["stato"].toString(),
+                                data["subDescr"].toString(),
+                                data["priorita"].toString(),
+                                data["scadenza"] as Timestamp,
                                 data["progress"].toString().toInt()
                             )
 
                             bundle.putSerializable(index.toString(), tmp)
                         }
                     }
-
                     callback(bundle)
                 }
                 .addOnFailureListener {
@@ -44,6 +46,4 @@ class ProjectsDB {
                 }
         }
     }
-
-
 }

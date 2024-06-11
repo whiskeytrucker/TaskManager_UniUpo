@@ -1,6 +1,8 @@
 buildscript {
     dependencies {
         classpath("com.google.gms:google-services:4.4.1")
+        classpath("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+        classpath("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
     }
 }
 // Top-level build file where you can add configuration options common to all sub-projects/modules.

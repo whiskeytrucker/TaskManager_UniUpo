@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -13,15 +14,20 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import it.polettomatteo.taskmanager_uniupo.R
-import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
-import it.polettomatteo.taskmanager_uniupo.fragments.RecyclerViewFragment
+import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
+import it.polettomatteo.taskmanager_uniupo.fragments.ProjectsViewFragment
+import it.polettomatteo.taskmanager_uniupo.fragments.SubtasksViewFragment
+import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
+import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
+import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
-var TAG = "MainActivity"
+private val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity() {
+
+
+class MainActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
     var currentUser: FirebaseUser? = null
 
@@ -42,41 +48,55 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart(){
         super.onStart()
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.frameLayout)
 
-        if(currentFragment == null){
-            this.createFragments()
-        }
+        this.createFragment()
     }
 
 
-    private fun createFragments(){
+    private fun createFragment(){
         if(currentUser != null){
-            ProjectsDB.getProjects() { bundle ->
-                if (bundle != null) {
-                    this.setupFragment(RecyclerViewFragment(), bundle)
+            currentUser!!.email?.let {
+                ProjectsDB.getProjects(it) { bundle ->
+                    if (bundle != null) {
+                        this.setupFragment(ProjectsViewFragment(), bundle)
+                    }
                 }
             }
         }
 
     }
 
+
+
     private fun setupFragment(fragment: Fragment, bundle: Bundle? = null) {
-        if(bundle != null) fragment.arguments = bundle
+        if(bundle != null){
+            bundle.putSerializable("task_interface",  taskListener)
+            fragment.arguments = bundle
+        }
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.frameLayout, fragment)
+            .addToBackStack(null)
             .commit()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.ses -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     // --------------- FUNZIONI AUSILIARIE ---------------
     private fun initToolbar(toolbar: Toolbar){
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
             setHomeButtonEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_menu)
         }
 
         val mainLayout = findViewById<DrawerLayout>(R.id.mainLayout)
@@ -96,20 +116,39 @@ class MainActivity : AppCompatActivity() {
                     if(currentUser != null){
                         auth.signOut()
                         Toast.makeText(baseContext, "Logout Effettuato", Toast.LENGTH_SHORT).show()
-                        updateUI(navigationView)
-                        mainLayout.closeDrawer(navigationView)
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
                     }
                 }
+
+                R.id.home2 -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                }
+
+
+
                 R.id.userpage -> {
-                    Toast.makeText(baseContext, "Non ancora implementato!", Toast.LENGTH_SHORT).show()
+                    if(currentUser != null) {
+                        UsersDB.getUserType(currentUser?.email.toString()) { bundle ->
+                            if (bundle != null) {
+                                bundle.putString("username", currentUser?.email)
+                                mainLayout.closeDrawer(navigationView)
+                                setupFragment(UserPageFragment(), bundle)
+                            }
+                        }
+                    }
                 }
 
                 R.id.chat -> {
-                    Toast.makeText(baseContext, "Non ancora implementato!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ChatActivity::class.java)
+                    this.startActivity(intent)
                 }
 
-                R.id.updateDataset -> {
-                    Toast.makeText(baseContext, "Non ancora implementato!", Toast.LENGTH_SHORT).show()
+                R.id.ses -> {
+                    Toast.makeText(baseContext, "Dovresti essere tornato indietro, teoricamente.", Toast.LENGTH_LONG).show()
                     mainLayout.closeDrawer(navigationView)
                 }
 
@@ -131,36 +170,62 @@ class MainActivity : AppCompatActivity() {
 
         menu.findItem(R.id.login)?.isVisible = !isLoggedIn
 
-        var elements = arrayOf("logout","userpage","chat","updateDataset")
+        var elements = arrayOf("home","logout","userpage","chat","ses")
 
+        /*
+        for(element in elements){
+            val str = "R.id.${element}"
+            menu.findItem(str.toInt())?.isVisible = isLoggedIn
+        }*/
 
-
+        menu.findItem(R.id.home2)?.isVisible = isLoggedIn
         menu.findItem(R.id.logout)?.isVisible = isLoggedIn
         menu.findItem(R.id.userpage)?.isVisible = isLoggedIn
         menu.findItem(R.id.chat)?.isVisible = isLoggedIn
-        menu.findItem(R.id.updateDataset)?.isVisible = isLoggedIn
+        menu.findItem(R.id.ses)?.isVisible = isLoggedIn
 
-        recreate()
+        //if(!isLoggedIn)setupFragment(RecyclerViewFragment(), Bundle())
+
+        this.recreate()
     }
 
 
 
 
+    val taskListener = object: StartNewRecycler{
+        override fun onStartNewRecylcerView(data: Bundle){
+            var fragment = TasksViewFragment()
+
+            if(data != null){
+                data.putSerializable("subtask_interface", subtaskListener)
+                fragment.arguments = data
+            }
+
+            Log.d(TAG, supportFragmentManager.fragments.toString())
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .addToBackStack(null)
+                .commit()
+
+        }
+    }
+
+    val subtaskListener = object: StartNewRecycler{
+        override fun onStartNewRecylcerView(data: Bundle){
+            var fragment = SubtasksViewFragment()
+
+            if(data != null){
+                fragment.arguments = data
+            }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .commit()
+
+        }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 }

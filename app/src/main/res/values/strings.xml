@@ -10,5 +10,8 @@
     <string name="logout">Logout</string>
     <string name="wb">Bentornato</string>
     <string name="lorem_30w">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ac tortor dolor. Ut pharetra sollicitudin orci quis maximus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit. "</string>
+    <string name="senderPlaceholder">DiegoSender</string>
+    <string name="lastMsgPlaceholder">Sono bellissimo.</string>
+    <string name="datePlaceholder">46</string>
 
 </resources>
