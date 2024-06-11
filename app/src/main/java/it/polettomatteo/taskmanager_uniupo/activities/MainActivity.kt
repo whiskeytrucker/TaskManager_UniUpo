@@ -23,7 +23,7 @@ import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
-var TAG = "MainActivity"
+private val TAG = "MainActivity"
 
 
 

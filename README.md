@@ -6,7 +6,7 @@ PRINCIPALI
 		- [ ] Sottotask
 		
 - [ ] Notifiche
-- [ ] Chat 
+- [ ] Chat (CTRL + C / CTRL + V perchè non funziona nulla)
 
 
 FUN:
@@ -17,8 +17,6 @@ FUN:
 	- [ ] Cambio valore dei sottotask
 	- [ ] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
 
-- [X] Checkbox per le sotto task 
-	- [ ] Posizione buggata
 
 VIEW:
 - [X] Menù laterale  E videata con lista progetti
