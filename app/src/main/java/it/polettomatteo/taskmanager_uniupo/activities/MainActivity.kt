@@ -30,6 +30,7 @@ private val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
     var currentUser: FirebaseUser? = null
+    var userType: String = "NA"
 
 
     // --------------- FUNZIONI ACTIVITY ---------------
@@ -56,11 +57,21 @@ class MainActivity : AppCompatActivity(){
     private fun createFragment(){
         if(currentUser != null){
             currentUser!!.email?.let {
-                ProjectsDB.getProjects(it) { bundle ->
+                UsersDB.getUserType(currentUser!!.email.toString()){ bundle ->
                     if (bundle != null) {
-                        this.setupFragment(ProjectsViewFragment(), bundle)
+                        userType = bundle.getString("tipo").toString()
+
+                        if(userType.compareTo("NA") != 0){
+
+                            ProjectsDB.getProjects(it, userType) { bundle2 ->
+                                if (bundle2 != null) {
+                                    this.setupFragment(ProjectsViewFragment(), bundle2)
+                                }
+                            }
+                        }
                     }
                 }
+
             }
         }
 
@@ -132,13 +143,11 @@ class MainActivity : AppCompatActivity(){
 
                 R.id.userpage -> {
                     if(currentUser != null) {
-                        UsersDB.getUserType(currentUser?.email.toString()) { bundle ->
-                            if (bundle != null) {
-                                bundle.putString("username", currentUser?.email)
-                                mainLayout.closeDrawer(navigationView)
-                                setupFragment(UserPageFragment(), bundle)
-                            }
-                        }
+                        val bundle = Bundle()
+                        bundle.putString("username", currentUser?.email)
+                        bundle.putString("tipo", userType)
+                        mainLayout.closeDrawer(navigationView)
+                        setupFragment(UserPageFragment(), bundle)
                     }
                 }
 
@@ -197,11 +206,10 @@ class MainActivity : AppCompatActivity(){
             var fragment = TasksViewFragment()
 
             if(data != null){
+                data.putSerializable("tipo", userType)
                 data.putSerializable("subtask_interface", subtaskListener)
                 fragment.arguments = data
             }
-
-            Log.d(TAG, supportFragmentManager.fragments.toString())
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, fragment)
@@ -216,6 +224,7 @@ class MainActivity : AppCompatActivity(){
             var fragment = SubtasksViewFragment()
 
             if(data != null){
+                data.putSerializable("tipo", userType)
                 fragment.arguments = data
             }
 

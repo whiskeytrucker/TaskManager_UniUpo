@@ -30,7 +30,7 @@ class AuthActivity : AppCompatActivity() {
             // mettere controllo mail e password
             var textInput = findViewById<TextInputEditText>(R.id.email)
             //val email = textInput.text.toString()
-            val email = "pm1@testapp.com"
+            val email = "pl1@testapp.com"
 
             textInput = findViewById(R.id.password)
             //var pass = textInput.text.toString()

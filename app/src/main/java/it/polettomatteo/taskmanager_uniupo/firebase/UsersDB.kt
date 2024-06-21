@@ -5,7 +5,6 @@ import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polettomatteo.taskmanager_uniupo.dataclass.Chat
-import java.util.Date
 
 class UsersDB {
     companion object{

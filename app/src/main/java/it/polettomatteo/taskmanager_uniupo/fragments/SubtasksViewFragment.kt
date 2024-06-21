@@ -19,14 +19,17 @@ class SubtasksViewFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.recycler_view, container, false)
-        recyclerView = view.findViewById(R.id.recyclerView)
+        val view = inflater.inflate(R.layout.recycler_taskview, container, false)
+        recyclerView = view.findViewById(R.id.recyclerTaskView)
 
         val tmp = ArrayList<Subtask>()
 
         val bundle = this.arguments
 
         if(bundle != null){
+            var userType = bundle.getString("tipo")!!
+            bundle.remove("tipo")
+
             for(key in bundle.keySet()){
                 tmp.add(bundle.getSerializable(key) as Subtask)
             }

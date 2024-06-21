@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
@@ -20,6 +21,7 @@ class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val liste
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView
         val content: TextView
+        val author: TextView
         val assigned: TextView
         val progress: TextView
         val seekBar: SeekBar
@@ -31,6 +33,7 @@ class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val liste
             seekBar = view.findViewById(R.id.seekBar)
             progress = view.findViewById(R.id.progress)
             assigned = view.findViewById(R.id.assigned)
+            author = view.findViewById(R.id.authorProject)
 
             seekBar.isEnabled = false
             seekBar.progress = 0
@@ -53,11 +56,22 @@ class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val liste
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var id = dataSet[position].id
+        var auth = FirebaseAuth.getInstance()
+        var currentUser = auth.currentUser
 
         // prendi l'elemento dal dataset e rimpazza i contenuti
         holder.title.text = dataSet[position].titolo
         holder.content.text = dataSet[position].descr
-        holder.assigned.text = "Project Leader: ${dataSet[position].assigned}"
+
+        if (currentUser != null) {
+            if(currentUser.email?.compareTo(dataSet[position].assigned) == 0) {
+                holder.assigned.visibility = View.GONE
+                holder.author.text = "Project Manager: ${dataSet[position].autore}"
+            }else{
+                holder.author.visibility = View.GONE
+                holder.assigned.text = "Project Leader: ${dataSet[position].assigned}"
+            }
+        }
         holder.progress.text = "${dataSet[position].progress}%"
         holder.seekBar.progress = dataSet[position].progress
 

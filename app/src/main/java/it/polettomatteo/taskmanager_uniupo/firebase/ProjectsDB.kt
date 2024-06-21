@@ -11,11 +11,21 @@ var TAG = "ProjectsDB"
 
 class ProjectsDB {
     companion object{
-        fun getProjects(username: String, callback: (Bundle?) -> Unit) {
+        fun getProjects(username: String, usertype: String, callback: (Bundle?) -> Unit) {
+            var field: String = ""
+
+            if(usertype.compareTo("pm") == 0) {
+                field = "autore"
+            }else if(usertype.compareTo("pl") == 0){
+                field = "assigned"
+            }
+            else "Developer"
+
+
             FirebaseFirestore
                 .getInstance()
                 .collection("projects")
-                .whereEqualTo("autore", username)
+                .whereEqualTo(field.trim(), username)
                 .get()
                 .addOnSuccessListener {results ->
                     val documents = results.documents
@@ -42,6 +52,7 @@ class ProjectsDB {
                     it.printStackTrace()
                     callback(null)
                 }
+
         }
     }
 
