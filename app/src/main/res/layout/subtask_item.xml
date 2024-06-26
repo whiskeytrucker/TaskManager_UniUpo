@@ -13,6 +13,23 @@
         android:textSize="20sp">
     </TextView>
 
+    <Button
+        android:id="@+id/modifySubtask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/subDescr"
+        android:layout_marginTop="8dp"
+        android:text="Modifica" />
+
+    <Button
+        android:id="@+id/deleteSubtask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/subDescr"
+        android:layout_below="@id/modifySubtask"
+        android:layout_marginTop="2dp"
+        android:text="Cancella" />
+
     <TextView
         android:id="@+id/state"
         android:layout_width="wrap_content"
@@ -23,7 +40,6 @@
         android:layout_marginTop="0dp"
         android:layout_below="@id/subDescr">
     </TextView>
-
 
 
     <TextView

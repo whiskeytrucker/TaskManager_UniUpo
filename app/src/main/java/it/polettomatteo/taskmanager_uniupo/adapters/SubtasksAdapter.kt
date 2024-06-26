@@ -1,21 +1,25 @@
 package it.polettomatteo.taskmanager_uniupo.adapters
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
+import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Adapter<SubtasksAdapter.ViewHolder>() {
+class SubtasksAdapter(private val context: Context, private var dataSet: ArrayList<Subtask>): RecyclerView.Adapter<SubtasksAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val state: TextView
@@ -24,6 +28,8 @@ class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Ada
         val expiring: TextView
         val progress: TextView
         val seekBar: SeekBar
+        val modifyBtn: Button
+        val deleteBtn: Button
 
         init{
             state = view.findViewById(R.id.state)
@@ -32,6 +38,9 @@ class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Ada
             expiring = view.findViewById(R.id.expiringSubtask)
             progress = view.findViewById(R.id.progressSubtask)
             seekBar = view.findViewById(R.id.seekBar)
+
+            modifyBtn = view.findViewById(R.id.modifySubtask)
+            deleteBtn = view.findViewById(R.id.deleteSubtask)
 
             seekBar.isEnabled = true
             seekBar.progress = 0
@@ -72,6 +81,17 @@ class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Ada
         }else if(dataSet[position].stato.compareTo("todo") == 0){
             holder.seekBar.isEnabled = false
         }
+
+
+
+        holder.modifyBtn.setOnClickListener{
+            Toast.makeText(context, "NON ANCORA IMPLEMENTATO", Toast.LENGTH_SHORT).show()
+        }
+
+        holder.deleteBtn.setOnClickListener{
+            Toast.makeText(context, "NON ANCORA IMPLEMENTATO", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
 

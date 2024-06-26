@@ -31,6 +31,24 @@
 
     </TextView>
 
+
+
+    <Button
+        android:id="@+id/modifyTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/descr"
+        android:layout_marginTop="8dp"
+        android:text="Modifica" />
+
+    <Button
+        android:id="@+id/deleteTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/descr"
+        android:layout_below="@id/modifyTask"
+        android:text="Cancella" />
+
     <TextView
         android:id="@+id/dev"
         android:paddingStart="10sp"
@@ -75,7 +93,6 @@
     </SeekBar>
 
 
-
     <View
         android:layout_below="@id/seekBar"
         android:layout_centerHorizontal="true"
@@ -83,5 +100,7 @@
         android:layout_width="370dp"
         android:layout_height="1dp"
         android:background="@color/black"/>
+
+
 
 </RelativeLayout>

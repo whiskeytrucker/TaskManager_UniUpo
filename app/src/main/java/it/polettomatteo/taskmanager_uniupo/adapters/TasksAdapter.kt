@@ -2,17 +2,21 @@ package it.polettomatteo.taskmanager_uniupo.adapters
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 import it.polettomatteo.taskmanager_uniupo.firebase.SubtasksDB
+import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -21,7 +25,7 @@ import kotlin.reflect.typeOf
 
 
 val TAG = "TasksAdapter"
-class TasksAdapter(private var dataSet: ArrayList<Task>, private val listener: StartNewRecycler) : RecyclerView.Adapter<TasksAdapter.ViewHolder>(){
+class TasksAdapter(private val context: Context, private var dataSet: ArrayList<Task>, private val listener: StartNewRecycler) : RecyclerView.Adapter<TasksAdapter.ViewHolder>(){
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -31,7 +35,8 @@ class TasksAdapter(private var dataSet: ArrayList<Task>, private val listener: S
         val expiring: TextView
         val progressTask: TextView
         val seekBar: SeekBar
-
+        val modifyBtn: Button
+        val deleteBtn: Button
 
         init {
             nome = view.findViewById(R.id.name)
@@ -40,6 +45,9 @@ class TasksAdapter(private var dataSet: ArrayList<Task>, private val listener: S
             expiring = view.findViewById(R.id.expiring)
             seekBar = view.findViewById(R.id.seekBar)
             progressTask = view.findViewById(R.id.progressTask)
+
+            modifyBtn = view.findViewById(R.id.modifyTask)
+            deleteBtn = view.findViewById(R.id.deleteTask)
 
             seekBar.isEnabled = false
             seekBar.progress = 0
@@ -55,6 +63,7 @@ class TasksAdapter(private var dataSet: ArrayList<Task>, private val listener: S
 
         return ViewHolder(view)
     }
+
 
 
 
@@ -88,6 +97,25 @@ class TasksAdapter(private var dataSet: ArrayList<Task>, private val listener: S
                     dataSet.clear()
                     listener.onStartNewRecylcerView(bundle)
                 }
+            }
+        }
+
+        holder.modifyBtn.setOnClickListener{
+            Toast.makeText(context, "NON ANCORA IMPLEMENTATO", Toast.LENGTH_SHORT).show()
+        }
+
+        holder.deleteBtn.setOnClickListener{
+            TasksDB.deleteTask(idProject, idTask){result ->
+                if(result == true){
+                    Toast.makeText(context, "Task cancellata correttamente!", Toast.LENGTH_SHORT).show()
+                    dataSet.removeAt(position)
+                    notifyItemRemoved(position)
+                    notifyItemRangeChanged(position, dataSet.size)
+                    notifyDataSetChanged()
+                }else{
+                    Toast.makeText(context, "Errore nella cancellazione!", Toast.LENGTH_SHORT).show()
+                }
+
             }
         }
     }

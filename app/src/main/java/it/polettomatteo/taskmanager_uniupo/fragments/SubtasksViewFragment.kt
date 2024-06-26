@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,12 +38,21 @@ class SubtasksViewFragment: Fragment() {
 
         tmp.sortWith(compareBy{it.priorita})
 
-        val customAdapter = SubtasksAdapter(tmp) // <-- Da cambiare con i dati presi da savedInstanceState
+        val customAdapter =
+            context?.let { SubtasksAdapter(it, tmp) } // <-- Da cambiare con i dati presi da savedInstanceState
         recyclerView.adapter = customAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
         return view
     }
 
+
+    override fun onStart(){
+        super.onStart()
+        val goBackBtn = view?.findViewById<Button>(R.id.goBack)
+        goBackBtn?.setOnClickListener{
+            requireActivity().supportFragmentManager.popBackStack();
+        }
+    }
 
 }

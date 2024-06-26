@@ -67,7 +67,7 @@ class TasksViewFragment: Fragment() {
 
 
         val customAdapter =
-            listener?.let { TasksAdapter(tmp, it) }
+            listener?.let { context?.let { it1 -> TasksAdapter(it1, tmp, it) } }
         recyclerView.adapter = customAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
@@ -81,9 +81,10 @@ class TasksViewFragment: Fragment() {
         addStuffBtn.setOnClickListener{
             parentFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, AddTaskFragment())
-                .addToBackStack(this.toString())
+                .addToBackStack(null)
                 .commit()
         }
+
     }
 
     override fun onPause() {

@@ -2,9 +2,9 @@ package it.polettomatteo.taskmanager_uniupo.firebase
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 
 class TasksDB {
@@ -67,6 +67,23 @@ class TasksDB {
                 return true
             }
             return false
+        }
+
+        fun deleteTask(idProject: String, idTask: String, callback: (Boolean?) -> Unit) {
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idProject)
+                .collection("task")
+                .document(idTask)
+                .delete()
+                .addOnSuccessListener {
+                    callback(true)
+                }
+                .addOnFailureListener{
+                    it.printStackTrace()
+                    callback(false)
+                }
         }
     }
 }
