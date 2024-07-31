@@ -23,13 +23,11 @@ import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
-private val TAG = "MainActivity"
-
 
 
 class MainActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
-    var currentUser: FirebaseUser? = null
+    private var currentUser: FirebaseUser? = null
     var userType: String = "NA"
 
 
@@ -62,7 +60,6 @@ class MainActivity : AppCompatActivity(){
                         userType = bundle.getString("tipo").toString()
 
                         if(userType.compareTo("NA") != 0){
-
                             ProjectsDB.getProjects(it, userType) { bundle2 ->
                                 if (bundle2 != null) {
                                     this.setupFragment(ProjectsViewFragment(), bundle2)
@@ -154,11 +151,6 @@ class MainActivity : AppCompatActivity(){
                 R.id.chat -> {
                     val intent = Intent(this, ChatActivity::class.java)
                     this.startActivity(intent)
-                }
-
-                R.id.ses -> {
-                    Toast.makeText(baseContext, "Dovresti essere tornato indietro, teoricamente.", Toast.LENGTH_LONG).show()
-                    mainLayout.closeDrawer(navigationView)
                 }
 
             }

@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
+import java.lang.NumberFormatException
 
 class TasksDB {
 
@@ -26,6 +27,19 @@ class TasksDB {
                     for((index, doc) in documents.withIndex()){
                         val data = doc.data
                         if (data != null) {
+                            val progress: Int = if(data["progress"].toString() != null && data["progress"].toString().isNotEmpty()){
+                                try{
+                                    data["progress"].toString().toInt()
+                                }catch(e: NumberFormatException){
+                                    e.printStackTrace()
+                                    0
+                                }
+                            }else{
+                                0
+                            }
+
+
+
                             val tmp = Task(
                                 doc.id,
                                 idProject,
@@ -33,7 +47,7 @@ class TasksDB {
                                 data["descr"].toString(),
                                 data["dev"].toString(),
                                 data["scadenza"] as Timestamp,
-                                data["progress"].toString().toInt()
+                                progress
                             )
 
                             bundle.putSerializable(index.toString(), tmp)
@@ -63,6 +77,28 @@ class TasksDB {
                     .document(idPrj)
                     .collection("task")
                     .document()
+                    .set(data)
+                return true
+            }
+            return false
+        }
+
+        fun modifyTask(idTask: String, title: String, descr: String, assigned:String, expiring: Timestamp): Boolean {
+            val data = hashMapOf(
+                "nome" to title,
+                "descr" to descr,
+                "dev" to assigned,
+                "scadenza" to expiring,
+                "progess" to 0
+            )
+
+            if(data != null){
+                FirebaseFirestore
+                    .getInstance()
+                    .collection("projects")
+                    .document(idPrj)
+                    .collection("task")
+                    .document(idTask)
                     .set(data)
                 return true
             }

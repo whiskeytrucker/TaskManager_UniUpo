@@ -12,10 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
-import it.polettomatteo.taskmanager_uniupo.adapters.TAG
 import it.polettomatteo.taskmanager_uniupo.adapters.TasksAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
+import it.polettomatteo.taskmanager_uniupo.interfaces.TempActivity
 
 class TasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
@@ -67,11 +67,28 @@ class TasksViewFragment: Fragment() {
 
 
         val customAdapter =
-            listener?.let { context?.let { it1 -> TasksAdapter(it1, tmp, it) } }
+            listener?.let { context?.let { it1 -> TasksAdapter(userType, it1, tmp, it, modifyActivityListener) } }
         recyclerView.adapter = customAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
         return view
+    }
+
+
+    val modifyActivityListener = object: TempActivity{
+        override fun onStartNewTempActivity(data: Bundle) {
+            var fragment = ModifyTaskFragment()
+
+            if(data != null){
+                fragment.arguments = data
+            }
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
     }
 
 
