@@ -28,7 +28,7 @@ class AddTaskFragment: Fragment() {
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val submitBtn = view.findViewById<Button>(R.id.submitButton)
+        val submitBtn = view.findViewById<Button>(R.id.submitTaskButton)
 
 
 

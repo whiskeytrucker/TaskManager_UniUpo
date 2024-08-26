@@ -33,7 +33,7 @@
         android:text="Cancella" />
 
     <TextView
-        android:id="@+id/state"
+        android:id="@+id/priority"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
@@ -45,13 +45,13 @@
 
 
     <TextView
-        android:id="@+id/priority"
+        android:id="@+id/state"
         android:paddingStart="10sp"
         android:paddingEnd="10sp"
         android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/state"
+        android:layout_below="@id/priority"
         android:layout_marginTop="0dp"
         android:layout_centerHorizontal="true">
     </TextView>
@@ -64,7 +64,7 @@
         android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/priority"
+        android:layout_below="@id/state"
         />
 
 

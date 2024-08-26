@@ -16,15 +16,20 @@ FUN:
 	- [ ] Controllo input mail + password NO vuoto etc
 	- [ ] Cambio valore dei sottotask
 	- [ ] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
+		- [ ] Un **task** può essere modificato solo da un PL
+		- [ ] Un **sottotask** può essere modificato sia da un PL che da un D
+		
 
 
 VIEW:
 - [X] Menù laterale  E videata con lista progetti
-  - [X] Lista Task una volta clickato un progetto 
+  - [X] Lista Task una volta clickato un progetto
+	- [X] Mostrare SOLO Lista Task se Dev
   - [X] Lista Sotto Task una volta clickata una Task
   - [ ] Tasto indietro per tornare alla "pagina" precedente
 
 - [X] Pagina Utente -- Giusto da visualizzare il tipo di utente
+
 
 
 

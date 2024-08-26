@@ -71,7 +71,6 @@ class ModifyTaskFragment() : Fragment() {
 
                     val expiring = getTimestamp(modDate, modTime)
 
-                    Log.d("ModifyTaskFragment", title + descr + assigned + expiring)
 
                     if(TasksDB.modifyTask(idTask.toString(), title.toString(), descr.toString(), assigned.toString(), expiring)){
                         Toast.makeText(context, "Dati modificati!", Toast.LENGTH_SHORT).show()
@@ -83,7 +82,8 @@ class ModifyTaskFragment() : Fragment() {
             }
 
         }else{
-            //lol chiudi tutto
+            Log.e(TAG, "Error @ Line 31 in ModifyTaskFragment.kt")
+
         }
 
 

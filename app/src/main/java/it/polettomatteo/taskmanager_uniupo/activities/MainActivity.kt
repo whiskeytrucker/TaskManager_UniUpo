@@ -15,7 +15,10 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import it.polettomatteo.taskmanager_uniupo.R
+import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
+import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB.Companion.fetchPL
+import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
 import it.polettomatteo.taskmanager_uniupo.fragments.ProjectsViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.SubtasksViewFragment
@@ -59,12 +62,37 @@ class MainActivity : AppCompatActivity(){
                     if (bundle != null) {
                         userType = bundle.getString("tipo").toString()
 
+                        var user: String = currentUser!!.email.toString()
+
                         if(userType.compareTo("NA") != 0){
-                            ProjectsDB.getProjects(it, userType) { bundle2 ->
-                                if (bundle2 != null) {
-                                    this.setupFragment(ProjectsViewFragment(), bundle2)
+                            if(userType.compareTo("d") == 0){
+                                // sono un dev
+                                // prendo le task del dev da idProject, faccio partire il fragment
+                                ProjectsDB.getIdProjectAsDev(user){idProject ->
+                                    if(idProject != null){
+                                        TasksDB.getTasksAsDev(idProject, user){budnle ->
+                                            if(budnle != null){
+                                                taskListener.onStartNewRecylcerView(budnle)
+                                            }
+
+                                        }
+                                    }
+
+
+                                }
+
+                                //fetch dei dati inerenti al dev
+
+                            }else{
+                                ProjectsDB.getProjects(user, userType) { bundle2 ->
+                                    if (bundle2 != null) {
+                                        this.setupFragment(ProjectsViewFragment(), bundle2)
+                                    }
                                 }
                             }
+
+
+
                         }
                     }
                 }

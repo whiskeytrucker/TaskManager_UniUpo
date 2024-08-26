@@ -24,20 +24,22 @@ class TasksDB {
                 .addOnSuccessListener { results ->
                     val documents = results.documents
                     val bundle = Bundle()
-                    for((index, doc) in documents.withIndex()){
+                    for ((index, doc) in documents.withIndex()) {
                         val data = doc.data
                         if (data != null) {
-                            val progress: Int = if(data["progress"].toString() != null && data["progress"].toString().isNotEmpty()){
-                                try{
-                                    data["progress"].toString().toInt()
-                                }catch(e: NumberFormatException){
-                                    e.printStackTrace()
+                            val progress: Int =
+                                if (data["progress"].toString() != null && data["progress"].toString()
+                                        .isNotEmpty()
+                                ) {
+                                    try {
+                                        data["progress"].toString().toInt()
+                                    } catch (e: NumberFormatException) {
+                                        e.printStackTrace()
+                                        0
+                                    }
+                                } else {
                                     0
                                 }
-                            }else{
-                                0
-                            }
-
 
 
                             val tmp = Task(
@@ -61,7 +63,65 @@ class TasksDB {
                 }
         }
 
-        fun addTask(title: String, descr: String, assigned:String, expiring: Timestamp): Boolean {
+
+        fun getTasksAsDev(idProject: String, developer: String, callback: (Bundle?) -> Unit) {
+
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idProject)
+                .collection("task")
+                .whereEqualTo("dev", developer)
+                .get()
+                .addOnSuccessListener { results ->
+                    val documents = results.documents
+                    val bundle = Bundle()
+                    for ((index, doc) in documents.withIndex()) {
+                        val data = doc.data
+                        if (data != null) {
+                            val progress: Int =
+                                if (data["progress"].toString() != null && data["progress"].toString()
+                                        .isNotEmpty()
+                                ) {
+                                    try {
+                                        data["progress"].toString().toInt()
+                                    } catch (e: NumberFormatException) {
+                                        e.printStackTrace()
+                                        0
+                                    }
+                                } else {
+                                    0
+                                }
+
+
+                            val tmp = Task(
+                                doc.id,
+                                idProject,
+                                data["nome"].toString(),
+                                data["descr"].toString(),
+                                data["dev"].toString(),
+                                data["scadenza"] as Timestamp,
+                                progress
+                            )
+
+                            bundle.putSerializable(index.toString(), tmp)
+                        }
+                    }
+                    callback(bundle)
+                }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                    callback(null)
+                }
+        }
+
+
+        fun addTask(
+            title: String,
+            descr: String,
+            assigned: String,
+            expiring: Timestamp
+        ): Boolean {
             val data = hashMapOf(
                 "nome" to title,
                 "descr" to descr,
@@ -70,7 +130,7 @@ class TasksDB {
                 "progess" to 0
             )
 
-            if(data != null){
+            if (data != null) {
                 FirebaseFirestore
                     .getInstance()
                     .collection("projects")
@@ -83,7 +143,13 @@ class TasksDB {
             return false
         }
 
-        fun modifyTask(idTask: String, title: String, descr: String, assigned:String, expiring: Timestamp): Boolean {
+        fun modifyTask(
+            idTask: String,
+            title: String,
+            descr: String,
+            assigned: String,
+            expiring: Timestamp
+        ): Boolean {
             val data = hashMapOf(
                 "nome" to title,
                 "descr" to descr,
@@ -92,7 +158,7 @@ class TasksDB {
                 "progess" to 0
             )
 
-            if(data != null){
+            if (data != null) {
                 FirebaseFirestore
                     .getInstance()
                     .collection("projects")
@@ -116,7 +182,7 @@ class TasksDB {
                 .addOnSuccessListener {
                     callback(true)
                 }
-                .addOnFailureListener{
+                .addOnFailureListener {
                     it.printStackTrace()
                     callback(false)
                 }

@@ -28,9 +28,11 @@ class SubtasksDB {
 
                             val tmp = Subtask(
                                 doc.id,
-                                data["stato"].toString(),
+                                idTask,
+                                idProject,
+                                data["stato"].toString().toInt(),
                                 data["subDescr"].toString(),
-                                data["priorita"].toString(),
+                                data["priorita"].toString().toInt(),
                                 data["scadenza"] as Timestamp,
                                 data["progress"].toString().toInt()
                             )
@@ -43,6 +45,29 @@ class SubtasksDB {
                 .addOnFailureListener {
                     it.printStackTrace()
                     callback(null)
+                }
+        }
+
+
+        fun modifySubtask(){
+
+        }
+        fun deleteSubtask(idProject: String, idTask: String, idSubtask: String, callback: (Boolean?) -> Unit){
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idProject)
+                .collection("task")
+                .document(idTask)
+                .collection("sotto_task")
+                .document(idSubtask)
+                .delete()
+                .addOnSuccessListener {
+                    callback(true)
+                }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                    callback(false)
                 }
         }
     }

@@ -14,4 +14,19 @@
     <string name="lastMsgPlaceholder">Sono bellissimo.</string>
     <string name="datePlaceholder">46</string>
 
+
+    <string-array name="stati_subtask">
+        <item>TODO</item>
+        <item>Assigned</item>
+        <item>Completed</item>
+    </string-array>
+
+    <string-array name="priorita_subtask">
+        <item>Nessuna</item>
+        <item>Bassa</item>
+        <item>Media</item>
+        <item>Alta</item>
+        <item>URGENTE</item>
+    </string-array>
+
 </resources>
