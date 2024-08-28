@@ -74,9 +74,11 @@ class ModifyTaskFragment() : Fragment() {
 
                     if(TasksDB.modifyTask(idTask.toString(), title.toString(), descr.toString(), assigned.toString(), expiring)){
                         Toast.makeText(context, "Dati modificati!", Toast.LENGTH_SHORT).show()
-
-                        requireActivity().supportFragmentManager.popBackStack();
+                    }else{
+                        Toast.makeText(context, "Errore nella modifica dei dati.", Toast.LENGTH_SHORT).show()
                     }
+
+                    requireActivity().supportFragmentManager.popBackStack();
                 }
 
             }

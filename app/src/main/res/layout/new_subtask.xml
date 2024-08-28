@@ -5,64 +5,85 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Titolo -->
+    <!-- Descrizione  -->
     <TextView
-        android:id="@+id/addSubTitleText"
+        android:id="@+id/subDescrText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Titolo"
+        android:text="Descrizione"
         android:textSize="18sp"
         android:layout_marginTop="16dp" />
 
     <EditText
-        android:layout_below="@id/addSubTitleText"
-        android:id="@+id/addSubtitle"
+        android:id="@+id/modSubDescr"
+        android:layout_below="@id/subDescrText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Inserisci il titolo" />
+        android:hint="Inserisci la descrizione" />
 
-    <!-- Descrizione -->
+    <!-- Priorita -->
     <TextView
-        android:id="@+id/addSubStateText"
-        android:layout_below="@id/addSubtitle"
+        android:id="@+id/priorityText"
+        android:layout_below="@id/modSubDescr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Priorità"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp" />
+
+    <Spinner
+        android:id="@+id/spinPriority"
+        android:layout_below="@id/priorityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/priorita_subtask"
+        />
+
+    <!-- Stato -->
+    <TextView
+        android:id="@+id/stateText"
+        android:layout_below="@id/spinPriority"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stato"
         android:textSize="18sp"
         android:layout_marginTop="16dp" />
 
-
-    <!-- cambiare con un selezionatore -->
     <Spinner
-        android:id="@+id/addSubState"
-        android:layout_below="@id/addSubStateText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/priorita_subtask" />
-
-    <!-- Priorita' -->
-    <TextView
-        android:id="@+id/addSubPriorityText"
-        android:layout_below="@id/addSubState"
+        android:id="@+id/spinState"
+        android:layout_below="@id/stateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Priorita"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp" />
+        android:entries="@array/stati_subtask"
+        />
 
-    <Spinner
-        android:id="@+id/addSubPriority"
-        android:layout_below="@+id/addSubPriorityText"
+    <!-- Progress -->
+    <TextView
+        android:id="@+id/progressSubtask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_below="@id/spinState"
+        android:layout_centerHorizontal="true"
+        android:textSize="16sp">
+
+    </TextView>
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_below="@id/progressSubtask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/priorita_subtask" />
+        android:layout_marginTop="0dp"
+        android:max="100">
+    </SeekBar>
 
-    <!--- Progress -->
 
-    <!-- Data di scadenza -->
+    <!-- Data -->
+
     <TextView
-        android:id="@+id/addSubExpiringText"
-        android:layout_below="@id/addSubPriority"
+        android:id="@+id/expiringSubText"
+        android:layout_below="@id/seekBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Data di scadenza"
@@ -70,23 +91,23 @@
         android:layout_marginTop="16dp" />
 
     <DatePicker
-        android:id="@+id/addSubDate"
+        android:id="@+id/modSubDate"
         android:layout_width="381dp"
         android:layout_height="208dp"
-        android:layout_below="@id/addSubExpiringText"
+        android:layout_below="@id/expiringSubText"
         android:layout_marginTop="0dp"
         android:calendarViewShown="true" />
 
     <TimePicker
-        android:id="@+id/addSubTime"
+        android:id="@+id/modSubTime"
         android:layout_width="384dp"
         android:layout_height="96dp"
-        android:layout_below="@id/addSubDate"
+        android:layout_below="@id/modSubDate"
         android:timePickerMode="spinner" />
 
     <Button
         android:id="@+id/submitSubButton"
-        android:layout_below="@id/addSubTime"
+        android:layout_below="@id/modSubTime"
         android:layout_marginTop="8sp"
         android:layout_marginBottom="8sp"
         android:layout_width="match_parent"

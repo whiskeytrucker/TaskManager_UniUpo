@@ -1,6 +1,7 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +10,12 @@ import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.firebase.Timestamp
 import it.polettomatteo.taskmanager_uniupo.R
+import it.polettomatteo.taskmanager_uniupo.firebase.SubtasksDB
 import java.util.Calendar
 import java.util.Date
 
@@ -31,8 +34,6 @@ class ModifySubtaskFragment() : Fragment() {
 
             if(data != null) {
                 val id = data.getString("id")
-                val idPrg = data.getString("idPrg")
-                val idTask = data.getString("idTask")
 
                 val modSubDescr = view.findViewById<EditText>(R.id.modSubDescr)
                 val spinPriority = view.findViewById<Spinner>(R.id.spinPriority)
@@ -66,20 +67,25 @@ class ModifySubtaskFragment() : Fragment() {
                 val submitBtn = view.findViewById<Button>(R.id.subModifySubButton)
 
                 submitBtn.setOnClickListener{
+                    var subDescr = modSubDescr.text.toString()
+                    if(subDescr.compareTo("") == 0)subDescr = modSubDescr.hint.toString()
 
+                    var priority = spinPriority.selectedItemPosition
+                    if(priority < 0 || priority > 4)priority = 0
+
+                    var state = spinState.selectedItemPosition
+                    if(state < 0 || state > 4)state = 0
+
+                    val expiring = getTimestamp(modSubDate, modSubTime)
+
+                    if(SubtasksDB.modifySubtask(id.toString(), subDescr, priority, state, expiring)){
+                        Toast.makeText(context, "Dati modificati!", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(context, "Errore nella modifica dei dati.", Toast.LENGTH_SHORT).show()
+                    }
+
+                    requireActivity().supportFragmentManager.popBackStack();
                 }
-
-
-
-
-
-
-
-
-
-
-
-
             }
         }
 

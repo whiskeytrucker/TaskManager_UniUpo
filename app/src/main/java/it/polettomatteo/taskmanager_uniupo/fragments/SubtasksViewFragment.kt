@@ -17,6 +17,7 @@ import it.polettomatteo.taskmanager_uniupo.interfaces.TempActivity
 val TAG = "SubtasksViewFragment"
 
 class SubtasksViewFragment: Fragment() {
+    private var savedBundle: Bundle? = null
     private lateinit var addStuffBtn: Button
     private lateinit var recyclerView: RecyclerView
 
@@ -37,8 +38,11 @@ class SubtasksViewFragment: Fragment() {
 
 
         if(bundle != null){
-            userType = bundle.getString("tipo")!!
-            bundle.remove("tipo")
+            if(bundle.getString("tipo") != null){
+                userType = bundle.getString("tipo")!!
+                bundle.remove("tipo")
+            }
+
 
             for(key in bundle.keySet()){
                 tmp.add(bundle.getSerializable(key) as Subtask)
@@ -61,13 +65,10 @@ class SubtasksViewFragment: Fragment() {
     }
 
 
-    val modifyActivityListener = object: TempActivity {
+    private val modifyActivityListener = object: TempActivity {
         override fun onStartNewTempActivity(data: Bundle) {
             var fragment = ModifySubtaskFragment()
-
-            if(data != null){
-                fragment.arguments = data
-            }
+            fragment.arguments = data
 
             parentFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, fragment)
@@ -83,6 +84,21 @@ class SubtasksViewFragment: Fragment() {
         goBackBtn?.setOnClickListener{
             requireActivity().supportFragmentManager.popBackStack();
         }
+
+
+        addStuffBtn.setOnClickListener{
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, AddSubtaskFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
+
+    override fun onPause() {
+        super.onPause()
+        savedBundle = this.arguments
+    }
+
+
 
 }

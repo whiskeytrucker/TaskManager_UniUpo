@@ -86,7 +86,6 @@ class SubtasksAdapter(private val userType: String, private val context: Context
         holder.expiring.text = "Scadenza: ${formatTimestamp(Date(ms))}"
         holder.seekBar.isEnabled = false
 
-        Log.d("SubtasksAdapter", "Subtask: " + dataSet[position].subDescr + "\tStato: " + dataSet[position].stato)
 
         // Riga 79 per vedere gli stati scritti bene
         if(dataSet[position].stato == 2){
@@ -106,8 +105,6 @@ class SubtasksAdapter(private val userType: String, private val context: Context
                 val tmp = Bundle()
 
                 tmp.putString("id", dataSet[position].id)
-                tmp.putString("idPrg", dataSet[position].idPrg)
-                tmp.putString("idTask", dataSet[position].idTask)
 
                 tmp.putString("subDescr", dataSet[position].subDescr)
                 tmp.putInt("priorita", dataSet[position].priorita)
@@ -115,7 +112,7 @@ class SubtasksAdapter(private val userType: String, private val context: Context
                 tmp.putLong("expiring", ms)
                 tmp.putInt("progress", dataSet[position].progress)
 
-                listener.onStartNewTempActivity(Bundle())
+                listener.onStartNewTempActivity(tmp)
             }
 
             holder.deleteBtn.setOnClickListener{

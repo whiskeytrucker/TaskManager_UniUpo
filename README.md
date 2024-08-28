@@ -14,10 +14,11 @@ FUN:
 	- [X] Login / Logout e relativi tasti
 	- [X] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
 	- [ ] Controllo input mail + password NO vuoto etc
-	- [ ] Cambio valore dei sottotask
 	- [ ] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
 		- [ ] Un **task** può essere modificato solo da un PL
 		- [ ] Un **sottotask** può essere modificato sia da un PL che da un D
+		- [ ] AGGIUNGERE LA AGGIUNTA/MODIFICA DI "PROGRESS"
+			- Decidere se farlo diretto sulla schermata iniziale o su modifica
 		
 
 
@@ -37,6 +38,7 @@ VIEW:
 ## BUG
 - [X] Videata progetti non si aggiorna quando si fa logout/login
 - [X] Tasto Home crasha quando cliccato dentro la Task
+- [ ] Refreshare Task e Subtask ogni volta che si effettua la modifica
 
 ## Testo Progetto
 **Progetto Android**  
