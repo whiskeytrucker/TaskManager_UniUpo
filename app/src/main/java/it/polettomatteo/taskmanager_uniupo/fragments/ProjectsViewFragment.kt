@@ -16,6 +16,7 @@ import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
 class ProjectsViewFragment: Fragment() {
+    private var savedBundle: Bundle? = null
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
@@ -31,7 +32,13 @@ class ProjectsViewFragment: Fragment() {
 
         val tmp = ArrayList<Project>()
 
-        val bundle = this.arguments
+        val bundle: Bundle?
+
+        if(savedBundle != null && this.arguments == null){
+            bundle = savedBundle
+        }else{
+            bundle = this.arguments
+        }
 
         var listener: StartNewRecycler? = null
 
@@ -54,6 +61,11 @@ class ProjectsViewFragment: Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
         return view
+    }
+
+    override fun onPause() {
+        super.onPause()
+        savedBundle = this.arguments
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

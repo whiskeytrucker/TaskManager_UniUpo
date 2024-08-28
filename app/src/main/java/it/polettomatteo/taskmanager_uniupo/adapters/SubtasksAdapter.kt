@@ -1,21 +1,28 @@
 package it.polettomatteo.taskmanager_uniupo.adapters
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
+import it.polettomatteo.taskmanager_uniupo.firebase.SubtasksDB
+import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
+import it.polettomatteo.taskmanager_uniupo.interfaces.TempActivity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Adapter<SubtasksAdapter.ViewHolder>() {
+class SubtasksAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Subtask>, private var listener: TempActivity): RecyclerView.Adapter<SubtasksAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val state: TextView
@@ -24,6 +31,8 @@ class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Ada
         val expiring: TextView
         val progress: TextView
         val seekBar: SeekBar
+        val modifyBtn: Button
+        val deleteBtn: Button
 
         init{
             state = view.findViewById(R.id.state)
@@ -32,6 +41,10 @@ class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Ada
             expiring = view.findViewById(R.id.expiringSubtask)
             progress = view.findViewById(R.id.progressSubtask)
             seekBar = view.findViewById(R.id.seekBar)
+
+            modifyBtn = view.findViewById(R.id.modifySubtask)
+            deleteBtn = view.findViewById(R.id.deleteSubtask)
+
 
             seekBar.isEnabled = true
             seekBar.progress = 0
@@ -56,22 +69,70 @@ class SubtasksAdapter(private var dataSet: ArrayList<Subtask>): RecyclerView.Ada
 
         val ms = sec * 1000 + ns /  1000000
 
-        holder.state.text = "Stato: ${dataSet[position].stato}"
+        var subpriority:String = ""
+        var subState: String = ""
+
+        if(dataSet[position].priorita <= 1) subpriority = "Bassa"
+        else if(dataSet[position].priorita == 2) subpriority = "Media"
+        else if(dataSet[position].priorita >= 3) subpriority = "Alta"
+
+        if(dataSet[position].stato <= 1) subState = "TODO"
+        else if(dataSet[position].stato == 2) subState = "Assigned"
+        else if(dataSet[position].stato >= 3) subState = "Completed"
+
+        holder.state.text = "Stato: ${subState}"
         holder.subDescr.text = "\"${dataSet[position].subDescr}\""
-        holder.priority.text = "Priorita': ${dataSet[position].priorita}"
+        holder.priority.text = "Priorita': ${subpriority}"
         holder.expiring.text = "Scadenza: ${formatTimestamp(Date(ms))}"
+        holder.seekBar.isEnabled = false
 
 
-        if(dataSet[position].stato.compareTo("assigned") == 0){
+        // Riga 79 per vedere gli stati scritti bene
+        if(dataSet[position].stato == 2){
             holder.progress.text = "${dataSet[position].progress}%"
             holder.seekBar.progress = dataSet[position].progress
-        }else if(dataSet[position].stato.compareTo("completed") == 0){
+        }else if(dataSet[position].stato >= 3){
             holder.priority.visibility = View.GONE
             holder.progress.visibility = View.GONE
             holder.seekBar.visibility = View.GONE
-        }else if(dataSet[position].stato.compareTo("todo") == 0){
-            holder.seekBar.isEnabled = false
         }
+
+        if((userType.compareTo("d") == 0 || userType.compareTo("pl") == 0)){
+            if(dataSet[position].stato <= 2)holder.modifyBtn.visibility = View.VISIBLE
+            holder.deleteBtn.visibility = View.VISIBLE
+
+            holder.modifyBtn.setOnClickListener{
+                val tmp = Bundle()
+
+                tmp.putString("id", dataSet[position].id)
+
+                tmp.putString("subDescr", dataSet[position].subDescr)
+                tmp.putInt("priorita", dataSet[position].priorita)
+                tmp.putInt("stato", dataSet[position].stato)
+                tmp.putLong("expiring", ms)
+                tmp.putInt("progress", dataSet[position].progress)
+
+                listener.onStartNewTempActivity(tmp)
+            }
+
+            holder.deleteBtn.setOnClickListener{
+                SubtasksDB.deleteSubtask(dataSet[position].idPrg, dataSet[position].idTask, dataSet[position].id){ result ->
+                    if(result == true){
+                        Toast.makeText(context, "Task cancellata correttamente!", Toast.LENGTH_SHORT).show()
+                        dataSet.removeAt(position)
+                        notifyItemRemoved(position)
+                        notifyItemRangeChanged(position, dataSet.size)
+                        notifyDataSetChanged()
+                    }else{
+                        Toast.makeText(context, "Errore nella cancellazione!", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+            }
+        }
+
+
+
     }
 
 

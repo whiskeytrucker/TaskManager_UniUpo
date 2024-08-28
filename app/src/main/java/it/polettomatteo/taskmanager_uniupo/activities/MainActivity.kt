@@ -15,7 +15,10 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import it.polettomatteo.taskmanager_uniupo.R
+import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
+import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB.Companion.fetchPL
+import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
 import it.polettomatteo.taskmanager_uniupo.fragments.ProjectsViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.SubtasksViewFragment
@@ -23,13 +26,12 @@ import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
-private val TAG = "MainActivity"
-
 
 
 class MainActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
-    var currentUser: FirebaseUser? = null
+    private var currentUser: FirebaseUser? = null
+    var userType: String = "NA"
 
 
     // --------------- FUNZIONI ACTIVITY ---------------
@@ -56,11 +58,45 @@ class MainActivity : AppCompatActivity(){
     private fun createFragment(){
         if(currentUser != null){
             currentUser!!.email?.let {
-                ProjectsDB.getProjects(it) { bundle ->
+                UsersDB.getUserType(currentUser!!.email.toString()){ bundle ->
                     if (bundle != null) {
-                        this.setupFragment(ProjectsViewFragment(), bundle)
+                        userType = bundle.getString("tipo").toString()
+
+                        var user: String = currentUser!!.email.toString()
+
+                        if(userType.compareTo("NA") != 0){
+                            if(userType.compareTo("d") == 0){
+                                // sono un dev
+                                // prendo le task del dev da idProject, faccio partire il fragment
+                                ProjectsDB.getIdProjectAsDev(user){idProject ->
+                                    if(idProject != null){
+                                        TasksDB.getTasksAsDev(idProject, user){budnle ->
+                                            if(budnle != null){
+                                                taskListener.onStartNewRecylcerView(budnle)
+                                            }
+
+                                        }
+                                    }
+
+
+                                }
+
+                                //fetch dei dati inerenti al dev
+
+                            }else{
+                                ProjectsDB.getProjects(user, userType) { bundle2 ->
+                                    if (bundle2 != null) {
+                                        this.setupFragment(ProjectsViewFragment(), bundle2)
+                                    }
+                                }
+                            }
+
+
+
+                        }
                     }
                 }
+
             }
         }
 
@@ -132,24 +168,17 @@ class MainActivity : AppCompatActivity(){
 
                 R.id.userpage -> {
                     if(currentUser != null) {
-                        UsersDB.getUserType(currentUser?.email.toString()) { bundle ->
-                            if (bundle != null) {
-                                bundle.putString("username", currentUser?.email)
-                                mainLayout.closeDrawer(navigationView)
-                                setupFragment(UserPageFragment(), bundle)
-                            }
-                        }
+                        val bundle = Bundle()
+                        bundle.putString("username", currentUser?.email)
+                        bundle.putString("tipo", userType)
+                        mainLayout.closeDrawer(navigationView)
+                        setupFragment(UserPageFragment(), bundle)
                     }
                 }
 
                 R.id.chat -> {
                     val intent = Intent(this, ChatActivity::class.java)
                     this.startActivity(intent)
-                }
-
-                R.id.ses -> {
-                    Toast.makeText(baseContext, "Dovresti essere tornato indietro, teoricamente.", Toast.LENGTH_LONG).show()
-                    mainLayout.closeDrawer(navigationView)
                 }
 
             }
@@ -197,11 +226,10 @@ class MainActivity : AppCompatActivity(){
             var fragment = TasksViewFragment()
 
             if(data != null){
+                data.putSerializable("tipo", userType)
                 data.putSerializable("subtask_interface", subtaskListener)
                 fragment.arguments = data
             }
-
-            Log.d(TAG, supportFragmentManager.fragments.toString())
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, fragment)
@@ -216,6 +244,7 @@ class MainActivity : AppCompatActivity(){
             var fragment = SubtasksViewFragment()
 
             if(data != null){
+                data.putSerializable("tipo", userType)
                 fragment.arguments = data
             }
 

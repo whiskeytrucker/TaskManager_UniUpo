@@ -5,11 +5,17 @@ import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
-import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 
 class SubtasksDB {
     companion object{
-        fun getSubtasks(idProject: String, idTask: String, callback: (Bundle?) -> Unit){
+        private lateinit var idPrg: String
+        private lateinit var idTask: String
+
+
+        fun getSubtasks(idProject: String, idTsk: String, callback: (Bundle?) -> Unit){
+            idPrg = idProject
+            idTask = idTsk
+
             FirebaseFirestore
                 .getInstance()
                 .collection("projects")
@@ -28,9 +34,11 @@ class SubtasksDB {
 
                             val tmp = Subtask(
                                 doc.id,
-                                data["stato"].toString(),
+                                idTask,
+                                idProject,
+                                data["stato"].toString().toInt(),
                                 data["subDescr"].toString(),
-                                data["priorita"].toString(),
+                                data["priorita"].toString().toInt(),
                                 data["scadenza"] as Timestamp,
                                 data["progress"].toString().toInt()
                             )
@@ -43,6 +51,80 @@ class SubtasksDB {
                 .addOnFailureListener {
                     it.printStackTrace()
                     callback(null)
+                }
+        }
+
+
+        fun addSubtask(
+            subDescr: String,
+            priority: Int,
+            state: Int,
+            expiring: Timestamp
+        ): Boolean {
+            val data = hashMapOf(
+                "subDescr" to subDescr,
+                "priorita" to priority,
+                "stato" to state,
+                "scadenza" to expiring,
+                "progress" to 0
+            )
+
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idPrg)
+                .collection("task")
+                .document(idTask)
+                .collection("sotto_task")
+                .document()
+                .set(data)
+            return true
+        }
+
+
+        fun modifySubtask(
+            idSub: String,
+            subDescr: String,
+            priority: Int,
+            state: Int,
+            expiring: Timestamp
+        ): Boolean {
+            val data = hashMapOf(
+                "subDescr" to subDescr,
+                "priorita" to priority,
+                "stato" to state,
+                "scadenza" to expiring,
+                "progress" to 0
+            )
+
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idPrg)
+                .collection("task")
+                .document(idTask)
+                .collection("sotto_task")
+                .document(idSub)
+                .set(data)
+            return true
+
+        }
+        fun deleteSubtask(idProject: String, idTask: String, idSubtask: String, callback: (Boolean?) -> Unit){
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idProject)
+                .collection("task")
+                .document(idTask)
+                .collection("sotto_task")
+                .document(idSubtask)
+                .delete()
+                .addOnSuccessListener {
+                    callback(true)
+                }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                    callback(false)
                 }
         }
     }
