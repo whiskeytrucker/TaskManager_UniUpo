@@ -14,17 +14,11 @@ class ProjectsDB {
         fun getProjects(username: String, usertype: String, callback: (Bundle?) -> Unit) {
             var field: String = ""
 
-            Log.d(TAG, usertype)
-
             if(usertype.compareTo("pm") == 0) {
                 field = "autore"
             }else if(usertype.compareTo("pl") == 0) {
                 field = "assigned"
             }
-
-            Log.d(TAG, "Campo riassegnato: " + field)
-
-
 
             FirebaseFirestore
                 .getInstance()
@@ -94,7 +88,6 @@ class ProjectsDB {
                     val documents = results.documents
                     for((index, doc) in documents.withIndex()){
                         val data = doc.data
-                        Log.d(TAG, data.toString())
                         if(data != null){
                             bundle.putString("pl",data["pl"].toString())
                             callback(data["pl"].toString())

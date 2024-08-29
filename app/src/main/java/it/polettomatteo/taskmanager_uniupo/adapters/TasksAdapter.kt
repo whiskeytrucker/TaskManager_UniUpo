@@ -52,8 +52,6 @@ class TasksAdapter(private val userType: String, private val context: Context, p
             modifyBtn = view.findViewById(R.id.modifyTask)
             deleteBtn = view.findViewById(R.id.deleteTask)
 
-
-
             seekBar.isEnabled = false
             seekBar.progress = 0
         }
@@ -81,7 +79,6 @@ class TasksAdapter(private val userType: String, private val context: Context, p
         val ms = sec * 1000 + ns /  1000000
 
 
-
         // prendi l'elemento dal dataset e rimpazza i contenuti
         holder.nome.text = dataSet[position].nome
         holder.descr.text = dataSet[position].descr
@@ -89,7 +86,6 @@ class TasksAdapter(private val userType: String, private val context: Context, p
         holder.expiring.text = "Scadenza: ${formatTimestamp(Date(ms))}"
         holder.progressTask.text = "${dataSet[position].progress}%"
         holder.seekBar.progress = dataSet[position].progress
-
 
         val idTask = dataSet[position].id
         val idProject = dataSet[position].idPrg
@@ -115,7 +111,7 @@ class TasksAdapter(private val userType: String, private val context: Context, p
                 bundle.putString("titolo", dataSet[position].nome)
                 bundle.putString("descr", dataSet[position].descr)
                 bundle.putString("dev", dataSet[position].dev)
-                bundle.putInt("progress", dataSet[position].progress)
+                bundle.putInt("progress", dataSet[position].progress.toInt())
                 bundle.putLong("scadenza", ms)
 
                 listener2.onStartNewTempActivity(bundle)

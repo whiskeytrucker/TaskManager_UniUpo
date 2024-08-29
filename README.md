@@ -1,7 +1,7 @@
 # Task Manager (App Mobili)
 ## TODO
 PRINCIPALI
-- [ ] Progetti
+- [X] Progetti
 	- [ ] Task
 		- [ ] Sottotask
 		
@@ -11,14 +11,20 @@ PRINCIPALI
 
 FUN:
 - [X] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
-	- [X] Login / Logout e relativi tasti
-	- [X] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
-	- [ ] Controllo input mail + password NO vuoto etc
-	- [ ] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
-		- [ ] Un **task** può essere modificato solo da un PL
-		- [ ] Un **sottotask** può essere modificato sia da un PL che da un D
-		- [ ] AGGIUNGERE LA AGGIUNTA/MODIFICA DI "PROGRESS"
-			- Decidere se farlo diretto sulla schermata iniziale o su modifica
+- [X] Login / Logout e relativi tasti
+- [X] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
+- [ ] Controllo input mail + password NO vuoto etc
+- [ ] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
+	- [ ] Un **task** può essere modificato solo da un PL
+	- [ ] Un **sottotask** può essere modificato sia da un PL che da un D
+	- [ ] AGGIUNGERE LA AGGIUNTA/MODIFICA DI "PROGRESS"
+		- Aggiornabile su modifica oppure a videata chiusa
+	- [ ] Ad ogni **sottotask** è possibile assegnare una **foto/documento** relativa/o al task (tipo esempio dell'interfaccia grafica che si è sviluppato)
+	- [ ] **voto** e **scrivere un commento** su un lavoro svolto.
+	
+	RICERCA
+	- Il **PM** può fare ricerche sui progetti mettendo filtri in base allo **stato**, al **PL** e alla **scadenza**.
+	- [ ] I **PL** possono fare qualcosa di analogo ma relativo ai **task**, quindi filtrando per **stato**, **D**, **scadenza** o **priorità**
 		
 
 

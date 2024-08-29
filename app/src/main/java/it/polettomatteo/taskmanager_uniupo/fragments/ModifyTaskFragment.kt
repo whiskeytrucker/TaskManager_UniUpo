@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -37,13 +39,33 @@ class ModifyTaskFragment() : Fragment() {
                 val modTitle = view.findViewById<EditText>(R.id.modTitle)
                 val modDescr = view.findViewById<EditText>(R.id.modDescr)
                 val modAssigned = view.findViewById<EditText>(R.id.modAssigned)
+                val progressText = view.findViewById<TextView>(R.id.progressTask)
+                val seekBar = view.findViewById<SeekBar>(R.id.seekBar)
                 val modDate = view.findViewById<DatePicker>(R.id.modDate)
                 val modTime = view.findViewById<TimePicker>(R.id.modTime)
 
                 modTitle.hint = data.getString("titolo")
                 modDescr.hint = data.getString("descr")
                 modAssigned.hint = data.getString("dev")
-                // MANCA PROGRESS
+
+                // Progress
+                progressText.text = "${data.getInt("progress")}%"
+                seekBar.progress = data.getInt("progress")
+
+                seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        progressText.text = "${progress.toString()}%"
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                        // Optional: azione quando l'utente inizia a muovere la SeekBar
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                        // Optional: azione quando l'utente smette di muovere la SeekBar
+                    }
+                })
+
 
                 val ms = data.getLong("scadenza")
                 val date = Date(ms)
@@ -59,6 +81,9 @@ class ModifyTaskFragment() : Fragment() {
 
                 val submitBtn = view.findViewById<Button>(R.id.submitModifyButton)
 
+
+
+
                 submitBtn.setOnClickListener{
                     var title = modTitle.text.toString()
                     if(title.compareTo("") == 0)title = modTitle.hint.toString()
@@ -69,10 +94,13 @@ class ModifyTaskFragment() : Fragment() {
                     var assigned = modAssigned.text.toString()
                     if(assigned.compareTo("") == 0)assigned = modAssigned.hint.toString()
 
+                    var progress = seekBar.progress
+
+
                     val expiring = getTimestamp(modDate, modTime)
 
 
-                    if(TasksDB.modifyTask(idTask.toString(), title.toString(), descr.toString(), assigned.toString(), expiring)){
+                    if(TasksDB.modifyTask(idTask.toString(), title, descr, assigned, progress, expiring)){
                         Toast.makeText(context, "Dati modificati!", Toast.LENGTH_SHORT).show()
                     }else{
                         Toast.makeText(context, "Errore nella modifica dei dati.", Toast.LENGTH_SHORT).show()

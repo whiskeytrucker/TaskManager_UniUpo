@@ -42,9 +42,6 @@ class AddTaskFragment: Fragment() {
 
             val expiring = getTimestamp(dateP, timeP)
 
-
-
-
             // query di TasksDB
             if(TasksDB.addTask(title.toString(), descr.toString(), assigned.toString(), expiring)){
                 Toast.makeText(context, "Dati salvati!", Toast.LENGTH_SHORT).show()

@@ -10,7 +10,7 @@
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Titolo"
+        android:text="Titolo:"
         android:textSize="18sp"
         android:layout_marginTop="16dp" />
 
@@ -18,8 +18,7 @@
         android:layout_below="@id/titleText"
         android:id="@+id/modTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Inserisci il titolo" />
+        android:layout_height="wrap_content"/>
 
     <!-- Descrizione -->
     <TextView
@@ -27,7 +26,7 @@
         android:layout_below="@id/modTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Descrizione"
+        android:text="Descrizione:"
         android:textSize="18sp"
         android:layout_marginTop="16dp" />
 
@@ -35,8 +34,7 @@
         android:layout_below="@id/descrText"
         android:id="@+id/modDescr"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Inserisci la descrizione" />
+        android:layout_height="wrap_content" />
 
     <!-- A chi è assegnato -->
     <TextView
@@ -44,7 +42,7 @@
         android:layout_below="@id/modDescr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Persona assegnata"
+        android:text="Persona assegnata:"
         android:textSize="18sp"
         android:layout_marginTop="16dp" />
 
@@ -52,15 +50,44 @@
         android:id="@+id/modAssigned"
         android:layout_below="@+id/assignedText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Inserisci il nome della persona assegnata" />
+        android:layout_height="wrap_content" />
 
+    <!-- Progress -->
     <TextView
-        android:id="@+id/expiringText"
-        android:layout_below="@id/modAssigned"
+        android:id="@+id/progressTaskText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Data di scadenza"
+        android:layout_marginBottom="0dp"
+        android:layout_below="@id/modAssigned"
+        android:text="Progresso:"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/progressTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_below="@id/progressTaskText"
+        android:layout_centerHorizontal="true"
+        android:textSize="16sp"/>
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_below="@id/progressTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:max="100">
+    </SeekBar>
+
+
+    <!-- Date -->
+    <TextView
+        android:id="@+id/expiringText"
+        android:layout_below="@id/seekBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Data di scadenza:"
         android:textSize="18sp"
         android:layout_marginTop="16dp" />
 

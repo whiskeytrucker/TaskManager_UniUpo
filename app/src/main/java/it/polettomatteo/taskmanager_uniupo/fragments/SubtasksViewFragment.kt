@@ -20,6 +20,7 @@ class SubtasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
     private lateinit var addStuffBtn: Button
     private lateinit var recyclerView: RecyclerView
+    private lateinit var customAdapter: SubtasksAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +49,7 @@ class SubtasksViewFragment: Fragment() {
                 tmp.add(bundle.getSerializable(key) as Subtask)
             }
 
-            if(userType.compareTo("d") == 0){
+            if(userType.compareTo("d") == 0 || userType.compareTo("pl") == 0){
                 addStuffBtn.visibility = View.VISIBLE
             }
 
@@ -56,8 +57,8 @@ class SubtasksViewFragment: Fragment() {
 
         tmp.sortWith(compareByDescending<Subtask>{it.priorita}.thenBy { it.scadenza })
 
-        val customAdapter =
-            context?.let { SubtasksAdapter(userType, it, tmp, modifyActivityListener) } // <-- Da cambiare con i dati presi da savedInstanceState
+        customAdapter =
+            context?.let { SubtasksAdapter(userType, it, tmp, modifyActivityListener) }!! // <-- Da cambiare con i dati presi da savedInstanceState
         recyclerView.adapter = customAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
@@ -93,6 +94,7 @@ class SubtasksViewFragment: Fragment() {
                 .commit()
         }
     }
+
 
     override fun onPause() {
         super.onPause()

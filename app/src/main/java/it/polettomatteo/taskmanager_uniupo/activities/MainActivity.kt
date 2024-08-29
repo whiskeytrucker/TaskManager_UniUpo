@@ -81,8 +81,6 @@ class MainActivity : AppCompatActivity(){
 
                                 }
 
-                                //fetch dei dati inerenti al dev
-
                             }else{
                                 ProjectsDB.getProjects(user, userType) { bundle2 ->
                                     if (bundle2 != null) {

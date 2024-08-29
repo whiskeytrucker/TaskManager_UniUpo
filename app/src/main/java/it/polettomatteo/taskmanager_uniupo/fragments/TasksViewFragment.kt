@@ -106,9 +106,11 @@ class TasksViewFragment: Fragment() {
 
     override fun onPause() {
         super.onPause()
+
         savedBundle = this.arguments
     }
 
+/*
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -120,5 +122,5 @@ class TasksViewFragment: Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
+*/
 }
