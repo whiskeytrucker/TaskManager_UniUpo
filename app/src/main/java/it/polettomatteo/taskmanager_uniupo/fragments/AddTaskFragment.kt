@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.firebase.Timestamp
 import it.polettomatteo.taskmanager_uniupo.R
+import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import java.util.Calendar
 
@@ -43,14 +44,19 @@ class AddTaskFragment: Fragment() {
             val expiring = getTimestamp(dateP, timeP)
 
 
+            TasksDB.addTask(title.toString(), descr.toString(), assigned.toString(), expiring){ bundle ->
+                if (bundle != null) {
+                    if(bundle.getBoolean("result")){
+                        Toast.makeText(context, "Dati salvati!", Toast.LENGTH_SHORT).show()
+                        requireActivity().supportFragmentManager.setFragmentResult("data", bundle)
+                        requireActivity().supportFragmentManager.popBackStack();
+                    }
+                }else{
+                    Toast.makeText(context, "Errore nell'aggiunta dei dati.", Toast.LENGTH_LONG).show()
+                }
 
-
-            // query di TasksDB
-            if(TasksDB.addTask(title.toString(), descr.toString(), assigned.toString(), expiring)){
-                Toast.makeText(context, "Dati salvati!", Toast.LENGTH_SHORT).show()
-
-                requireActivity().supportFragmentManager.popBackStack();
             }
+
 
         }
         return view

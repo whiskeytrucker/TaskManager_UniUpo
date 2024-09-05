@@ -7,6 +7,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 import java.lang.NumberFormatException
+import kotlin.reflect.typeOf
 
 class TasksDB {
 
@@ -27,21 +28,6 @@ class TasksDB {
                     for ((index, doc) in documents.withIndex()) {
                         val data = doc.data
                         if (data != null) {
-                            val progress: Int =
-                                if (data["progress"].toString() != null && data["progress"].toString()
-                                        .isNotEmpty()
-                                ) {
-                                    try {
-                                        data["progress"].toString().toInt()
-                                    } catch (e: NumberFormatException) {
-                                        e.printStackTrace()
-                                        0
-                                    }
-                                } else {
-                                    0
-                                }
-
-
                             val tmp = Task(
                                 doc.id,
                                 idProject,
@@ -49,7 +35,7 @@ class TasksDB {
                                 data["descr"].toString(),
                                 data["dev"].toString(),
                                 data["scadenza"] as Timestamp,
-                                progress
+                                data["progress"].toString().toInt()
                             )
 
                             bundle.putSerializable(index.toString(), tmp)
@@ -79,20 +65,6 @@ class TasksDB {
                     for ((index, doc) in documents.withIndex()) {
                         val data = doc.data
                         if (data != null) {
-                            val progress: Int =
-                                if (data["progress"].toString() != null && data["progress"].toString()
-                                        .isNotEmpty()
-                                ) {
-                                    try {
-                                        data["progress"].toString().toInt()
-                                    } catch (e: NumberFormatException) {
-                                        e.printStackTrace()
-                                        0
-                                    }
-                                } else {
-                                    0
-                                }
-
 
                             val tmp = Task(
                                 doc.id,
@@ -101,7 +73,7 @@ class TasksDB {
                                 data["descr"].toString(),
                                 data["dev"].toString(),
                                 data["scadenza"] as Timestamp,
-                                progress
+                                data["progress"].toString().toInt()
                             )
 
                             bundle.putSerializable(index.toString(), tmp)
@@ -120,27 +92,48 @@ class TasksDB {
             title: String,
             descr: String,
             assigned: String,
-            expiring: Timestamp
-        ): Boolean {
+            expiring: Timestamp,
+            callback: (Bundle?) -> Unit
+        ){
             val data = hashMapOf(
                 "nome" to title,
                 "descr" to descr,
                 "dev" to assigned,
                 "scadenza" to expiring,
-                "progess" to 0
+                "progress" to 0
             )
 
             if (data != null) {
-                FirebaseFirestore
+                val doc =  FirebaseFirestore
                     .getInstance()
                     .collection("projects")
                     .document(idPrj)
                     .collection("task")
                     .document()
-                    .set(data)
-                return true
+
+                doc.set(data)
+                .addOnSuccessListener {
+                    val task = Task(
+                        doc.id,
+                        idPrj,
+                        title,
+                        descr,
+                        assigned,
+                        expiring,
+                        0,
+                    )
+                    val bun = Bundle()
+                    bun.putSerializable("data", task)
+                    bun.putBoolean("result", true)
+
+                    callback(bun)
+                }.addOnFailureListener{
+                    it.printStackTrace()
+                    callback(null)
+                }
             }
-            return false
+
+
         }
 
         fun modifyTask(
@@ -148,14 +141,16 @@ class TasksDB {
             title: String,
             descr: String,
             assigned: String,
-            expiring: Timestamp
-        ): Boolean {
+            progress: Int,
+            expiring: Timestamp,
+            callback: (Bundle?) -> Unit
+        ){
             val data = hashMapOf(
                 "nome" to title,
                 "descr" to descr,
                 "dev" to assigned,
-                "scadenza" to expiring,
-                "progess" to 0
+                "progress" to progress,
+                "scadenza" to expiring
             )
 
             if (data != null) {
@@ -166,9 +161,28 @@ class TasksDB {
                     .collection("task")
                     .document(idTask)
                     .set(data)
-                return true
+                    .addOnSuccessListener {
+                        val task = Task(
+                            idTask,
+                            idPrj,
+                            title,
+                            descr,
+                            assigned,
+                            expiring,
+                            progress,
+                        )
+                        val bun = Bundle()
+                        bun.putString("done", "mod")
+                        bun.putSerializable("data", task)
+                        bun.putBoolean("result", true)
+
+                        callback(bun)
+                    }.addOnFailureListener {
+                        it.printStackTrace()
+                        callback(null)
+                    }
             }
-            return false
+
         }
 
         fun deleteTask(idProject: String, idTask: String, callback: (Boolean?) -> Unit) {

@@ -40,10 +40,17 @@ class AddSubtaskFragment: Fragment() {
 
             val expiring = getTimestamp(dateS, timeS)
 
-            if(SubtasksDB.addSubtask(subDescr, priority, state, expiring)){
-                Toast.makeText(context, "Dati salvati!", Toast.LENGTH_SHORT).show()
-
-                requireActivity().supportFragmentManager.popBackStack();
+            SubtasksDB.addSubtask(subDescr, priority, state, expiring) { bundle ->
+                if (bundle != null) {
+                    if (bundle.getBoolean("result")) {
+                        Toast.makeText(context, "Dati salvati!", Toast.LENGTH_SHORT).show()
+                        requireActivity().supportFragmentManager.setFragmentResult("data", bundle)
+                        requireActivity().supportFragmentManager.popBackStack();
+                    }
+                } else {
+                    Toast.makeText(context, "Errore nell'aggiunta dei dati.", Toast.LENGTH_LONG)
+                        .show()
+                }
             }
         }
 

@@ -59,15 +59,22 @@
 
     <!-- Progress -->
     <TextView
-        android:id="@+id/progressSubtask"
+        android:id="@+id/progressSubtaskText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         android:layout_below="@id/spinState"
-        android:layout_centerHorizontal="true"
-        android:textSize="16sp">
+        android:text="Progresso:"
+        android:textSize="16sp"/>
 
-    </TextView>
+    <TextView
+        android:id="@+id/progressSubtask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_below="@id/progressSubtaskText"
+        android:layout_centerHorizontal="true"
+        android:textSize="16sp"/>
 
     <SeekBar
         android:id="@+id/seekBar"

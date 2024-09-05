@@ -1,5 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.adapters.TasksAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
@@ -21,6 +23,8 @@ class TasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var addStuffBtn: Button
+    private lateinit var tasksAdapter: TasksAdapter
+    private var tmp = ArrayList<Task>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,8 +39,9 @@ class TasksViewFragment: Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerTaskView)
 
-        val tmp = ArrayList<Task>()
+
         var bundle: Bundle?
+        tmp = ArrayList<Task>()
 
 
         if(savedBundle != null && this.arguments == null){
@@ -66,9 +71,10 @@ class TasksViewFragment: Fragment() {
         tmp.sortWith(compareBy{it.nome})
 
 
-        val customAdapter =
-            listener?.let { context?.let { it1 -> TasksAdapter(userType, it1, tmp, it, modifyActivityListener) } }
-        recyclerView.adapter = customAdapter
+
+        tasksAdapter =
+            listener?.let { context?.let { it1 -> TasksAdapter(userType, it1, tmp, it, modifyActivityListener) } }!!
+        recyclerView.adapter = tasksAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
         return view
@@ -102,13 +108,39 @@ class TasksViewFragment: Fragment() {
                 .commit()
         }
 
+        val key = "data"
+        parentFragmentManager.setFragmentResultListener(key, this){key, bundle ->
+            Log.d(TAG, "key: ${key}\t Bundle: ${bundle.toString()}")
+            val task = bundle.getSerializable("data") as Task
+            val done = bundle.getString("done")
+
+            if (done?.compareTo("mod") == 0){
+                val i = findIndex(task)
+                tmp.removeAt(i)
+                tasksAdapter.notifyItemRemoved(i)
+            }
+
+            tmp.add(task)
+            tmp.sortWith(compareBy{it.nome})
+            tasksAdapter.notifyItemInserted(tmp.indexOf(task))
+        }
+
     }
 
     override fun onPause() {
-        super.onPause()
         savedBundle = this.arguments
+        super.onPause()
     }
 
+    private fun findIndex(toFind: Task):Int{
+        for(task in tmp){
+            if(task.id == toFind.id)return tmp.indexOf(task)
+        }
+        return -1
+    }
+
+
+/*
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -120,5 +152,5 @@ class TasksViewFragment: Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
+*/
 }

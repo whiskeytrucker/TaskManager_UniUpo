@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.SeekBar
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.google.firebase.Timestamp
 import it.polettomatteo.taskmanager_uniupo.R
@@ -38,6 +41,8 @@ class ModifySubtaskFragment() : Fragment() {
                 val modSubDescr = view.findViewById<EditText>(R.id.modSubDescr)
                 val spinPriority = view.findViewById<Spinner>(R.id.spinPriority)
                 val spinState = view.findViewById<Spinner>(R.id.spinState)
+                val progressText = view.findViewById<TextView>(R.id.progressSubtask)
+                val seekBar = view.findViewById<SeekBar>(R.id.seekBar)
                 val modSubDate = view.findViewById<DatePicker>(R.id.modSubDate)
                 val modSubTime = view.findViewById<TimePicker>(R.id.modSubTime)
 
@@ -47,9 +52,31 @@ class ModifySubtaskFragment() : Fragment() {
                 else if(data.getInt("priorita") >= 4){spinPriority.setSelection(4)}
                 else spinPriority.setSelection(data.getInt("priorita"))
 
-                if(data.getInt("stato") <= 0){spinState.setSelection(0)}
-                else if(data.getInt("stato") >= 3){spinState.setSelection(4)}
-                else spinState.setSelection(data.getInt("stato"))
+                if(data.getInt("stato") <= 1){spinState.setSelection(0)}
+                else if(data.getInt("stato") >= 3){spinState.setSelection(2)}
+                else spinState.setSelection(1)
+
+
+
+                // Progress
+                progressText.text = "${data.getInt("progress")}%"
+                seekBar.progress = data.getInt("progress")
+
+                seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        progressText.text = "${progress.toString()}%"
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                        // Optional: azione quando l'utente inizia a muovere la SeekBar
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                        // Optional: azione quando l'utente smette di muovere la SeekBar
+                    }
+                })
+
+
 
                 val ms = data.getLong("expiring")
                 val date = Date(ms)
@@ -73,18 +100,24 @@ class ModifySubtaskFragment() : Fragment() {
                     var priority = spinPriority.selectedItemPosition
                     if(priority < 0 || priority > 4)priority = 0
 
-                    var state = spinState.selectedItemPosition
+                    var state = spinState.selectedItemPosition + 1
                     if(state < 0 || state > 4)state = 0
+
+                    var progress = seekBar.progress
 
                     val expiring = getTimestamp(modSubDate, modSubTime)
 
-                    if(SubtasksDB.modifySubtask(id.toString(), subDescr, priority, state, expiring)){
-                        Toast.makeText(context, "Dati modificati!", Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(context, "Errore nella modifica dei dati.", Toast.LENGTH_SHORT).show()
+                    SubtasksDB.modifySubtask(id.toString(), subDescr, priority, state, progress, expiring) { bundle ->
+                        if (bundle != null) {
+                            if (bundle.getBoolean("result")) {
+                                Toast.makeText(context, "Dati aggiornati!", Toast.LENGTH_SHORT).show()
+                                requireActivity().supportFragmentManager.setFragmentResult("data",bundle)
+                                requireActivity().supportFragmentManager.popBackStack();
+                            }
+                        } else {
+                            Toast.makeText(context,"Errore nella modifica dei dati.",Toast.LENGTH_LONG).show()
+                        }
                     }
-
-                    requireActivity().supportFragmentManager.popBackStack();
                 }
             }
         }

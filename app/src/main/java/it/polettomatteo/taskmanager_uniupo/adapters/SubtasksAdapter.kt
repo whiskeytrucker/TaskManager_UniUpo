@@ -45,8 +45,7 @@ class SubtasksAdapter(private val userType: String, private val context: Context
             modifyBtn = view.findViewById(R.id.modifySubtask)
             deleteBtn = view.findViewById(R.id.deleteSubtask)
 
-
-            seekBar.isEnabled = true
+            seekBar.isEnabled = false
             seekBar.progress = 0
 
 
@@ -84,7 +83,6 @@ class SubtasksAdapter(private val userType: String, private val context: Context
         holder.subDescr.text = "\"${dataSet[position].subDescr}\""
         holder.priority.text = "Priorita': ${subpriority}"
         holder.expiring.text = "Scadenza: ${formatTimestamp(Date(ms))}"
-        holder.seekBar.isEnabled = false
 
 
         // Riga 79 per vedere gli stati scritti bene
@@ -97,7 +95,7 @@ class SubtasksAdapter(private val userType: String, private val context: Context
             holder.seekBar.visibility = View.GONE
         }
 
-        if((userType.compareTo("d") == 0 || userType.compareTo("pl") == 0)){
+        if((/*userType.compareTo("d") == 0 || */userType.compareTo("pl") == 0)){
             if(dataSet[position].stato <= 2)holder.modifyBtn.visibility = View.VISIBLE
             holder.deleteBtn.visibility = View.VISIBLE
 
