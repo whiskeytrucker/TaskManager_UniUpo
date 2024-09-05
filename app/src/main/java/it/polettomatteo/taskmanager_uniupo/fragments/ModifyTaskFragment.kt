@@ -100,13 +100,17 @@ class ModifyTaskFragment() : Fragment() {
                     val expiring = getTimestamp(modDate, modTime)
 
 
-                    if(TasksDB.modifyTask(idTask.toString(), title, descr, assigned, progress, expiring)){
-                        Toast.makeText(context, "Dati modificati!", Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(context, "Errore nella modifica dei dati.", Toast.LENGTH_SHORT).show()
+                    TasksDB.modifyTask(idTask.toString(), title, descr, assigned, progress, expiring) { bundle ->
+                        if (bundle != null) {
+                            if (bundle.getBoolean("result")) {
+                                Toast.makeText(context, "Dati aggiornati!", Toast.LENGTH_SHORT).show()
+                                requireActivity().supportFragmentManager.setFragmentResult("data",bundle)
+                                requireActivity().supportFragmentManager.popBackStack();
+                            }else{
+                                Toast.makeText(context, "Errore nella modifica dei dati.", Toast.LENGTH_LONG).show()
+                            }
+                        }
                     }
-
-                    requireActivity().supportFragmentManager.popBackStack();
                 }
 
             }
@@ -147,3 +151,4 @@ class ModifyTaskFragment() : Fragment() {
         return timestamp
     }
 }
+

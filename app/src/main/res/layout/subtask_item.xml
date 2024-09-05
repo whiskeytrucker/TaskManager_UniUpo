@@ -5,19 +5,18 @@
 
     <TextView
         android:id="@+id/subDescr"
-        android:layout_width="match_parent"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:paddingTop="10sp"
         android:paddingStart="10sp"
+        android:paddingTop="10sp"
         android:paddingEnd="10sp"
-        android:textSize="20sp">
-    </TextView>
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/modifySubtask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/subDescr"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="8dp"
         android:visibility="gone"
         android:text="Modifica" />
@@ -26,7 +25,7 @@
         android:id="@+id/deleteSubtask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/subDescr"
+        android:layout_alignParentEnd="true"
         android:layout_below="@id/modifySubtask"
         android:layout_marginTop="2dp"
         android:visibility="gone"

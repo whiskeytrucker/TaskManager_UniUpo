@@ -7,13 +7,8 @@
         android:visible="true"
         />
 
-    <item android:title="@string/login"
-          android:id="@+id/login"
-          android:visible="true"
-        />
-
-    <item android:title="@string/logout"
-        android:id="@+id/logout"
+    <item android:title="Pagina Utente"
+        android:id="@+id/userpage"
         android:visible="false"
         />
 
@@ -24,12 +19,17 @@
         />
 
 
-    <item android:title="Pagina Utente"
-        android:id="@+id/userpage"
+    <item android:title="@string/login"
+        android:id="@+id/login"
+        android:visible="true"
+        />
+
+    <item android:title="@string/logout"
+        android:id="@+id/logout"
         android:visible="false"
         />
 
-    <item android:title="dioporco"
+    <item android:title="Temporaneo"
         android:id="@+id/ses"
         android:visible="false"
         />

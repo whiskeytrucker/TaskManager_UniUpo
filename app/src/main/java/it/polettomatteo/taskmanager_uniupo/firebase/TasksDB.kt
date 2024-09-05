@@ -92,8 +92,9 @@ class TasksDB {
             title: String,
             descr: String,
             assigned: String,
-            expiring: Timestamp
-        ): Boolean {
+            expiring: Timestamp,
+            callback: (Bundle?) -> Unit
+        ){
             val data = hashMapOf(
                 "nome" to title,
                 "descr" to descr,
@@ -103,16 +104,36 @@ class TasksDB {
             )
 
             if (data != null) {
-                FirebaseFirestore
+                val doc =  FirebaseFirestore
                     .getInstance()
                     .collection("projects")
                     .document(idPrj)
                     .collection("task")
                     .document()
-                    .set(data)
-                return true
+
+                doc.set(data)
+                .addOnSuccessListener {
+                    val task = Task(
+                        doc.id,
+                        idPrj,
+                        title,
+                        descr,
+                        assigned,
+                        expiring,
+                        0,
+                    )
+                    val bun = Bundle()
+                    bun.putSerializable("data", task)
+                    bun.putBoolean("result", true)
+
+                    callback(bun)
+                }.addOnFailureListener{
+                    it.printStackTrace()
+                    callback(null)
+                }
             }
-            return false
+
+
         }
 
         fun modifyTask(
@@ -121,8 +142,9 @@ class TasksDB {
             descr: String,
             assigned: String,
             progress: Int,
-            expiring: Timestamp
-        ): Boolean {
+            expiring: Timestamp,
+            callback: (Bundle?) -> Unit
+        ){
             val data = hashMapOf(
                 "nome" to title,
                 "descr" to descr,
@@ -139,9 +161,28 @@ class TasksDB {
                     .collection("task")
                     .document(idTask)
                     .set(data)
-                return true
+                    .addOnSuccessListener {
+                        val task = Task(
+                            idTask,
+                            idPrj,
+                            title,
+                            descr,
+                            assigned,
+                            expiring,
+                            progress,
+                        )
+                        val bun = Bundle()
+                        bun.putString("done", "mod")
+                        bun.putSerializable("data", task)
+                        bun.putBoolean("result", true)
+
+                        callback(bun)
+                    }.addOnFailureListener {
+                        it.printStackTrace()
+                        callback(null)
+                    }
             }
-            return false
+
         }
 
         fun deleteTask(idProject: String, idTask: String, callback: (Boolean?) -> Unit) {

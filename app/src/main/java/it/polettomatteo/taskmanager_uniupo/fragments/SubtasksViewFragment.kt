@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.adapters.SubtasksAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
+import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 import it.polettomatteo.taskmanager_uniupo.interfaces.TempActivity
 
 val TAG = "SubtasksViewFragment"
@@ -20,7 +21,8 @@ class SubtasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
     private lateinit var addStuffBtn: Button
     private lateinit var recyclerView: RecyclerView
-    private lateinit var customAdapter: SubtasksAdapter
+    private lateinit var subtasksAdapter: SubtasksAdapter
+    private lateinit var tmp: ArrayList<Subtask>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,11 +34,18 @@ class SubtasksViewFragment: Fragment() {
 
         addStuffBtn = view.findViewById(R.id.addStuff)
 
-        val tmp = ArrayList<Subtask>()
 
-        val bundle = this.arguments
+        val bundle: Bundle?
+
+        if(savedBundle != null && this.arguments == null){
+            bundle = savedBundle
+        }else{
+            bundle = this.arguments
+        }
+
         var userType:String = ""
 
+        tmp = ArrayList()
 
         if(bundle != null){
             if(bundle.getString("tipo") != null){
@@ -57,9 +66,11 @@ class SubtasksViewFragment: Fragment() {
 
         tmp.sortWith(compareByDescending<Subtask>{it.priorita}.thenBy { it.scadenza })
 
-        customAdapter =
+        Log.d(TAG, "Tipo User: ${userType}")
+
+        subtasksAdapter =
             context?.let { SubtasksAdapter(userType, it, tmp, modifyActivityListener) }!! // <-- Da cambiare con i dati presi da savedInstanceState
-        recyclerView.adapter = customAdapter
+        recyclerView.adapter = subtasksAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
         return view
@@ -93,14 +104,39 @@ class SubtasksViewFragment: Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+
+        val key = "data"
+        parentFragmentManager.setFragmentResultListener(key, this){key, bundle ->
+            Log.d(TAG, "key: ${key}\t Bundle: ${bundle.toString()}")
+            val subtask = bundle.getSerializable("data") as Subtask
+            val done = bundle.getString("done")
+
+            if (done?.compareTo("mod") == 0){
+                val i = findIndex(subtask)
+                tmp.removeAt(i)
+                subtasksAdapter.notifyItemRemoved(i)
+                for(subtask in tmp){
+                    Log.d(TAG, subtask.toString())
+                }
+            }
+
+            tmp.add(subtask)
+            tmp.sortWith(compareByDescending<Subtask>{it.priorita}.thenBy { it.scadenza })
+            subtasksAdapter.notifyItemInserted(tmp.indexOf(subtask))
+        }
     }
 
 
     override fun onPause() {
-        super.onPause()
         savedBundle = this.arguments
+        super.onPause()
     }
 
-
+    private fun findIndex(toFind: Subtask):Int{
+        for(subtask in tmp){
+            if(subtask.id == toFind.id)return tmp.indexOf(subtask)
+        }
+        return -1
+    }
 
 }

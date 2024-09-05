@@ -2,8 +2,8 @@
 ## TODO
 PRINCIPALI
 - [X] Progetti
-	- [ ] Task
-		- [ ] Sottotask
+	- [X] Task
+		- [X] Sottotask
 		
 - [ ] Notifiche
 - [ ] Chat (CTRL + C / CTRL + V perchè non funziona nulla)
@@ -17,8 +17,10 @@ FUN:
 - [X] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
 	- [X] Un **task** può essere modificato solo da un PL
 	- [X] Un **sottotask** può essere modificato sia da un PL che da un D
-	- [ ] AGGIUNGERE LA AGGIUNTA/MODIFICA DI "PROGRESS"
-		- Aggiornabile su modifica oppure a videata chiusa
+	- [X] AGGIUNGERE LA AGGIUNTA/MODIFICA DI "PROGRESS"
+		- Aggiornabile su modifica
+
+	RATING
 	- [ ] Ad ogni **sottotask** è possibile assegnare una **foto/documento** relativa/o al task (tipo esempio dell'interfaccia grafica che si è sviluppato)
 	- [ ] **Voto** e **scrivere un commento** su un lavoro svolto.
 	
@@ -44,7 +46,8 @@ VIEW:
 ## BUG
 - [X] Videata progetti non si aggiorna quando si fa logout/login
 - [X] Tasto Home crasha quando cliccato dentro la Task
-- [ ] Refreshare Task e Subtask ogni volta che si effettua la modifica
+- [X] Refreshare Task e Subtask ogni volta che si effettua la modifica
+	- [ ] Tasti Modifica e Cancella scompaiono poiché si "dimentica" del tipo utente
 
 ## Testo Progetto
 **Progetto Android**  

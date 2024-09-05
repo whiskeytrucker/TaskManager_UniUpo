@@ -59,8 +59,9 @@ class SubtasksDB {
             subDescr: String,
             priority: Int,
             state: Int,
-            expiring: Timestamp
-        ): Boolean {
+            expiring: Timestamp,
+            callback: (Bundle?) -> Unit
+        ) {
             val data = hashMapOf(
                 "subDescr" to subDescr,
                 "priorita" to priority,
@@ -68,17 +69,36 @@ class SubtasksDB {
                 "scadenza" to expiring,
                 "progress" to 0
             )
+            val doc = FirebaseFirestore
+                        .getInstance()
+                        .collection("projects")
+                        .document(idPrg)
+                        .collection("task")
+                        .document(idTask)
+                        .collection("sotto_task")
+                        .document()
 
-            FirebaseFirestore
-                .getInstance()
-                .collection("projects")
-                .document(idPrg)
-                .collection("task")
-                .document(idTask)
-                .collection("sotto_task")
-                .document()
-                .set(data)
-            return true
+                doc.set(data)
+                .addOnSuccessListener {
+                    val subtask = Subtask(
+                        doc.id,
+                        idTask,
+                        idPrg,
+                        state,
+                        subDescr,
+                        priority,
+                        expiring,
+                        0,
+                    )
+                    val bun = Bundle()
+                    bun.putSerializable("data", subtask)
+                    bun.putBoolean("result", true)
+
+                    callback(bun)
+                }.addOnFailureListener{
+                    it.printStackTrace()
+                    callback(null)
+                }
         }
 
 
@@ -87,14 +107,16 @@ class SubtasksDB {
             subDescr: String,
             priority: Int,
             state: Int,
-            expiring: Timestamp
-        ): Boolean {
+            progresso: Int,
+            expiring: Timestamp,
+            callback: (Bundle?) -> Unit
+        ) {
             val data = hashMapOf(
                 "subDescr" to subDescr,
                 "priorita" to priority,
                 "stato" to state,
-                "scadenza" to expiring,
-                "progress" to 0
+                "progress" to progresso,
+                "scadenza" to expiring
             )
 
             FirebaseFirestore
@@ -106,7 +128,27 @@ class SubtasksDB {
                 .collection("sotto_task")
                 .document(idSub)
                 .set(data)
-            return true
+                .addOnSuccessListener {
+                    val subtask = Subtask(
+                        idSub,
+                        idTask,
+                        idPrg,
+                        state,
+                        subDescr,
+                        priority,
+                        expiring,
+                        0,
+                    )
+                    val bun = Bundle()
+                    bun.putString("done", "mod")
+                    bun.putSerializable("data", subtask)
+                    bun.putBoolean("result", true)
+
+                    callback(bun)
+                }.addOnFailureListener{
+                    it.printStackTrace()
+                    callback(null)
+                }
 
         }
         fun deleteSubtask(idProject: String, idTask: String, idSubtask: String, callback: (Boolean?) -> Unit){

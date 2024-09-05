@@ -95,7 +95,7 @@ class SubtasksAdapter(private val userType: String, private val context: Context
             holder.seekBar.visibility = View.GONE
         }
 
-        if((userType.compareTo("d") == 0 || userType.compareTo("pl") == 0)){
+        if((/*userType.compareTo("d") == 0 || */userType.compareTo("pl") == 0)){
             if(dataSet[position].stato <= 2)holder.modifyBtn.visibility = View.VISIBLE
             holder.deleteBtn.visibility = View.VISIBLE
 
