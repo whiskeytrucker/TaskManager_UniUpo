@@ -71,13 +71,27 @@ class SubtasksAdapter(private val userType: String, private val context: Context
         var subpriority:String = ""
         var subState: String = ""
 
-        if(dataSet[position].priorita <= 1) subpriority = "Bassa"
-        else if(dataSet[position].priorita == 2) subpriority = "Media"
-        else if(dataSet[position].priorita >= 3) subpriority = "Alta"
 
-        if(dataSet[position].stato <= 1) subState = "TODO"
-        else if(dataSet[position].stato == 2) subState = "Assigned"
-        else if(dataSet[position].stato >= 3) subState = "Completed"
+        when(dataSet[position].priorita){
+            0 -> subpriority = "Nessuna"
+            1 -> subpriority = "Bassa"
+            2 -> subpriority = "Media"
+            3 -> subpriority = "Alta"
+            4 -> subpriority = "URGENTE"
+            else -> {
+                subpriority = "Errore"
+            }
+        }
+
+        when(dataSet[position].stato){
+            1 -> subState = "TODO"
+            2 -> subState = "Assigned"
+            3 -> subState = "Completed"
+            else -> {
+                subpriority = "Errore"
+            }
+        }
+
 
         holder.state.text = "Stato: ${subState}"
         holder.subDescr.text = "\"${dataSet[position].subDescr}\""

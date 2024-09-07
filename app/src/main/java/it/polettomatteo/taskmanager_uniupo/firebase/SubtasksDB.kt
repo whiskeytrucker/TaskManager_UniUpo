@@ -30,8 +30,6 @@ class SubtasksDB {
                     for((index, doc) in documents.withIndex()){
                         val data = doc.data
                         if (data != null) {
-                            Log.d(TAG, data.toString())
-
                             val tmp = Subtask(
                                 doc.id,
                                 idTask,
@@ -70,13 +68,13 @@ class SubtasksDB {
                 "progress" to 0
             )
             val doc = FirebaseFirestore
-                        .getInstance()
-                        .collection("projects")
-                        .document(idPrg)
-                        .collection("task")
-                        .document(idTask)
-                        .collection("sotto_task")
-                        .document()
+                    .getInstance()
+                    .collection("projects")
+                    .document(idPrg)
+                    .collection("task")
+                    .document(idTask)
+                    .collection("sotto_task")
+                    .document()
 
                 doc.set(data)
                 .addOnSuccessListener {

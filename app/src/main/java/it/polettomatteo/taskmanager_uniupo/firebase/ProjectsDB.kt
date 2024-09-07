@@ -76,7 +76,6 @@ class ProjectsDB {
         }
 
         fun fetchPL(username: String, callback:(String) -> Unit){
-
             val bundle = Bundle()
 
             FirebaseFirestore
