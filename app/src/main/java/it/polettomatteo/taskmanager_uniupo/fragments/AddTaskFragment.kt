@@ -47,7 +47,6 @@ class AddTaskFragment: Fragment() {
             TasksDB.addTask(title.toString(), descr.toString(), assigned.toString(), expiring){ bundle ->
                 if (bundle != null) {
                     if(bundle.getBoolean("result")){
-                        Toast.makeText(context, "Dati salvati!", Toast.LENGTH_SHORT).show()
                         requireActivity().supportFragmentManager.setFragmentResult("data", bundle)
                         requireActivity().supportFragmentManager.popBackStack();
                     }
