@@ -89,10 +89,19 @@
         android:max="100">
     </SeekBar>
 
+    <Button
+        android:layout_below="@id/seekBar"
+        android:id="@+id/viewSubComment"
+        android:paddingStart="12sp"
+        android:paddingEnd="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Commenti"
+        />
 
 
     <View
-        android:layout_below="@id/seekBar"
+        android:layout_below="@id/viewSubComment"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:layout_width="370dp"

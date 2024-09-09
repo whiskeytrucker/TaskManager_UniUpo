@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import it.polettomatteo.taskmanager_uniupo.dataclass.Comment
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
 
 class SubtasksDB {
@@ -45,6 +46,42 @@ class SubtasksDB {
                         }
                     }
                     callback(bundle)
+                }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                    callback(null)
+                }
+        }
+
+        fun getComments(idSubtask: String, callback: (Bundle?) -> Unit){
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idPrg)
+                .collection("task")
+                .document(idTask)
+                .collection("sotto_task")
+                .document(idSubtask)
+                .collection("commenti")
+                .get()
+                .addOnSuccessListener { results ->
+                    val documents = results.documents
+                    val bun = Bundle()
+
+                    for((index, doc) in documents.withIndex()) {
+                        val data = doc.data
+                        if (data != null) {
+                            val tmp = Comment(
+                                doc.id,
+                                data["da"].toString(),
+                                data["commento"].toString(),
+                                data["voto"].toString().toInt()
+                            )
+                            bun.putSerializable(index.toString(), tmp)
+                        }
+                    }
+
+                    callback(bun)
                 }
                 .addOnFailureListener {
                     it.printStackTrace()

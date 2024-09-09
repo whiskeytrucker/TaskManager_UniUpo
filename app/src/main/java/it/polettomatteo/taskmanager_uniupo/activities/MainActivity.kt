@@ -179,8 +179,7 @@ class MainActivity : AppCompatActivity(){
                 }
 
                 R.id.chat -> {
-                    val intent = Intent(this, ChatActivity::class.java)
-                    this.startActivity(intent)
+                    Toast.makeText(baseContext, "Non ancora implementato", Toast.LENGTH_SHORT).show()
                 }
 
             }

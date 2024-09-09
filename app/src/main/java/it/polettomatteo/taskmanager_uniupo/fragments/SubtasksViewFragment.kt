@@ -58,7 +58,7 @@ class SubtasksViewFragment: Fragment() {
                 tmp.add(bundle.getSerializable(key) as Subtask)
             }
 
-            Log.d(TAG, userType)
+
             if(userType.compareTo("d") == 0 || userType.compareTo("pl") == 0){
                 addStuffBtn.visibility = View.VISIBLE
             }
@@ -68,7 +68,7 @@ class SubtasksViewFragment: Fragment() {
         tmp.sortWith(compareByDescending<Subtask>{it.priorita}.thenBy { it.scadenza })
 
         subtasksAdapter =
-            context?.let { SubtasksAdapter(userType, it, tmp, modifyActivityListener) }!! // <-- Da cambiare con i dati presi da savedInstanceState
+            context?.let { SubtasksAdapter(userType, it, tmp, modifyActivityListener, commentsListener) }!! // <-- Da cambiare con i dati presi da savedInstanceState
         recyclerView.adapter = subtasksAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
@@ -78,7 +78,7 @@ class SubtasksViewFragment: Fragment() {
 
     private val modifyActivityListener = object: TempActivity {
         override fun onStartNewTempActivity(data: Bundle) {
-            var fragment = ModifySubtaskFragment()
+            val fragment = ModifySubtaskFragment()
             fragment.arguments = data
 
             parentFragmentManager.beginTransaction()
@@ -87,6 +87,18 @@ class SubtasksViewFragment: Fragment() {
                 .commit()
         }
 
+    }
+
+    private val commentsListener = object: TempActivity{
+        override fun onStartNewTempActivity(data: Bundle) {
+            val fragment = CommentsViewFragment()
+            fragment.arguments = data
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun onStart(){
@@ -128,7 +140,6 @@ class SubtasksViewFragment: Fragment() {
 
 
     override fun onPause() {
-        Log.d(TAG, "Line 126 \n Saving bundle...}")
         savedBundle = this.arguments
         super.onPause()
     }
