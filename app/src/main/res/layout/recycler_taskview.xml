@@ -6,7 +6,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerTaskView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="720dp"
+        android:layout_above="@id/goBack"
+        android:layout_marginBottom="5dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 

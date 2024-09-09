@@ -57,6 +57,7 @@ class SubtasksDB {
             subDescr: String,
             priority: Int,
             state: Int,
+            progresso: Int,
             expiring: Timestamp,
             callback: (Bundle?) -> Unit
         ) {
@@ -64,8 +65,8 @@ class SubtasksDB {
                 "subDescr" to subDescr,
                 "priorita" to priority,
                 "stato" to state,
-                "scadenza" to expiring,
-                "progress" to 0
+                "progress" to progresso,
+                "scadenza" to expiring
             )
             val doc = FirebaseFirestore
                     .getInstance()

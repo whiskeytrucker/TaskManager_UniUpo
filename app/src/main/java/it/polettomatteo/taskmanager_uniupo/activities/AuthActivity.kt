@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
@@ -12,7 +13,6 @@ import it.polettomatteo.taskmanager_uniupo.R
 
 class AuthActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-    var TAG = "Authentication"
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -26,20 +26,24 @@ class AuthActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
 
         val buttLogin = findViewById<Button>(R.id.firstBtn)
+        val mailText = findViewById<TextInputEditText>(R.id.email)
+        val passText = findViewById<TextInputEditText>(R.id.password)
+
         buttLogin.setOnClickListener {
-            // mettere controllo mail e password
-            var textInput = findViewById<TextInputEditText>(R.id.email)
-            //val email = textInput.text.toString()
-            val email = "pl1@testapp.com"
+            val email = mailText.text.toString()
+            val pass = passText.text.toString()
 
-            textInput = findViewById(R.id.password)
-            //var pass = textInput.text.toString()
-            val pass = "admin123"
+            Log.d("AuthActivity", "email: ${email}\tValid: ${controlloMail(email)}")
+            Log.d("AuthActivity", "pass: ${pass}\tValid: ${validPass(pass)}")
+            Log.d("AuthActivity", "currentUser: ${currentUser}")
 
-            Log.d("CURRENT_USER",currentUser?.email.toString())
-            // check user already signed in
-            if (currentUser == null) {
-                login(email, pass)
+            if(currentUser == null && validPass(pass) && controlloMail(email)){
+                login(email, pass){ result ->
+                    if(result == true){
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
             }
         }
     }
@@ -51,17 +55,31 @@ class AuthActivity : AppCompatActivity() {
     fun login(
         email: String,
         password: String,
+        callback: (Boolean?) -> Unit
     ){
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this){task ->
                 if(task.isSuccessful){
                     Toast.makeText(baseContext, "Login effettuato!", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-
+                    callback(true)
                 }else{
                     Toast.makeText(baseContext, "Autenticazione fallita.", Toast.LENGTH_SHORT).show()
+                    callback(false)
                 }
             }
+            .addOnFailureListener{
+                it.printStackTrace()
+                callback(null)
+            }
+    }
+
+    private fun validPass(password: String): Boolean {
+        val regex = "^[a-zA-Z0-9@$!%*?&]+$".toRegex()
+        return regex.matches(password)
+    }
+
+    private fun controlloMail(input: String): Boolean {
+        val regex = "^[^@]*@[^@]*$".toRegex()
+        return regex.matches(input)
     }
 }

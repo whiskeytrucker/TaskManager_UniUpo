@@ -59,12 +59,13 @@ class AddSubtaskFragment: Fragment() {
             val subDescr = view.findViewById<EditText>(R.id.modSubDescr).text.toString()
             val priority = view.findViewById<Spinner>(R.id.spinPriority).selectedItemPosition
             val state = view.findViewById<Spinner>(R.id.spinState).selectedItemPosition + 1
+            var progress = seekBar.progress
             val dateS = view.findViewById<DatePicker>(R.id.modSubDate)
             val timeS = view.findViewById<TimePicker>(R.id.modSubTime)
 
             val expiring = getTimestamp(dateS, timeS)
 
-            SubtasksDB.addSubtask(subDescr, priority, state, expiring) { bundle ->
+            SubtasksDB.addSubtask(subDescr, priority, state, progress, expiring) { bundle ->
                 if (bundle != null) {
                     if (bundle.getBoolean("result")) {
                         Toast.makeText(context, "Dati salvati!", Toast.LENGTH_SHORT).show()

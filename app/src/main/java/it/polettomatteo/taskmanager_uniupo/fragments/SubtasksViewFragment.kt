@@ -58,6 +58,7 @@ class SubtasksViewFragment: Fragment() {
                 tmp.add(bundle.getSerializable(key) as Subtask)
             }
 
+            Log.d(TAG, userType)
             if(userType.compareTo("d") == 0 || userType.compareTo("pl") == 0){
                 addStuffBtn.visibility = View.VISIBLE
             }

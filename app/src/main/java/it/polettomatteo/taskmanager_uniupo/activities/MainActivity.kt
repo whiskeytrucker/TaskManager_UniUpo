@@ -25,7 +25,9 @@ import it.polettomatteo.taskmanager_uniupo.fragments.SubtasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
-
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity(){
@@ -50,7 +52,6 @@ class MainActivity : AppCompatActivity(){
 
     override fun onStart(){
         super.onStart()
-
         this.createFragment()
     }
 
@@ -150,8 +151,11 @@ class MainActivity : AppCompatActivity(){
                     if(currentUser != null){
                         auth.signOut()
                         Toast.makeText(baseContext, "Logout Effettuato", Toast.LENGTH_SHORT).show()
+
                         val intent = Intent(this, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
+                        finish()
                     }
                 }
 

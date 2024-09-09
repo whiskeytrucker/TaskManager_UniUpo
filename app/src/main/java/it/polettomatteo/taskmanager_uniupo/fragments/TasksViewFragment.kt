@@ -117,9 +117,10 @@ class TasksViewFragment: Fragment() {
 
     override fun onResume(){
         Log.d(TAG, "onResume:")
+        /*
         for(task in tmp){
             Log.d("AAAAAAAAAAAAAAAAAA", "${task.toString()}")
-        }
+        }*/
         super.onResume()
         recyclerView.adapter = tasksAdapter
     }
@@ -155,10 +156,10 @@ class TasksViewFragment: Fragment() {
             }else{
                 savedBundle?.remove(id?.let { findIndex(it, savedBundle!!) })
             }
-
+            /*
             for(task in tmp){
                 Log.d("AAAAAAAAAAAAAAAAAA", "${task.toString()}")
-            }
+            }*/
 
         }
     }
