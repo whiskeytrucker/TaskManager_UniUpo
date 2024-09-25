@@ -38,7 +38,7 @@ class TasksViewFragment: Fragment() {
 
 
         var bundle: Bundle?
-        tmp = ArrayList<Task>()
+        tmp = ArrayList()
 
 
         if(savedBundle != null && this.arguments == null){
@@ -46,6 +46,7 @@ class TasksViewFragment: Fragment() {
         }else{
            bundle = this.arguments
         }
+
 
 
         var listener: StartNewRecycler? = null

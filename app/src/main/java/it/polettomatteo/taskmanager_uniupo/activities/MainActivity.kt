@@ -1,12 +1,18 @@
 package it.polettomatteo.taskmanager_uniupo.activities
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -15,9 +21,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import it.polettomatteo.taskmanager_uniupo.R
-import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
-import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB.Companion.fetchPL
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
 import it.polettomatteo.taskmanager_uniupo.fragments.ProjectsViewFragment
@@ -25,13 +29,11 @@ import it.polettomatteo.taskmanager_uniupo.fragments.SubtasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
+import java.util.Random
 
 class MainActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
+    private lateinit var notificationManager: NotificationManager
     private var currentUser: FirebaseUser? = null
     var userType: String = "NA"
 
@@ -42,6 +44,10 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
 
         FirebaseApp.initializeApp(applicationContext)
+
+        this.notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         auth = FirebaseAuth.getInstance()
@@ -147,6 +153,12 @@ class MainActivity : AppCompatActivity(){
                     val intent = Intent(this, AuthActivity::class.java)
                     startActivity(intent)
                 }
+
+                R.id.register -> {
+                    val intent = Intent(this, RegisterActivity::class.java)
+                    startActivity(intent)
+                }
+
                 R.id.logout -> {
                     if(currentUser != null){
                         auth.signOut()
@@ -199,6 +211,7 @@ class MainActivity : AppCompatActivity(){
         val menu = navigationView.menu
 
         menu.findItem(R.id.login)?.isVisible = !isLoggedIn
+        menu.findItem(R.id.register)?.isVisible = !isLoggedIn
 
         var elements = arrayOf("home","logout","userpage","chat","ses")
 
@@ -254,8 +267,33 @@ class MainActivity : AppCompatActivity(){
                 .commit()
 
         }
-
-
     }
+
+    fun createNotification(
+        id: String,
+        title: String,
+        text: String,
+        channelName: String,
+        channelDescription: String,
+    ) {
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(id, channelName, importance)
+        channel.description = channelDescription
+        this.notificationManager.getNotificationChannel(channel.id)
+            ?: this.notificationManager.createNotificationChannel(channel)
+
+        val notification = NotificationCompat.Builder(this@MainActivity, channel.id)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setAutoCancel(true)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            .setChannelId(channel.id)
+            .build()
+        this.notificationManager.notify(Random(1000000).nextInt(), notification)
+    }
+
+
+
 
 }

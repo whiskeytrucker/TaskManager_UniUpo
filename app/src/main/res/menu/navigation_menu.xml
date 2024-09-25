@@ -24,6 +24,11 @@
         android:visible="true"
         />
 
+    <item android:title="Registrarsi"
+        android:id="@+id/register"
+        android:visible="true"
+        />
+
     <item android:title="@string/logout"
         android:id="@+id/logout"
         android:visible="false"

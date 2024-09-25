@@ -1,7 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,7 @@ import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import com.google.firebase.Timestamp
 import it.polettomatteo.taskmanager_uniupo.R
@@ -23,6 +22,7 @@ import java.util.Calendar
 import java.util.Date
 
 class ModifySubtaskFragment() : Fragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,6 +31,7 @@ class ModifySubtaskFragment() : Fragment() {
         val view = inflater.inflate(R.layout.modify_subtask, container, false)
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
         if(arguments != null){
             val data = this.arguments
@@ -110,6 +111,7 @@ class ModifySubtaskFragment() : Fragment() {
                     SubtasksDB.modifySubtask(id.toString(), subDescr, priority, state, progress, expiring) { bundle ->
                         if (bundle != null) {
                             if (bundle.getBoolean("result")) {
+                                // Crea il canale di notifica (se necessario)
                                 Toast.makeText(context, "Dati aggiornati!", Toast.LENGTH_SHORT).show()
                                 requireActivity().supportFragmentManager.setFragmentResult("data",bundle)
                                 requireActivity().supportFragmentManager.popBackStack();
@@ -149,4 +151,5 @@ class ModifySubtaskFragment() : Fragment() {
 
         return timestamp
     }
+
 }

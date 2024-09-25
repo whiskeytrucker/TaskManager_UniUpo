@@ -33,10 +33,6 @@ class AuthActivity : AppCompatActivity() {
             val email = mailText.text.toString()
             val pass = passText.text.toString()
 
-            Log.d("AuthActivity", "email: ${email}\tValid: ${controlloMail(email)}")
-            Log.d("AuthActivity", "pass: ${pass}\tValid: ${validPass(pass)}")
-            Log.d("AuthActivity", "currentUser: ${currentUser}")
-
             if(currentUser == null && validPass(pass) && controlloMail(email)){
                 login(email, pass){ result ->
                     if(result == true){

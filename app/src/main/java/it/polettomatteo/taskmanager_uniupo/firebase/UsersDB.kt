@@ -26,5 +26,25 @@ class UsersDB {
                     callback(null)
                 }
         }
+
+        fun setUserType(username: String, type: String, callback: (Boolean?) -> Unit){
+            val data = hashMapOf(
+                "username" to username,
+                "tipo" to type
+            )
+
+            FirebaseFirestore
+                .getInstance()
+                .collection("tipo_utenti")
+                .document()
+                .set(data)
+                .addOnSuccessListener {
+                    callback(true)
+                }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                    callback(false)
+                }
+        }
     }
 }
