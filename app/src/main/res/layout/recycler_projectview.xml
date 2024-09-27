@@ -11,15 +11,6 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <Button
-        android:id="@+id/random"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@id/goBack"
-        android:layout_alignParentEnd="true"
-        android:onClick="createNotification"
-        />
-
-    <Button
         android:id="@+id/goBack"
         android:layout_width="60dp"
         android:layout_height="60dp"
