@@ -29,6 +29,10 @@ FUN:
 	- [ ] Il **PM** può fare ricerche sui progetti mettendo filtri in base allo **stato**, al **PL** e alla **scadenza**.
 	- [ ] I **PL** possono fare qualcosa di analogo ma relativo ai **task**, quindi filtrando per **stato**, **D**, **scadenza** o **priorità**
 		
+	CHAT
+	- [ ] Videata
+	- [ ] Mandare messaggi
+	- [ ] Ricevere messaggi instant
 
 
 VIEW:

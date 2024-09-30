@@ -25,7 +25,7 @@ class ChatAdapter(private val dataSet: ArrayList<Message>) : RecyclerView.Adapte
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.message_item, parent, false)
         return ViewHolder(view)
     }
 
