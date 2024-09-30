@@ -1,15 +1,12 @@
 package it.polettomatteo.taskmanager_uniupo.activities
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
@@ -21,11 +18,13 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import it.polettomatteo.taskmanager_uniupo.R
+import it.polettomatteo.taskmanager_uniupo.firebase.ChatDB
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
 import it.polettomatteo.taskmanager_uniupo.fragments.ProjectsViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.SubtasksViewFragment
+import it.polettomatteo.taskmanager_uniupo.fragments.ChatFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
@@ -109,9 +108,9 @@ class MainActivity : AppCompatActivity(){
 
 
 
-    private fun setupFragment(fragment: Fragment, bundle: Bundle? = null) {
+    private fun setupFragment(fragment: Fragment, bundle: Bundle? = null, fromNav: Boolean = false) {
         if(bundle != null){
-            bundle.putSerializable("task_interface",  taskListener)
+            if(!fromNav)bundle.putSerializable("task_interface",  taskListener)
             fragment.arguments = bundle
         }
 
@@ -186,12 +185,18 @@ class MainActivity : AppCompatActivity(){
                         bundle.putString("username", currentUser?.email)
                         bundle.putString("tipo", userType)
                         mainLayout.closeDrawer(navigationView)
-                        setupFragment(UserPageFragment(), bundle)
+                        setupFragment(UserPageFragment(), bundle, true)
                     }
                 }
 
                 R.id.chat -> {
-                    Toast.makeText(baseContext, "Non ancora implementato", Toast.LENGTH_SHORT).show()
+                    if(currentUser != null){
+                        ChatDB.getOldMessages("nESjOjtffa2BOpoX4Wvh"){ bundle ->
+                            mainLayout.closeDrawer(navigationView)
+                            setupFragment(ChatFragment(), bundle, true)
+                        }
+                    }
+
                 }
 
             }

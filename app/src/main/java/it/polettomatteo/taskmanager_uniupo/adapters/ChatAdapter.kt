@@ -1,5 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,26 +12,32 @@ import it.polettomatteo.taskmanager_uniupo.dataclass.Message
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class MessageAdapter(private val messageList: List<Message>) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
+class ChatAdapter(private val dataSet: ArrayList<Message>) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
-    class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val messageText: TextView = view.findViewById(R.id.messageText)
-        val messageTimestamp: TextView = view.findViewById(R.id.messageTimestamp)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val messageText: TextView
+        val messageTimestamp: TextView
+
+        init{
+            messageText = view.findViewById(R.id.messageText)
+            messageTimestamp = view.findViewById(R.id.messageTimestamp)
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
-        return MessageViewHolder(view)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        val message = messageList[position]
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d("ChatAdapter", dataSet[position].toString())
+        val message = dataSet[position]
         holder.messageText.text = message.text
         holder.messageTimestamp.text = formatTimestamp(message.timestamp)
     }
 
     override fun getItemCount(): Int {
-        return messageList.size
+        return dataSet.size
     }
 
     private fun formatTimestamp(timestamp: Timestamp): String {
