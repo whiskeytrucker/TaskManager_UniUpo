@@ -5,7 +5,7 @@ import java.io.Serializable
 
 data class Message(
     val id: String = "",
-    val sender: String = "",
+    val sender: Boolean,
     val text: String = "",
     val timestamp: Timestamp
 ): Serializable

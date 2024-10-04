@@ -39,7 +39,7 @@ class ChatDB {
 
         }
 
-        fun getOldMesssages(userMail: String, callback: (Bundle?) -> Unit) {
+        fun getReceivers(userMail: String, callback: (Bundle?) -> Unit) {
             val db = FirebaseFirestore
             .getInstance()
 
@@ -50,56 +50,78 @@ class ChatDB {
                 .addOnSuccessListener { querySnapshot ->
                     if(!querySnapshot.isEmpty){
                         val docs = querySnapshot.documents
+                        val receivers = Bundle()
 
-                        for(doc in docs){
-                            if(doc.data != null){
-                                db.collection("chat")
-                                    .document(doc.id)
-                                    .collection("messages")
-                                    .orderBy("timestamp", Query.Direction.ASCENDING)
-                                    .get()
-                                    .addOnSuccessListener { result ->
-                                        val documents = result.documents
-                                        val bundle = Bundle()
-
-                                        for ((i, docIn) in documents.withIndex()) {
-                                            val data = docIn.data
-                                            if(data != null){
-                                                var sender = ""
-                                                if(data["sender"] == true){
-                                                    sender = doc.data?.get("user0").toString()
-                                                }else{
-                                                    sender = doc.data?.get("user1").toString()
-                                                }
-
-
-                                                val tmp = Message(
-                                                    docIn.id,
-                                                    sender,
-                                                    data["text"].toString(),
-                                                    data["timestamp"] as Timestamp
-                                                )
-                                                bundle.putSerializable(i.toString(), tmp)
-                                            }
-                                        }
-                                        callback(bundle)
-                                    }
-
-                                    .addOnFailureListener{
-                                        it.printStackTrace()
-                                        callback(null)
-                                    }
+                        for((i, doc) in docs.withIndex()){
+                            val data = doc.data
+                            if(data != null){
+                                receivers.putString(i.toString(), data["user1"].toString())
                             }
                         }
+
+                        callback(receivers)
                     }
                 }
+
+
                 .addOnFailureListener{
+                    it.printStackTrace()
+                    callback(null)
+                }
+        }
+
+
+
+        fun getOldMessages(user0: String, user1: String, callback: (Bundle?) -> Unit){
+            val db = FirebaseFirestore
+                .getInstance()
+
+            db.collection("chat")
+                .whereEqualTo("user0", user0)
+                .whereEqualTo("user1", user1)
+                .get()
+                .addOnSuccessListener { docs ->
+                    for(doc in docs.documents){
+                        db.collection("chat")
+                            .document(doc.id)
+                            .collection("messages")
+                            .orderBy("timestamp", Query.Direction.ASCENDING)
+                            .get()
+                            .addOnSuccessListener { result ->
+                                val documents = result.documents
+                                val bundle = Bundle()
+
+                                for ((i, docIn) in documents.withIndex()) {
+                                    val data = docIn.data
+                                    if(data != null){
+                                        val tmp = Message(
+                                            docIn.id,
+                                            data["sender"].toString().toBoolean(),
+                                            data["text"].toString(),
+                                            data["timestamp"] as Timestamp
+                                        )
+                                        bundle.putSerializable(i.toString(), tmp)
+                                    }
+                                }
+                                callback(bundle)
+                            }
+
+                            .addOnFailureListener{
+                                it.printStackTrace()
+                                callback(null)
+                            }
+                    }
+                }
+                .addOnFailureListener {
                     it.printStackTrace()
                     callback(null)
                 }
         }
     }
 }
+
+
+
 
 
 
