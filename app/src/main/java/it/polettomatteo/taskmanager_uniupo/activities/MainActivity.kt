@@ -191,9 +191,16 @@ class MainActivity : AppCompatActivity(){
 
                 R.id.chat -> {
                     if(currentUser != null){
-                        ChatDB.getOldMessages("nESjOjtffa2BOpoX4Wvh"){ bundle ->
-                            mainLayout.closeDrawer(navigationView)
-                            setupFragment(ChatFragment(), bundle, true)
+                        currentUser?.email?.let {
+                            ChatDB.getOldMesssages(it){ bundle ->
+                                if(bundle != null){
+                                    mainLayout.closeDrawer(navigationView)
+                                    setupFragment(ChatFragment(), bundle, true)
+                                }else{
+                                    Toast.makeText(baseContext, "Nun ce stanno messaggi cumpà", Toast.LENGTH_SHORT).show()
+                                }
+
+                            }
                         }
                     }
 

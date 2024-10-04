@@ -39,39 +39,70 @@ class ChatDB {
 
         }
 
-        fun getOldMessages(chatID: String, callback: (Bundle?) -> Unit) {
+        fun getOldMesssages(userMail: String, callback: (Bundle?) -> Unit) {
             val db = FirebaseFirestore
             .getInstance()
 
 
             db.collection("chat")
-                .document(chatID)
-                .collection("messages")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .whereEqualTo("user0", userMail)
                 .get()
-                .addOnSuccessListener { result ->
-                    val documents = result.documents
-                    val bundle = Bundle()
+                .addOnSuccessListener { querySnapshot ->
+                    if(!querySnapshot.isEmpty){
+                        val docs = querySnapshot.documents
 
-                    for ((i, doc) in documents.withIndex()) {
-                        val data = doc.data
-                        if(data != null){
-                            val tmp = Message(
-                                doc.id,
-                                data["sender"].toString(),
-                                data["text"].toString(),
-                                data["timestamp"] as Timestamp
-                            )
-                            bundle.putSerializable(i.toString(), tmp)
+                        for(doc in docs){
+                            if(doc.data != null){
+                                db.collection("chat")
+                                    .document(doc.id)
+                                    .collection("messages")
+                                    .orderBy("timestamp", Query.Direction.ASCENDING)
+                                    .get()
+                                    .addOnSuccessListener { result ->
+                                        val documents = result.documents
+                                        val bundle = Bundle()
+
+                                        for ((i, docIn) in documents.withIndex()) {
+                                            val data = docIn.data
+                                            if(data != null){
+                                                var sender = ""
+                                                if(data["sender"] == true){
+                                                    sender = doc.data?.get("user0").toString()
+                                                }else{
+                                                    sender = doc.data?.get("user1").toString()
+                                                }
+
+
+                                                val tmp = Message(
+                                                    docIn.id,
+                                                    sender,
+                                                    data["text"].toString(),
+                                                    data["timestamp"] as Timestamp
+                                                )
+                                                bundle.putSerializable(i.toString(), tmp)
+                                            }
+                                        }
+                                        callback(bundle)
+                                    }
+
+                                    .addOnFailureListener{
+                                        it.printStackTrace()
+                                        callback(null)
+                                    }
+                            }
                         }
                     }
-
-                    callback(bundle)
                 }
-                .addOnFailureListener {
+                .addOnFailureListener{
                     it.printStackTrace()
                     callback(null)
                 }
         }
     }
 }
+
+
+
+
+
+

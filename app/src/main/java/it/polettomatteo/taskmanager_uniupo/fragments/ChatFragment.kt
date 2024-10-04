@@ -28,6 +28,8 @@ class ChatFragment: Fragment() {
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+
+
         val chatArr = ArrayList<Message>()
 
         val bundle = this.arguments
@@ -38,8 +40,6 @@ class ChatFragment: Fragment() {
             }
         }
 
-
-        val currentUser = FirebaseAuth.getInstance().currentUser
         this.recyclerView = view.findViewById(R.id.recyclerViewChat)
 
         val chatAdapter = ChatAdapter(chatArr)

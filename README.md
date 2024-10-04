@@ -30,7 +30,8 @@ FUN:
 	- [ ] I **PL** possono fare qualcosa di analogo ma relativo ai **task**, quindi filtrando per **stato**, **D**, **scadenza** o **priorità**
 		
 	CHAT
-	- [ ] Videata
+	Si ipotizza che sono SOLO messaggi che si ricevono (dal PL, PM, altro dev, etc.)
+	- [X] Videata
 	- [ ] Mandare messaggi
 	- [ ] Ricevere messaggi instant
 

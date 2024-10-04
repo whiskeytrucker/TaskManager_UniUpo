@@ -15,13 +15,9 @@ import java.util.Locale
 class ChatAdapter(private val dataSet: ArrayList<Message>) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val messageText: TextView
-        val messageTimestamp: TextView
-
-        init{
-            messageText = view.findViewById(R.id.messageText)
-            messageTimestamp = view.findViewById(R.id.messageTimestamp)
-        }
+        val messageText: TextView = view.findViewById(R.id.messageText)
+        val messageFromText: TextView = view.findViewById(R.id.messageFromText)
+        val messageTimestamp: TextView = view.findViewById(R.id.messageTimestamp)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,9 +26,9 @@ class ChatAdapter(private val dataSet: ArrayList<Message>) : RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("ChatAdapter", dataSet[position].toString())
         val message = dataSet[position]
         holder.messageText.text = message.text
+        holder.messageFromText.text = "Da: ${message.sender}"
         holder.messageTimestamp.text = formatTimestamp(message.timestamp)
     }
 
@@ -41,8 +37,7 @@ class ChatAdapter(private val dataSet: ArrayList<Message>) : RecyclerView.Adapte
     }
 
     private fun formatTimestamp(timestamp: Timestamp): String {
-        // Formatta il timestamp come desideri, ad esempio in "hh:mm a"
-        val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val sdf = SimpleDateFormat("hh:mm a dd/MM/YYYY ", Locale.getDefault())
         return sdf.format(timestamp.toDate())
     }
 }

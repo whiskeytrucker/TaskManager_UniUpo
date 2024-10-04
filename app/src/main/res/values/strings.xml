@@ -35,7 +35,10 @@
         <item>Developer</item>
         <item>Project Leader</item>
         <item>Project Manager</item>
+    </string-array>
 
+    <string-array name="porcodio">
+        <item>test</item>
     </string-array>
 
 </resources>
