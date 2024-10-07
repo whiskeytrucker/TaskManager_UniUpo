@@ -4,37 +4,52 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import it.polettomatteo.taskmanager_uniupo.dataclass.Message
+import java.time.LocalDateTime
+import java.util.Locale
 
 class ChatDB {
     companion object{
-        fun sendMessage(chatID: String, messageText: String, sender: String,callback: (Boolean?) -> Unit){
+        fun sendMessage(messageText: String, sender: String,callback: (Message?) -> Unit){
+
+
             val db = FirebaseFirestore
                     .getInstance()
             val msg = hashMapOf(
-                "mittente" to sender,
-                "testo" to messageText,
-                "timestamp" to FieldValue.serverTimestamp()
+                "sender" to true,
+                "text" to messageText,
+                "timestamp" to Timestamp.now()
             )
 
             val currentUser = FirebaseAuth.getInstance().currentUser
 
-
             if(currentUser != null){
                 db.collection("chat")
-                    .document(chatID)
-                    .collection("messages")
-                    .add(msg)
-                    .addOnSuccessListener{
-                        callback(true)
+                    .whereEqualTo("user0", currentUser.email)
+                    .whereEqualTo("user1", sender)
+                    .get()
+                    .addOnSuccessListener { docs ->
+                        for (doc in docs.documents) {
+                            db.collection("chat")
+                                .document(doc.id)
+                                .collection("messages")
+                                .document()
+                                .set(msg)
+                                .addOnSuccessListener {
+                                    val tmp = Message(
+                                        true,
+                                        messageText,
+                                        Timestamp.now()
+                                    )
+
+                                    callback(tmp)
+                                }
+                                .addOnFailureListener { callback(null) }
+                        }
                     }
-                    .addOnFailureListener {
-                        it.printStackTrace()
-                        callback(false)
-                    }
+                    .addOnFailureListener { it.printStackTrace(); callback(null) }
             }
 
         }
@@ -95,11 +110,11 @@ class ChatDB {
                                     val data = docIn.data
                                     if(data != null){
                                         val tmp = Message(
-                                            docIn.id,
                                             data["sender"].toString().toBoolean(),
                                             data["text"].toString(),
                                             data["timestamp"] as Timestamp
                                         )
+
                                         bundle.putSerializable(i.toString(), tmp)
                                     }
                                 }

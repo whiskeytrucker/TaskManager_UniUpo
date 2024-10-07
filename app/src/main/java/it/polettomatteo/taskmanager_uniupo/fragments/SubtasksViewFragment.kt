@@ -91,7 +91,7 @@ class SubtasksViewFragment: Fragment() {
 
     private val commentsListener = object: TempActivity{
         override fun onStartNewTempActivity(data: Bundle) {
-            val fragment = CommentsViewFragment()
+            val fragment = it.polettomatteo.taskmanager_uniupo.fragments.CommentsViewFragment()
             fragment.arguments = data
 
             parentFragmentManager.beginTransaction()

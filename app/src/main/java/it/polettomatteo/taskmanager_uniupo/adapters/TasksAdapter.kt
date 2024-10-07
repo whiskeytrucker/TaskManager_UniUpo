@@ -28,7 +28,7 @@ import java.util.Locale
 import kotlin.reflect.typeOf
 
 
-class TasksAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Task>, private val newFragment: StartNewRecycler, private val modifyListener: TempActivity, private val deleteListener: TempActivity) : RecyclerView.Adapter<TasksAdapter.ViewHolder>(){
+class TasksAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Task>, private val newFragment: StartNewRecycler, private val modifyListener: TempActivity, private val deleteListener: TempActivity) : RecyclerView.Adapter<it.polettomatteo.taskmanager_uniupo.adapters.TasksAdapter.ViewHolder>(){
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -64,7 +64,9 @@ class TasksAdapter(private val userType: String, private val context: Context, p
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.task_item, parent, false)
 
-        return ViewHolder(view)
+        return ViewHolder(
+            view
+        )
     }
 
 

@@ -70,7 +70,16 @@ class TasksViewFragment: Fragment() {
 
 
         tasksAdapter =
-            listener?.let { context?.let { it1 -> TasksAdapter(userType, it1, tmp, it, modifyActivityListener, deleteActivityListener) } }!!
+            listener?.let { context?.let { it1 ->
+                TasksAdapter(
+                    userType,
+                    it1,
+                    tmp,
+                    it,
+                    modifyActivityListener,
+                    deleteActivityListener
+                )
+            } }!!
         recyclerView.adapter = tasksAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
