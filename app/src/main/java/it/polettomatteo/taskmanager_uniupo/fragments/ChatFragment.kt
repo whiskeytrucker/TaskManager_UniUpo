@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.core.snap
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -103,6 +104,8 @@ class ChatFragment: Fragment() {
                 val userQuery = spinUser1.getItemAtPosition(spinUser1.selectedItemPosition).toString()
                 val chatArr = ArrayList<Message>()
 
+                listenForMessages()
+
                 if(currentUser != null){
                     currentUser!!.email?.let {
                         ChatDB.getOldMessages(it, userQuery){ results ->
@@ -169,13 +172,14 @@ class ChatFragment: Fragment() {
                             .document(doc.id)
                             .collection("messages")
                             .orderBy("timestamp", Query.Direction.ASCENDING)
-                            .addSnapshotListener { snapshots, err ->
+                            .addSnapshotListener { snapshot, err ->
                                 if (err != null) {
                                     Log.e("ChatFragment", err.toString())
                                     return@addSnapshotListener
                                 }
 
-                                for (document in snapshots!!.documentChanges) {
+
+                                for (document in snapshot!!.documentChanges) {
                                     if (document.type == DocumentChange.Type.ADDED) {
                                         val data = document.document.data
 
@@ -188,6 +192,7 @@ class ChatFragment: Fragment() {
                                         chatArr.add(tmp)
                                         val chatAdapter = ChatAdapter(chatArr, requireContext())
                                         recyclerView.adapter = chatAdapter
+                                        chatAdapter.notifyItemChanged(chatArr.size - 1)
                                     }
                                 }
                             }

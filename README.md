@@ -6,7 +6,7 @@ PRINCIPALI
 		- [X] Sottotask
 		
 - [ ] Notifiche
-- [ ] Chat (CTRL + C / CTRL + V perchè non funziona nulla)
+- [X] Chat
 
 
 FUN:
@@ -32,7 +32,7 @@ FUN:
 	CHAT
 	- [X] Videata
 	- [X] Mandare messaggi
-	- [ ] Ricevere messaggi instant
+	- [X] Ricevere messaggi instant
 
 
 VIEW:
