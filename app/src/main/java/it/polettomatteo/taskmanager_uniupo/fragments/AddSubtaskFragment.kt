@@ -8,7 +8,9 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.SeekBar
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -30,17 +32,40 @@ class AddSubtaskFragment: Fragment() {
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val submitBtn = view.findViewById<Button>(R.id.submitSubButton)
+        val progressText = view.findViewById<TextView>(R.id.progressSubtask)
+        val seekBar = view.findViewById<SeekBar>(R.id.seekBar)
+
+
+        // Progress
+        progressText.text = "0%"
+        seekBar.progress = 0
+
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                progressText.text = "${progress.toString()}%"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                // Optional: azione quando l'utente inizia a muovere la SeekBar
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                // Optional: azione quando l'utente smette di muovere la SeekBar
+            }
+        })
+
 
         submitBtn.setOnClickListener{
             val subDescr = view.findViewById<EditText>(R.id.modSubDescr).text.toString()
             val priority = view.findViewById<Spinner>(R.id.spinPriority).selectedItemPosition
-            val state = view.findViewById<Spinner>(R.id.spinState).selectedItemPosition
+            val state = view.findViewById<Spinner>(R.id.spinState).selectedItemPosition + 1
+            var progress = seekBar.progress
             val dateS = view.findViewById<DatePicker>(R.id.modSubDate)
             val timeS = view.findViewById<TimePicker>(R.id.modSubTime)
 
             val expiring = getTimestamp(dateS, timeS)
 
-            SubtasksDB.addSubtask(subDescr, priority, state, expiring) { bundle ->
+            SubtasksDB.addSubtask(subDescr, priority, state, progress, expiring) { bundle ->
                 if (bundle != null) {
                     if (bundle.getBoolean("result")) {
                         Toast.makeText(context, "Dati salvati!", Toast.LENGTH_SHORT).show()

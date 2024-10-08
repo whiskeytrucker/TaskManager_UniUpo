@@ -6,14 +6,15 @@ PRINCIPALI
 		- [X] Sottotask
 		
 - [ ] Notifiche
-- [ ] Chat (CTRL + C / CTRL + V perchè non funziona nulla)
+- [X] Chat
 
 
 FUN:
 - [X] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
 - [X] Login / Logout e relativi tasti
+- [X] Registrazione
 - [X] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
-- [ ] Controllo input mail + password NO vuoto etc
+- [X] Controllo input mail + password NO vuoto etc
 - [X] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
 	- [X] Un **task** può essere modificato solo da un PL
 	- [X] Un **sottotask** può essere modificato sia da un PL che da un D
@@ -28,6 +29,10 @@ FUN:
 	- [ ] Il **PM** può fare ricerche sui progetti mettendo filtri in base allo **stato**, al **PL** e alla **scadenza**.
 	- [ ] I **PL** possono fare qualcosa di analogo ma relativo ai **task**, quindi filtrando per **stato**, **D**, **scadenza** o **priorità**
 		
+	CHAT
+	- [X] Videata
+	- [X] Mandare messaggi
+	- [X] Ricevere messaggi instant
 
 
 VIEW:
@@ -47,7 +52,10 @@ VIEW:
 - [X] Videata progetti non si aggiorna quando si fa logout/login
 - [X] Tasto Home crasha quando cliccato dentro la Task
 - [X] Refreshare Task e Subtask ogni volta che si effettua la modifica
-	- [ ] Tasti Modifica e Cancella scompaiono poiché si "dimentica" del tipo utente
+	- [X] Tasti Modifica e Cancella scompaiono poiché si "dimentica" del tipo utente
+- [X] Refreshare Task e Subtask ogni volta che si effettua la cancellazione
+- [ ] Aggiornare domain/company name del pacchetto
+
 
 ## Testo Progetto
 **Progetto Android**  

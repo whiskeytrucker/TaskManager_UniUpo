@@ -24,7 +24,7 @@ class ProjectsViewFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.recycler_view, container, false)
+        val view = inflater.inflate(R.layout.recycler_projectview, container, false)
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

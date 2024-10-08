@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import it.polettomatteo.taskmanager_uniupo.dataclass.Comment
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
 
 class SubtasksDB {
@@ -30,8 +31,6 @@ class SubtasksDB {
                     for((index, doc) in documents.withIndex()){
                         val data = doc.data
                         if (data != null) {
-                            Log.d(TAG, data.toString())
-
                             val tmp = Subtask(
                                 doc.id,
                                 idTask,
@@ -54,11 +53,48 @@ class SubtasksDB {
                 }
         }
 
+        fun getComments(idSubtask: String, callback: (Bundle?) -> Unit){
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idPrg)
+                .collection("task")
+                .document(idTask)
+                .collection("sotto_task")
+                .document(idSubtask)
+                .collection("commenti")
+                .get()
+                .addOnSuccessListener { results ->
+                    val documents = results.documents
+                    val bun = Bundle()
+
+                    for((index, doc) in documents.withIndex()) {
+                        val data = doc.data
+                        if (data != null) {
+                            val tmp = Comment(
+                                doc.id,
+                                data["da"].toString(),
+                                data["commento"].toString(),
+                                data["voto"].toString().toInt()
+                            )
+                            bun.putSerializable(index.toString(), tmp)
+                        }
+                    }
+
+                    callback(bun)
+                }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                    callback(null)
+                }
+        }
+
 
         fun addSubtask(
             subDescr: String,
             priority: Int,
             state: Int,
+            progresso: Int,
             expiring: Timestamp,
             callback: (Bundle?) -> Unit
         ) {
@@ -66,17 +102,17 @@ class SubtasksDB {
                 "subDescr" to subDescr,
                 "priorita" to priority,
                 "stato" to state,
-                "scadenza" to expiring,
-                "progress" to 0
+                "progress" to progresso,
+                "scadenza" to expiring
             )
             val doc = FirebaseFirestore
-                        .getInstance()
-                        .collection("projects")
-                        .document(idPrg)
-                        .collection("task")
-                        .document(idTask)
-                        .collection("sotto_task")
-                        .document()
+                    .getInstance()
+                    .collection("projects")
+                    .document(idPrg)
+                    .collection("task")
+                    .document(idTask)
+                    .collection("sotto_task")
+                    .document()
 
                 doc.set(data)
                 .addOnSuccessListener {

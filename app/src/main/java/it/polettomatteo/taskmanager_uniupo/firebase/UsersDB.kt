@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import it.polettomatteo.taskmanager_uniupo.dataclass.Chat
 
 class UsersDB {
     companion object{
@@ -28,38 +27,23 @@ class UsersDB {
                 }
         }
 
-        fun getUserChat(username: String, callback: (Bundle?) -> Unit){
+        fun setUserType(username: String, type: String, callback: (Boolean?) -> Unit){
+            val data = hashMapOf(
+                "username" to username,
+                "tipo" to type
+            )
+
             FirebaseFirestore
                 .getInstance()
-                .collection("chat")
-                .whereEqualTo("da", username)
-                .get()
-                .addOnSuccessListener {result ->
-                    val bundle = Bundle()
-                    val documents = result.documents
-                    for((index, doc) in documents.withIndex()){
-                        val data = doc.data
-
-                        if(data != null){
-                            val tmp = Chat(
-                                data["id"].toString(),
-                                data["da"].toString(),
-                                data["a"].toString(),
-                                data["ultimoMsg"].toString(),
-                                data["data"] as Timestamp
-                            )
-
-                            bundle.putSerializable(index.toString(), tmp)
-                        }
-
-                    }
-
-                    callback(bundle)
-
+                .collection("tipo_utenti")
+                .document()
+                .set(data)
+                .addOnSuccessListener {
+                    callback(true)
                 }
-                .addOnFailureListener{
+                .addOnFailureListener {
                     it.printStackTrace()
-                    callback(null)
+                    callback(false)
                 }
         }
     }

@@ -14,10 +14,14 @@ class ProjectsDB {
         fun getProjects(username: String, usertype: String, callback: (Bundle?) -> Unit) {
             var field: String = ""
 
-            if(usertype.compareTo("pm") == 0) {
-                field = "autore"
-            }else if(usertype.compareTo("pl") == 0) {
-                field = "assigned"
+            if(usertype.isNotEmpty() && usertype.isNotBlank()) {
+                if (usertype.compareTo("pm") == 0) {
+                    field = "autore"
+                } else if (usertype.compareTo("pl") == 0) {
+                    field = "assigned"
+                }
+            }else{
+                callback(null)
             }
 
             FirebaseFirestore
@@ -76,7 +80,6 @@ class ProjectsDB {
         }
 
         fun fetchPL(username: String, callback:(String) -> Unit){
-
             val bundle = Bundle()
 
             FirebaseFirestore

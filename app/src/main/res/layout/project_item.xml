@@ -13,7 +13,6 @@
         android:paddingTop="10sp"
         android:paddingStart="10sp"
         android:paddingEnd="10sp">
-
     </TextView>
 
 
@@ -25,8 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_marginTop="0dp"
-        android:layout_centerHorizontal="true"
-        android:text="@string/lorem_30w">
+        android:layout_centerHorizontal="true">
 
     </TextView>
 

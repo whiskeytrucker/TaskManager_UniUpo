@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SubtasksAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Subtask>, private var listener: TempActivity): RecyclerView.Adapter<SubtasksAdapter.ViewHolder>() {
+class SubtasksAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Subtask>, private var modListener: TempActivity, private var commentListener: TempActivity): RecyclerView.Adapter<SubtasksAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val state: TextView
@@ -33,6 +33,7 @@ class SubtasksAdapter(private val userType: String, private val context: Context
         val seekBar: SeekBar
         val modifyBtn: Button
         val deleteBtn: Button
+        val commentBtn: Button
 
         init{
             state = view.findViewById(R.id.state)
@@ -45,10 +46,9 @@ class SubtasksAdapter(private val userType: String, private val context: Context
             modifyBtn = view.findViewById(R.id.modifySubtask)
             deleteBtn = view.findViewById(R.id.deleteSubtask)
 
+            commentBtn = view.findViewById(R.id.viewSubComment)
+
             seekBar.isEnabled = false
-            seekBar.progress = 0
-
-
         }
     }
 
@@ -71,13 +71,27 @@ class SubtasksAdapter(private val userType: String, private val context: Context
         var subpriority:String = ""
         var subState: String = ""
 
-        if(dataSet[position].priorita <= 1) subpriority = "Bassa"
-        else if(dataSet[position].priorita == 2) subpriority = "Media"
-        else if(dataSet[position].priorita >= 3) subpriority = "Alta"
 
-        if(dataSet[position].stato <= 1) subState = "TODO"
-        else if(dataSet[position].stato == 2) subState = "Assigned"
-        else if(dataSet[position].stato >= 3) subState = "Completed"
+        when(dataSet[position].priorita){
+            0 -> subpriority = "Nessuna"
+            1 -> subpriority = "Bassa"
+            2 -> subpriority = "Media"
+            3 -> subpriority = "Alta"
+            4 -> subpriority = "URGENTE"
+            else -> {
+                subpriority = "Errore"
+            }
+        }
+
+        when(dataSet[position].stato){
+            1 -> subState = "TODO"
+            2 -> subState = "Assigned"
+            3 -> subState = "Completed"
+            else -> {
+                subpriority = "Errore"
+            }
+        }
+
 
         holder.state.text = "Stato: ${subState}"
         holder.subDescr.text = "\"${dataSet[position].subDescr}\""
@@ -95,7 +109,7 @@ class SubtasksAdapter(private val userType: String, private val context: Context
             holder.seekBar.visibility = View.GONE
         }
 
-        if((/*userType.compareTo("d") == 0 || */userType.compareTo("pl") == 0)){
+        if((userType.compareTo("d") == 0 || userType.compareTo("pl") == 0)){
             if(dataSet[position].stato <= 2)holder.modifyBtn.visibility = View.VISIBLE
             holder.deleteBtn.visibility = View.VISIBLE
 
@@ -110,7 +124,7 @@ class SubtasksAdapter(private val userType: String, private val context: Context
                 tmp.putLong("expiring", ms)
                 tmp.putInt("progress", dataSet[position].progress)
 
-                listener.onStartNewTempActivity(tmp)
+                modListener.onStartNewTempActivity(tmp)
             }
 
             holder.deleteBtn.setOnClickListener{
@@ -120,11 +134,18 @@ class SubtasksAdapter(private val userType: String, private val context: Context
                         dataSet.removeAt(position)
                         notifyItemRemoved(position)
                         notifyItemRangeChanged(position, dataSet.size)
-                        notifyDataSetChanged()
                     }else{
                         Toast.makeText(context, "Errore nella cancellazione!", Toast.LENGTH_SHORT).show()
                     }
 
+                }
+            }
+        }
+
+        holder.commentBtn.setOnClickListener{
+            SubtasksDB.getComments(dataSet[position].id){ result ->
+                if(result != null){
+                    commentListener.onStartNewTempActivity(result)
                 }
             }
         }

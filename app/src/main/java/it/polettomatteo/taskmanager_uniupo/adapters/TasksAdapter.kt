@@ -28,7 +28,7 @@ import java.util.Locale
 import kotlin.reflect.typeOf
 
 
-class TasksAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Task>, private val listener: StartNewRecycler, private val listener2: TempActivity) : RecyclerView.Adapter<TasksAdapter.ViewHolder>(){
+class TasksAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Task>, private val newFragment: StartNewRecycler, private val modifyListener: TempActivity, private val deleteListener: TempActivity) : RecyclerView.Adapter<it.polettomatteo.taskmanager_uniupo.adapters.TasksAdapter.ViewHolder>(){
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -64,7 +64,9 @@ class TasksAdapter(private val userType: String, private val context: Context, p
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.task_item, parent, false)
 
-        return ViewHolder(view)
+        return ViewHolder(
+            view
+        )
     }
 
 
@@ -94,7 +96,7 @@ class TasksAdapter(private val userType: String, private val context: Context, p
             SubtasksDB.getSubtasks(idProject, idTask){bundle ->
                 if(bundle != null){
                     dataSet.clear()
-                    listener.onStartNewRecylcerView(bundle)
+                    newFragment.onStartNewRecylcerView(bundle)
                 }
             }
         }
@@ -114,17 +116,16 @@ class TasksAdapter(private val userType: String, private val context: Context, p
                 bundle.putInt("progress", dataSet[position].progress.toInt())
                 bundle.putLong("scadenza", ms)
 
-                listener2.onStartNewTempActivity(bundle)
+                modifyListener.onStartNewTempActivity(bundle)
             }
 
             holder.deleteBtn.setOnClickListener{
                 TasksDB.deleteTask(idProject, idTask){result ->
                     if(result == true){
-                        Toast.makeText(context, "Task cancellata correttamente!", Toast.LENGTH_SHORT).show()
-                        dataSet.removeAt(position)
-                        notifyItemRemoved(position)
-                        notifyItemRangeChanged(position, dataSet.size)
-                        notifyDataSetChanged()
+                        val bun = Bundle()
+                        bun.putInt("pos", position)
+                        bun.putString("id", idTask)
+                        deleteListener.onStartNewTempActivity(bun)
                     }else{
                         Toast.makeText(context, "Errore nella cancellazione!", Toast.LENGTH_SHORT).show()
                     }

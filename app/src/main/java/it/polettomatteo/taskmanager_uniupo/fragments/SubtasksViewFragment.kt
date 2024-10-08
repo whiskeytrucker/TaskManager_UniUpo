@@ -20,20 +20,22 @@ val TAG = "SubtasksViewFragment"
 class SubtasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
     private lateinit var addStuffBtn: Button
+    private lateinit var goBackBtn: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var subtasksAdapter: SubtasksAdapter
     private lateinit var tmp: ArrayList<Subtask>
+    private var userType: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.recycler_taskview, container, false)
+        val view = inflater.inflate(R.layout.recycler_subtaskview, container, false)
         recyclerView = view.findViewById(R.id.recyclerTaskView)
 
         addStuffBtn = view.findViewById(R.id.addStuff)
-
+        goBackBtn = view.findViewById(R.id.goBack)
 
         val bundle: Bundle?
 
@@ -42,8 +44,6 @@ class SubtasksViewFragment: Fragment() {
         }else{
             bundle = this.arguments
         }
-
-        var userType:String = ""
 
         tmp = ArrayList()
 
@@ -58,6 +58,7 @@ class SubtasksViewFragment: Fragment() {
                 tmp.add(bundle.getSerializable(key) as Subtask)
             }
 
+
             if(userType.compareTo("d") == 0 || userType.compareTo("pl") == 0){
                 addStuffBtn.visibility = View.VISIBLE
             }
@@ -66,10 +67,8 @@ class SubtasksViewFragment: Fragment() {
 
         tmp.sortWith(compareByDescending<Subtask>{it.priorita}.thenBy { it.scadenza })
 
-        Log.d(TAG, "Tipo User: ${userType}")
-
         subtasksAdapter =
-            context?.let { SubtasksAdapter(userType, it, tmp, modifyActivityListener) }!! // <-- Da cambiare con i dati presi da savedInstanceState
+            context?.let { SubtasksAdapter(userType, it, tmp, modifyActivityListener, commentsListener) }!! // <-- Da cambiare con i dati presi da savedInstanceState
         recyclerView.adapter = subtasksAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
@@ -79,7 +78,7 @@ class SubtasksViewFragment: Fragment() {
 
     private val modifyActivityListener = object: TempActivity {
         override fun onStartNewTempActivity(data: Bundle) {
-            var fragment = ModifySubtaskFragment()
+            val fragment = ModifySubtaskFragment()
             fragment.arguments = data
 
             parentFragmentManager.beginTransaction()
@@ -90,13 +89,26 @@ class SubtasksViewFragment: Fragment() {
 
     }
 
+    private val commentsListener = object: TempActivity{
+        override fun onStartNewTempActivity(data: Bundle) {
+            val fragment = it.polettomatteo.taskmanager_uniupo.fragments.CommentsViewFragment()
+            fragment.arguments = data
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
     override fun onStart(){
         super.onStart()
-        val goBackBtn = view?.findViewById<Button>(R.id.goBack)
-        goBackBtn?.setOnClickListener{
-            requireActivity().supportFragmentManager.popBackStack();
-        }
 
+        goBackBtn.setOnClickListener{
+            Log.d(TAG, "Sono nel onBackBtn listener")
+            Log.d(TAG, requireActivity().supportFragmentManager.getBackStackEntryAt(0).toString())
+            requireActivity().supportFragmentManager.popBackStack()
+        }
 
         addStuffBtn.setOnClickListener{
             parentFragmentManager.beginTransaction()
@@ -105,18 +117,18 @@ class SubtasksViewFragment: Fragment() {
                 .commit()
         }
 
+
+
         val key = "data"
         parentFragmentManager.setFragmentResultListener(key, this){key, bundle ->
-            Log.d(TAG, "key: ${key}\t Bundle: ${bundle.toString()}")
             val subtask = bundle.getSerializable("data") as Subtask
             val done = bundle.getString("done")
 
             if (done?.compareTo("mod") == 0){
                 val i = findIndex(subtask)
-                tmp.removeAt(i)
-                subtasksAdapter.notifyItemRemoved(i)
-                for(subtask in tmp){
-                    Log.d(TAG, subtask.toString())
+                if(i != -1){
+                    tmp.removeAt(i)
+                    subtasksAdapter.notifyItemRemoved(i)
                 }
             }
 
