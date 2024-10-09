@@ -54,6 +54,7 @@ VIEW:
 - [X] Refreshare Task e Subtask ogni volta che si effettua la modifica
 	- [X] Tasti Modifica e Cancella scompaiono poiché si "dimentica" del tipo utente
 - [X] Refreshare Task e Subtask ogni volta che si effettua la cancellazione
+- [X] Duplicazione messaggio in Chat
 - [ ] Aggiornare domain/company name del pacchetto
 
 
