@@ -47,7 +47,6 @@ class ChatFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "onCreateView")
         val view = inflater.inflate(R.layout.recycler_chat, container, false)
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -70,22 +69,6 @@ class ChatFragment: Fragment() {
         spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
         spinUser1.adapter = spinAdapter
 
-
-//        val userQuery = spinUser1.getItemAtPosition(spinUser1.selectedItemPosition).toString()
-
-//        if(currentUser != null){
-//            currentUser!!.email?.let {
-//                ChatDB.getOldMessages(it, userQuery){ results ->
-//                    if(results != null){
-//                        for(key in results.keySet()){
-//                            val msg = results.getSerializable(key) as Message
-//                            chatArr.add(msg)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
         toSend = view.findViewById(R.id.editTextMessage)
 
         this.recyclerView = view.findViewById(R.id.recyclerViewChat)
@@ -98,14 +81,13 @@ class ChatFragment: Fragment() {
     }
 
     override fun onStart(){
-        Log.d(TAG, "onStart")
         super.onStart()
 
         spinUser1.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 listenerMsg?.remove()
                 val userQuery = spinUser1.getItemAtPosition(spinUser1.selectedItemPosition).toString()
-                listenForMessages()
+                currentUser?.email?.let { listenForMessages(it, userQuery) }
 
                 if(currentUser != null){
                     currentUser!!.email?.let {
@@ -116,7 +98,6 @@ class ChatFragment: Fragment() {
                                     chatArr.add(results.getSerializable(key) as Message)
                                 }
 
-                                Log.d(TAG, "updating MSG onItemSelectedListener")
                                 val chatAdapter = ChatAdapter(chatArr, requireContext())
                                 recyclerView.adapter = chatAdapter
                             }
@@ -154,9 +135,7 @@ class ChatFragment: Fragment() {
     }
 
 
-    fun listenForMessages() {
-        val user0 = currentUser?.email
-        val user1 = spinUser1.getItemAtPosition(spinUser1.selectedItemPosition).toString()
+    fun listenForMessages(user0: String, user1: String) {
 
         val db = FirebaseFirestore.getInstance()
         db.collection("chat")
@@ -166,8 +145,7 @@ class ChatFragment: Fragment() {
             .get()
             .addOnSuccessListener { docs ->
                 for(doc in docs){
-                    listenerMsg =
-                    db.collection("chat")
+                    listenerMsg = db.collection("chat")
                         .document(doc.id)
                         .collection("messages")
                         .orderBy("timestamp", Query.Direction.ASCENDING)

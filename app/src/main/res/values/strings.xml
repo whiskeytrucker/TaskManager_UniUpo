@@ -13,6 +13,8 @@
     <string name="wb">Bentornato</string>
     <string name="lorem_30w">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ac tortor dolor. Ut pharetra sollicitudin orci quis maximus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit. "</string>
 
+    <string name="default_notification_channelID">"Canale Default Notifiche"</string>
+    <string name="msg_token_fmt">Token: %s</string>
 
 
     <string-array name="stati_subtask">

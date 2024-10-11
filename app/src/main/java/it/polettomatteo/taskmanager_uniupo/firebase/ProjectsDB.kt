@@ -7,8 +7,6 @@ import com.google.firebase.firestore.getField
 import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 
 
-var TAG = "ProjectsDB"
-
 class ProjectsDB {
     companion object{
         fun getProjects(username: String, usertype: String, callback: (Bundle?) -> Unit) {
