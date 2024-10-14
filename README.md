@@ -42,10 +42,10 @@ FUN:
 
 VIEW:
 - [X] Menù laterale  E videata con lista progetti
-  - [X] Lista Task una volta clickato un progetto
+- [X] Lista Task una volta clickato un progetto
 	- [X] Mostrare SOLO Lista Task se Dev
-  - [X] Lista Sotto Task una volta clickata una Task
-  - [ ] Tasto indietro per tornare alla "pagina" precedente
+- [X] Lista Sotto Task una volta clickata una Task
+- [ ] Tasto indietro per tornare alla "pagina" precedente
 
 - [X] Pagina Utente -- Giusto da visualizzare il tipo di utente
 

@@ -3,7 +3,6 @@ package it.polettomatteo.taskmanager_uniupo.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -13,11 +12,9 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.messaging.FirebaseMessaging
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.firebase.ChatDB
 import it.polettomatteo.taskmanager_uniupo.firebase.FBMsgService
-import it.polettomatteo.taskmanager_uniupo.firebase.FBMsgService.Companion.getUserToken
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
@@ -53,7 +50,7 @@ class MainActivity : AppCompatActivity(){
 
     override fun onStart(){
         super.onStart()
-        if(currentUser != null)getUserToken()
+        if(currentUser != null)FBMsgService.getUserToken()
         this.createFragment()
     }
 

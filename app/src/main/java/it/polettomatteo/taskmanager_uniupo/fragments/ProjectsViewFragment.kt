@@ -23,6 +23,7 @@ import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.activities.ResultActivity
 import it.polettomatteo.taskmanager_uniupo.adapters.ProjectsAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Project
+import it.polettomatteo.taskmanager_uniupo.firebase.FBMsgService.Companion.sendNotification
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
 class ProjectsViewFragment: Fragment() {
@@ -62,13 +63,6 @@ class ProjectsViewFragment: Fragment() {
         }
 
         tmpBut = view.findViewById(R.id.testNot)
-        this.notificationManager =
-            requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotifChannel(
-            "it.camporapoletto.tempNot",
-            "Diego News",
-            "Tutte le notifiche da parte di DIEGO"
-        )
 
 
         val customAdapter =
@@ -109,40 +103,40 @@ class ProjectsViewFragment: Fragment() {
 
 
 
-    fun createNotifChannel(
-        id: String,
-        channelName: String,
-        channelDescription: String,
-    ) {
-        val importance = NotificationManager.IMPORTANCE_LOW
-        val channel = NotificationChannel(id, channelName, importance)
-        channel.description = channelDescription
-        this.notificationManager.getNotificationChannel(channel.id)
-            ?: this.notificationManager.createNotificationChannel(channel)
-    }
-
-    fun sendNotification(){
-        val notificationID = 123
-        val resultIntent = Intent(requireContext(), ResultActivity::class.java)
-
-        val pending = PendingIntent.getActivity(
-            requireContext(),
-            0,
-            resultIntent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-
-
-        val channelID = "it.camporapoletto.tempNot"
-        val not = Notification.Builder(requireContext(), channelID)
-            .setContentTitle("Esempio Notifica")
-            .setContentText("Questo è un esempio di Notifica, Si Diego, Vai Diego")
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setChannelId(channelID)
-            .setContentIntent(pending)
-            .build()
-
-        notificationManager.notify(notificationID, not)
-    }
+//    fun createNotifChannel(
+//        id: String,
+//        channelName: String,
+//        channelDescription: String,
+//    ) {
+//        val importance = NotificationManager.IMPORTANCE_LOW
+//        val channel = NotificationChannel(id, channelName, importance)
+//        channel.description = channelDescription
+//        this.notificationManager.getNotificationChannel(channel.id)
+//            ?: this.notificationManager.createNotificationChannel(channel)
+//    }
+//
+//    fun sendNotification(){
+//        val notificationID = 123
+//        val resultIntent = Intent(requireContext(), ResultActivity::class.java)
+//
+//        val pending = PendingIntent.getActivity(
+//            requireContext(),
+//            0,
+//            resultIntent,
+//            PendingIntent.FLAG_IMMUTABLE
+//        )
+//
+//
+//        val channelID = "it.camporapoletto.tempNot"
+//        val not = Notification.Builder(requireContext(), channelID)
+//            .setContentTitle("Esempio Notifica")
+//            .setContentText("Questo è un esempio di Notifica, Si Diego, Vai Diego")
+//            .setSmallIcon(android.R.drawable.ic_dialog_info)
+//            .setChannelId(channelID)
+//            .setContentIntent(pending)
+//            .build()
+//
+//        notificationManager.notify(notificationID, not)
+//    }
 
 }
