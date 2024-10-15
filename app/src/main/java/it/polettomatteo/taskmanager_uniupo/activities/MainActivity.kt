@@ -1,5 +1,8 @@
 package it.polettomatteo.taskmanager_uniupo.activities
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,8 +16,10 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import it.polettomatteo.taskmanager_uniupo.R
+import it.polettomatteo.taskmanager_uniupo.dataclass.Notification
 import it.polettomatteo.taskmanager_uniupo.firebase.ChatDB
 import it.polettomatteo.taskmanager_uniupo.firebase.FBMsgService
+import it.polettomatteo.taskmanager_uniupo.firebase.NotificationDB.Companion.getChannelNames
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
@@ -26,6 +31,7 @@ import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
 class MainActivity : AppCompatActivity(){
+    private var notifManager: NotificationManager? = null
     private lateinit var auth: FirebaseAuth
     private var currentUser: FirebaseUser? = null
     var userType: String = "NA"
@@ -42,7 +48,7 @@ class MainActivity : AppCompatActivity(){
         auth = FirebaseAuth.getInstance()
         currentUser = auth.currentUser
 
-
+        notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 
         initToolbar(toolbar)
@@ -50,7 +56,23 @@ class MainActivity : AppCompatActivity(){
 
     override fun onStart(){
         super.onStart()
-        if(currentUser != null)FBMsgService.getUserToken()
+        if(currentUser != null){
+            currentUser?.email?.let {
+                getChannelNames(it){ result ->
+                    if(result != null){
+                        for(lel in result.keySet()){
+                            val tmp = result.getSerializable(lel) as Notification
+                            createNotifChannel(tmp)
+                        }
+
+                    }
+                }
+            }
+        }
+
+
+
+
         this.createFragment()
     }
 
@@ -245,6 +267,11 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
+    private fun createNotifChannel(notif: Notification){
+        val channel = NotificationChannel(notif.id, notif.title, NotificationManager.IMPORTANCE_LOW)
 
+        channel.description = notif.descr
+        notifManager?.createNotificationChannel(channel)
+    }
 
 }

@@ -3,19 +3,18 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,12 +22,11 @@ import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.activities.ResultActivity
 import it.polettomatteo.taskmanager_uniupo.adapters.ProjectsAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Project
-import it.polettomatteo.taskmanager_uniupo.firebase.FBMsgService.Companion.sendNotification
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
 class ProjectsViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
-    private lateinit var notificationManager: NotificationManager
+    private var notificationManager: NotificationManager? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var tmpBut: Button
 
@@ -63,6 +61,7 @@ class ProjectsViewFragment: Fragment() {
         }
 
         tmpBut = view.findViewById(R.id.testNot)
+        notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 
         val customAdapter =
@@ -86,57 +85,28 @@ class ProjectsViewFragment: Fragment() {
         savedBundle = this.arguments
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                Log.d("TasksViewFragment", parentFragmentManager.toString())
 
-                parentFragmentManager.popBackStack()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+    private fun sendNotification(){
+        val notificationID = 101
+
+        val resultIntent = Intent(requireContext(), ResultActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            requireContext(),
+            0,
+            resultIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val channelID = "it.taskmanager.temp"
+
+        val notification = Notification.Builder(requireContext(), channelID)
+            .setContentTitle("AAA")
+            .setContentText("SOLO A DEV1")
+            .setSmallIcon(R.drawable.ic_notification)
+            .setChannelId(channelID)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        notificationManager?.notify(notificationID, notification)
     }
-
-
-
-
-
-
-//    fun createNotifChannel(
-//        id: String,
-//        channelName: String,
-//        channelDescription: String,
-//    ) {
-//        val importance = NotificationManager.IMPORTANCE_LOW
-//        val channel = NotificationChannel(id, channelName, importance)
-//        channel.description = channelDescription
-//        this.notificationManager.getNotificationChannel(channel.id)
-//            ?: this.notificationManager.createNotificationChannel(channel)
-//    }
-//
-//    fun sendNotification(){
-//        val notificationID = 123
-//        val resultIntent = Intent(requireContext(), ResultActivity::class.java)
-//
-//        val pending = PendingIntent.getActivity(
-//            requireContext(),
-//            0,
-//            resultIntent,
-//            PendingIntent.FLAG_IMMUTABLE
-//        )
-//
-//
-//        val channelID = "it.camporapoletto.tempNot"
-//        val not = Notification.Builder(requireContext(), channelID)
-//            .setContentTitle("Esempio Notifica")
-//            .setContentText("Questo è un esempio di Notifica, Si Diego, Vai Diego")
-//            .setSmallIcon(android.R.drawable.ic_dialog_info)
-//            .setChannelId(channelID)
-//            .setContentIntent(pending)
-//            .build()
-//
-//        notificationManager.notify(notificationID, not)
-//    }
-
 }

@@ -1,7 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.adapters.SubtasksAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
-import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 import it.polettomatteo.taskmanager_uniupo.interfaces.TempActivity
 
 val TAG = "SubtasksViewFragment"
@@ -91,7 +89,7 @@ class SubtasksViewFragment: Fragment() {
 
     private val commentsListener = object: TempActivity{
         override fun onStartNewTempActivity(data: Bundle) {
-            val fragment = it.polettomatteo.taskmanager_uniupo.fragments.CommentsViewFragment()
+            val fragment = CommentsViewFragment()
             fragment.arguments = data
 
             parentFragmentManager.beginTransaction()
@@ -105,8 +103,6 @@ class SubtasksViewFragment: Fragment() {
         super.onStart()
 
         goBackBtn.setOnClickListener{
-            Log.d(TAG, "Sono nel onBackBtn listener")
-            Log.d(TAG, requireActivity().supportFragmentManager.getBackStackEntryAt(0).toString())
             requireActivity().supportFragmentManager.popBackStack()
         }
 

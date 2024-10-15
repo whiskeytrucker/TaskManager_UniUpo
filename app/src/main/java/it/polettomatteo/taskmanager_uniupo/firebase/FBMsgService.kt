@@ -16,6 +16,8 @@ val TAG = "FBMsgService"
 
 class FBMsgService: FirebaseMessagingService() {
     companion object{
+        private var token = ""
+
         fun getUserToken(){
             val msgSer = FirebaseMessaging.getInstance()
 
@@ -26,20 +28,29 @@ class FBMsgService: FirebaseMessagingService() {
                         return@addOnCompleteListener
                     }
 
-                    val token = task.result
-
-                    val msg = token.toString()
-                    Log.d(TAG, msg)
+                    token = task.result.toString()
                 }
         }
 
-        fun sendNotification(){
-            val key = "_DCClyZYFjWLkOuAjOFui6YGA9IFWx4-U3NTQp5uEac"
-            val token =
-                "fj4LYQx6QOW4yorj-CCBA3:APA91bF9BL_8fXtPPsBoDxTvxvOc6dzEjeFRZp7PI7b8VNr1tFLRTO4gJu2o6-TzxG-kqOZBrSIaJZFngW-XBKw6myZ3ZuhsTfMJ1HmprVrr75pq7ETKTd0acT69TPTPoA_XkDEMbyZg"
+        fun subscribeToTopic(){
+            val msgSer = FirebaseMessaging.getInstance()
 
+            msgSer.subscribeToTopic("test_notifica")
+                .addOnCompleteListener{task ->
+                    if(!task.isSuccessful){
+                        Log.e(TAG, "Errore nell'iscrizione del topic!")
+                    }else{
+                        Log.d(TAG, "Sottoscritto!")
+                    }
+                }
+        }
+
+
+
+
+        fun sendNotification(){
             val apiService = Retrofit.Builder()
-                .baseUrl("https://fcm.googleapis.com/fcm/send/")
+                .baseUrl("https://fcm.googleapis.com/v1/projects/taskmanager-uniupo-bb5f9/messages:send/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(NotificationAPIService::class.java)
@@ -50,7 +61,7 @@ class FBMsgService: FirebaseMessagingService() {
                 "Ciao! Sono un test!"
             )
 
-            apiService.sendNotification(key, notificationData).enqueue(object : Callback<ResponseBody> {
+            apiService.sendNotification(notificationData).enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     Log.d(TAG, "Notifica inviata con successo")
                     Log.d(TAG, response.toString())

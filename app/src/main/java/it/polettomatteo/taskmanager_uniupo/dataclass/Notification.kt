@@ -1,7 +1,9 @@
 package it.polettomatteo.taskmanager_uniupo.dataclass
 
+import java.io.Serializable
+
 data class Notification(
-    val token: String,
+    val id: String,
     val title: String,
-    val body: String
-)
+    val descr: String
+): Serializable
