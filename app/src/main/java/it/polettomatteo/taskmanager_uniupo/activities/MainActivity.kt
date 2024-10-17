@@ -2,12 +2,15 @@ package it.polettomatteo.taskmanager_uniupo.activities
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -15,11 +18,10 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.dataclass.Notification
 import it.polettomatteo.taskmanager_uniupo.firebase.ChatDB
-import it.polettomatteo.taskmanager_uniupo.firebase.FBMsgService
-import it.polettomatteo.taskmanager_uniupo.firebase.NotificationDB.Companion.getChannelNames
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
@@ -29,6 +31,7 @@ import it.polettomatteo.taskmanager_uniupo.fragments.ChatFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.UserPageFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
+import java.util.Random
 
 class MainActivity : AppCompatActivity(){
     private var notifManager: NotificationManager? = null
@@ -57,15 +60,10 @@ class MainActivity : AppCompatActivity(){
     override fun onStart(){
         super.onStart()
         if(currentUser != null){
-            currentUser?.email?.let {
-                getChannelNames(it){ result ->
-                    if(result != null){
-                        for(lel in result.keySet()){
-                            val tmp = result.getSerializable(lel) as Notification
-                            createNotifChannel(tmp)
-                        }
-
-                    }
+            getNotifications{ notifications ->
+                if(notifications != null){
+                    for(notif in notifications)
+                        createNotification(notif)
                 }
             }
         }
@@ -267,11 +265,72 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-    private fun createNotifChannel(notif: Notification){
-        val channel = NotificationChannel(notif.id, notif.title, NotificationManager.IMPORTANCE_LOW)
 
-        channel.description = notif.descr
-        notifManager?.createNotificationChannel(channel)
+    private fun getNotifications(callback: (ArrayList<Notification>?) -> Unit){
+        val db = FirebaseFirestore.getInstance()
+
+        val qry = db.collection("notifiche")
+            .whereEqualTo("user", currentUser?.email)
+            .limit(1)
+
+            qry.get()
+            .addOnSuccessListener { docs ->
+                for(doc in docs){
+                    db.collection("notifiche")
+                        .document(doc.id)
+                        .collection("unseen")
+                        .get()
+                        .addOnSuccessListener { result ->
+                            val nots = ArrayList<Notification>()
+                            for(docUS in result){
+                                val data = docUS.data
+                                val tmp = Notification(
+                                    docUS.id,
+                                    data["title"].toString(),
+                                    data["descr"].toString(),
+                                    data["channel"].toString(),
+                                    data["channelTitle"].toString(),
+                                    data["channelDescr"].toString()
+                                )
+                                nots.add(tmp)
+                            }
+
+                            callback(nots)
+                        }
+                }
+            }
     }
+
+
+
+    private fun createNotification(notifi: Notification) {
+        val intent1 = Intent(this, DeleteNotification::class.java)
+        intent1.putExtra("notification_id", notifi.id)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            intent1,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+
+        val importance = NotificationManager.IMPORTANCE_LOW
+        val channel = NotificationChannel(notifi.channelID, notifi.channelTitle, importance)
+        channel.description = notifi.channelDescr
+        notifManager?.getNotificationChannel(channel.id)
+            ?: notifManager?.createNotificationChannel(channel)
+
+        val notification = NotificationCompat.Builder(this@MainActivity, channel.id)
+            .setContentTitle(notifi.title)
+            .setContentText(notifi.descr)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notifi.title))
+            .setChannelId(channel.id)
+            .setDeleteIntent(pendingIntent)
+            .build()
+        notifManager?.notify(Random(1000000).nextInt(), notification)
+    }
+
 
 }

@@ -60,7 +60,7 @@ class ChatDB {
 
 
             db.collection("chat")
-                .whereEqualTo("user0", userMail)
+                .whereIn(userMail, listOf("user0", "user1"))
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     if(!querySnapshot.isEmpty){

@@ -60,7 +60,10 @@ VIEW:
 	- [X] Tasti Modifica e Cancella scompaiono poiché si "dimentica" del tipo utente
 - [X] Refreshare Task e Subtask ogni volta che si effettua la cancellazione
 - [X] Duplicazione messaggio in Chat
+- [ ] ID Notifica tiene salvata quella vecchia (?)
 - [ ] Aggiornare domain/company name del pacchetto
+- [ ] Aggiustare inversione chat:
+	- Esiste chat da A a B, ma io sono B e non posso accedere alla chat: B-A Chat = !(A-B Chat)
 
 
 ## Testo Progetto

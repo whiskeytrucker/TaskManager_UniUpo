@@ -38,7 +38,7 @@
             android:exported="true">
         </activity>
 
-
+        <receiver android:name=".activities.DeleteNotification"/>
 
         <meta-data
             android:name="preloaded_fonts"
