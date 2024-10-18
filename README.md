@@ -4,7 +4,7 @@ PRINCIPALI
 - [X] Progetti
 	- [X] Task
 		- [X] Sottotask
-- [ ] Notifiche
+- [X] Notifiche
 - [X] Chat
 
 
