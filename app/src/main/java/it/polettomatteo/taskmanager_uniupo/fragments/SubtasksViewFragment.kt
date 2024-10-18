@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.adapters.SubtasksAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
-import it.polettomatteo.taskmanager_uniupo.dataclass.Task
+import it.polettomatteo.taskmanager_uniupo.firebase.NotificationDB
+import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.interfaces.TempActivity
-
-val TAG = "SubtasksViewFragment"
+import kotlin.math.ceil
 
 class SubtasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
@@ -91,7 +91,7 @@ class SubtasksViewFragment: Fragment() {
 
     private val commentsListener = object: TempActivity{
         override fun onStartNewTempActivity(data: Bundle) {
-            val fragment = it.polettomatteo.taskmanager_uniupo.fragments.CommentsViewFragment()
+            val fragment = CommentsViewFragment()
             fragment.arguments = data
 
             parentFragmentManager.beginTransaction()
@@ -105,8 +105,6 @@ class SubtasksViewFragment: Fragment() {
         super.onStart()
 
         goBackBtn.setOnClickListener{
-            Log.d(TAG, "Sono nel onBackBtn listener")
-            Log.d(TAG, requireActivity().supportFragmentManager.getBackStackEntryAt(0).toString())
             requireActivity().supportFragmentManager.popBackStack()
         }
 
@@ -135,7 +133,22 @@ class SubtasksViewFragment: Fragment() {
             tmp.add(subtask)
             tmp.sortWith(compareByDescending<Subtask>{it.priorita}.thenBy { it.scadenza })
             subtasksAdapter.notifyItemInserted(tmp.indexOf(subtask))
+
+
+            var med = 0.0
+            for(subTask in tmp){
+                med += subTask.progress
+            }
+
+            med = ceil(med/tmp.size)
+            TasksDB.updateTaskProgress(tmp[0].idPrg, tmp[0].idTask, med)
+
+            if(med >= 100){
+                NotificationDB.notifySuperior(tmp[0].idPrg, tmp[0].idTask)
+            }
         }
+
+
     }
 
 

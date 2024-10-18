@@ -1,21 +1,25 @@
 package it.polettomatteo.taskmanager_uniupo.adapters
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.dataclass.Project
+import it.polettomatteo.taskmanager_uniupo.firebase.NotificationDB
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
 
-class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val listener: StartNewRecycler) : RecyclerView.Adapter<ProjectsAdapter.ViewHolder>(){
+class ProjectsAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Project>, private val listener: StartNewRecycler) : RecyclerView.Adapter<ProjectsAdapter.ViewHolder>(){
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -25,6 +29,7 @@ class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val liste
         val assigned: TextView
         val progress: TextView
         val seekBar: SeekBar
+        val promptPL: Button
 
 
         init {
@@ -34,6 +39,8 @@ class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val liste
             progress = view.findViewById(R.id.progress)
             assigned = view.findViewById(R.id.assigned)
             author = view.findViewById(R.id.authorProject)
+
+            promptPL = view.findViewById(R.id.promptPL)
 
             seekBar.isEnabled = false
             seekBar.progress = 0
@@ -79,11 +86,22 @@ class ProjectsAdapter(private var dataSet: ArrayList<Project>, private val liste
 
         val view = holder.itemView
 
+        if(userType.compareTo("pm") == 0){
+            holder.promptPL.visibility = View.VISIBLE
+        }
+
+        holder.promptPL.setOnClickListener {
+            NotificationDB.promptUser(dataSet[position].assigned, dataSet[position].titolo){ result ->
+                if(result == true) Toast.makeText(context, "Notifica inviata!", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(context, "Errore nel mandare la notifica", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         holder.itemView.setOnClickListener {
             TasksDB.getTasks(id){bundle ->
                 if(bundle != null){
                     dataSet.clear()
-                    listener.onStartNewRecylcerView(bundle)
+                    listener.onStartNewRecyclerView(bundle)
                 }
 
             }

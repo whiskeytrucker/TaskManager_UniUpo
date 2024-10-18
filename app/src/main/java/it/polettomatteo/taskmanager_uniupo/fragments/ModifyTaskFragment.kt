@@ -116,7 +116,7 @@ class ModifyTaskFragment() : Fragment() {
             }
 
         }else{
-            Log.e(TAG, "Error @ Line 31 in ModifyTaskFragment.kt")
+            Log.e("ModifyTaskFragment", "Error @ Line 31 in ModifyTaskFragment.kt")
 
         }
 

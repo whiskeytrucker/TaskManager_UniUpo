@@ -47,8 +47,7 @@ class CommentsViewFragment: Fragment()  {
         super.onStart()
 
         goBackBtn.setOnClickListener{
-            Log.d(TAG, "Sono nel onBackBtn listener")
-            Log.d(TAG, requireActivity().supportFragmentManager.getBackStackEntryAt(0).toString())
+            Log.d("CommentsViewFragment", requireActivity().supportFragmentManager.getBackStackEntryAt(0).toString())
             requireActivity().supportFragmentManager.popBackStack()
         }
     }

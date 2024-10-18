@@ -34,9 +34,4 @@
         android:visible="false"
         />
 
-    <item android:title="Temporaneo"
-        android:id="@+id/ses"
-        android:visible="false"
-        />
-
 </menu>

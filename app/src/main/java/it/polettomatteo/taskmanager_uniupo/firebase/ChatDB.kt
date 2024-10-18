@@ -1,14 +1,11 @@
 package it.polettomatteo.taskmanager_uniupo.firebase
 
 import android.os.Bundle
-import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import it.polettomatteo.taskmanager_uniupo.dataclass.Message
-import java.time.LocalDateTime
-import java.util.Locale
 
 class ChatDB {
     companion object{
@@ -60,7 +57,7 @@ class ChatDB {
 
 
             db.collection("chat")
-                .whereEqualTo("user0", userMail)
+                .whereIn(userMail, listOf("user0", "user1"))
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     if(!querySnapshot.isEmpty){

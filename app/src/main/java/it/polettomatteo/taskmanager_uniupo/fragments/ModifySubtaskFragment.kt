@@ -43,7 +43,7 @@ class ModifySubtaskFragment() : Fragment() {
                 val spinPriority = view.findViewById<Spinner>(R.id.spinPriority)
                 val spinState = view.findViewById<Spinner>(R.id.spinState)
                 val progressText = view.findViewById<TextView>(R.id.progressSubtask)
-                val seekBar = view.findViewById<SeekBar>(R.id.seekBar)
+                val seekBar = view.findViewById<SeekBar>(R.id.seekbarModifySub)
                 val modSubDate = view.findViewById<DatePicker>(R.id.modSubDate)
                 val modSubTime = view.findViewById<TimePicker>(R.id.modSubTime)
 
@@ -65,7 +65,7 @@ class ModifySubtaskFragment() : Fragment() {
 
                 seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                        progressText.text = "${progress.toString()}%"
+                        progressText.text = "${progress}%"
                     }
 
                     override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -104,15 +104,15 @@ class ModifySubtaskFragment() : Fragment() {
                     var state = spinState.selectedItemPosition + 1
                     if(state < 0 || state > 4)state = 0
 
-                    var progress = seekBar.progress
+                    val progress = seekBar.progress
 
                     val expiring = getTimestamp(modSubDate, modSubTime)
 
                     SubtasksDB.modifySubtask(id.toString(), subDescr, priority, state, progress, expiring) { bundle ->
                         if (bundle != null) {
                             if (bundle.getBoolean("result")) {
-                                // Crea il canale di notifica (se necessario)
                                 Toast.makeText(context, "Dati aggiornati!", Toast.LENGTH_SHORT).show()
+                                bundle.remove("result")
                                 requireActivity().supportFragmentManager.setFragmentResult("data",bundle)
                                 requireActivity().supportFragmentManager.popBackStack();
                             }

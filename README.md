@@ -4,43 +4,48 @@ PRINCIPALI
 - [X] Progetti
 	- [X] Task
 		- [X] Sottotask
-		
-- [ ] Notifiche
+- [X] Notifiche
 - [X] Chat
 
 
+
 FUN:
+- [X] Login / Logout / Registrazione e relativi tasti
+	- [X] Controllo input mail + password NO vuoto etc.
 - [X] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
-- [X] Login / Logout e relativi tasti
-- [X] Registrazione
 - [X] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
-- [X] Controllo input mail + password NO vuoto etc
 - [X] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
 	- [X] Un **task** può essere modificato solo da un PL
 	- [X] Un **sottotask** può essere modificato sia da un PL che da un D
 	- [X] AGGIUNGERE LA AGGIUNTA/MODIFICA DI "PROGRESS"
 		- Aggiornabile su modifica
-
-	RATING
-	- [ ] Ad ogni **sottotask** è possibile assegnare una **foto/documento** relativa/o al task (tipo esempio dell'interfaccia grafica che si è sviluppato)
-	- [ ] **Voto** e **scrivere un commento** su un lavoro svolto.
 	
 	RICERCA
 	- [ ] Il **PM** può fare ricerche sui progetti mettendo filtri in base allo **stato**, al **PL** e alla **scadenza**.
 	- [ ] I **PL** possono fare qualcosa di analogo ma relativo ai **task**, quindi filtrando per **stato**, **D**, **scadenza** o **priorità**
 		
+	NOTIFICHE
+	- [X] **D** modifica progess di una sottotask, se questo completa una task --> Notifica verso il **PL**.
+	- [X] Progetto completato --> Notifica al **PM**.
+	- [X] Sollecito **PL** --> **D**  ||  **PM** --> **PL**.
+	
 	CHAT
 	- [X] Videata
 	- [X] Mandare messaggi
 	- [X] Ricevere messaggi instant
-
+	
+	RATING
+	- [ ] Ad ogni **sottotask** è possibile assegnare una **foto/documento** relativa/o al task (tipo esempio dell'interfaccia grafica che si è sviluppato)
+	- [ ] **Voto** e **scrivere un commento** su un lavoro svolto.
+	
+	
 
 VIEW:
 - [X] Menù laterale  E videata con lista progetti
-  - [X] Lista Task una volta clickato un progetto
+- [X] Lista Task una volta clickato un progetto
 	- [X] Mostrare SOLO Lista Task se Dev
-  - [X] Lista Sotto Task una volta clickata una Task
-  - [ ] Tasto indietro per tornare alla "pagina" precedente
+- [X] Lista Sotto Task una volta clickata una Task
+- [ ] Tasto indietro per tornare alla "pagina" precedente
 
 - [X] Pagina Utente -- Giusto da visualizzare il tipo di utente
 
@@ -54,7 +59,11 @@ VIEW:
 - [X] Refreshare Task e Subtask ogni volta che si effettua la modifica
 	- [X] Tasti Modifica e Cancella scompaiono poiché si "dimentica" del tipo utente
 - [X] Refreshare Task e Subtask ogni volta che si effettua la cancellazione
+- [X] Duplicazione messaggio in Chat
+- [x] ID Notifica tiene salvata quella vecchia --> Messi Flag corretti in PendingIntent
 - [ ] Aggiornare domain/company name del pacchetto
+- [ ] Aggiustare inversione chat:
+	- Esiste chat da A a B, ma io sono B e non posso accedere alla chat: B-A Chat = !(A-B Chat)
 
 
 ## Testo Progetto

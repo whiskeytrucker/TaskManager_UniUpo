@@ -2,11 +2,12 @@ package it.polettomatteo.taskmanager_uniupo.activities
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
@@ -18,10 +19,12 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import it.polettomatteo.taskmanager_uniupo.R
+import it.polettomatteo.taskmanager_uniupo.dataclass.Notification
 import it.polettomatteo.taskmanager_uniupo.firebase.ChatDB
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
+import it.polettomatteo.taskmanager_uniupo.firebase.NotificationDB
 import it.polettomatteo.taskmanager_uniupo.fragments.ProjectsViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.SubtasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.ChatFragment
@@ -31,8 +34,8 @@ import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 import java.util.Random
 
 class MainActivity : AppCompatActivity(){
+    private var notifManager: NotificationManager? = null
     private lateinit var auth: FirebaseAuth
-    private lateinit var notificationManager: NotificationManager
     private var currentUser: FirebaseUser? = null
     var userType: String = "NA"
 
@@ -44,19 +47,29 @@ class MainActivity : AppCompatActivity(){
 
         FirebaseApp.initializeApp(applicationContext)
 
-        this.notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         auth = FirebaseAuth.getInstance()
         currentUser = auth.currentUser
+
+        notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
 
         initToolbar(toolbar)
     }
 
     override fun onStart(){
         super.onStart()
+        currentUser?.email?.let {
+            NotificationDB.getNotifications(it){ notifications ->
+                if(notifications != null){
+                    for(notf in notifications)createNotification(notf)
+                }
+            }
+        }
+
+
+
+
         this.createFragment()
     }
 
@@ -68,28 +81,24 @@ class MainActivity : AppCompatActivity(){
                     if (bundle != null) {
                         userType = bundle.getString("tipo").toString()
 
-                        var user: String = currentUser!!.email.toString()
+                        val user: String = currentUser!!.email.toString()
 
                         if(userType.compareTo("NA") != 0){
                             if(userType.compareTo("d") == 0){
-                                // sono un dev
-                                // prendo le task del dev da idProject, faccio partire il fragment
                                 ProjectsDB.getIdProjectAsDev(user){idProject ->
                                     if(idProject != null){
                                         TasksDB.getTasksAsDev(idProject, user){budnle ->
                                             if(budnle != null){
-                                                taskListener.onStartNewRecylcerView(budnle)
+                                                taskListener.onStartNewRecyclerView(budnle)
                                             }
 
                                         }
                                     }
-
-
                                 }
-
                             }else{
                                 ProjectsDB.getProjects(user, userType) { bundle2 ->
                                     if (bundle2 != null) {
+                                        bundle2.putString("tipo", userType)
                                         this.setupFragment(ProjectsViewFragment(), bundle2)
                                     }
                                 }
@@ -118,16 +127,6 @@ class MainActivity : AppCompatActivity(){
             .replace(R.id.frameLayout, fragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.ses -> {
-                onBackPressed()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     // --------------- FUNZIONI AUSILIARIE ---------------
@@ -225,21 +224,10 @@ class MainActivity : AppCompatActivity(){
         menu.findItem(R.id.login)?.isVisible = !isLoggedIn
         menu.findItem(R.id.register)?.isVisible = !isLoggedIn
 
-        var elements = arrayOf("home","logout","userpage","chat","ses")
-
-        /*
-        for(element in elements){
-            val str = "R.id.${element}"
-            menu.findItem(str.toInt())?.isVisible = isLoggedIn
-        }*/
-
         menu.findItem(R.id.home2)?.isVisible = isLoggedIn
         menu.findItem(R.id.logout)?.isVisible = isLoggedIn
         menu.findItem(R.id.userpage)?.isVisible = isLoggedIn
         menu.findItem(R.id.chat)?.isVisible = isLoggedIn
-        menu.findItem(R.id.ses)?.isVisible = isLoggedIn
-
-        //if(!isLoggedIn)setupFragment(RecyclerViewFragment(), Bundle())
 
         this.recreate()
     }
@@ -248,14 +236,12 @@ class MainActivity : AppCompatActivity(){
 
 
     val taskListener = object: StartNewRecycler{
-        override fun onStartNewRecylcerView(data: Bundle){
+        override fun onStartNewRecyclerView(data: Bundle){
             var fragment = TasksViewFragment()
 
-            if(data != null){
-                data.putSerializable("tipo", userType)
-                data.putSerializable("subtask_interface", subtaskListener)
-                fragment.arguments = data
-            }
+            data.putSerializable("tipo", userType)
+            data.putSerializable("subtask_interface", subtaskListener)
+            fragment.arguments = data
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, fragment)
@@ -266,13 +252,11 @@ class MainActivity : AppCompatActivity(){
     }
 
     val subtaskListener = object: StartNewRecycler{
-        override fun onStartNewRecylcerView(data: Bundle){
-            var fragment = SubtasksViewFragment()
+        override fun onStartNewRecyclerView(data: Bundle){
+            val fragment = SubtasksViewFragment()
 
-            if(data != null){
-                data.putSerializable("tipo", userType)
-                fragment.arguments = data
-            }
+            data.putSerializable("tipo", userType)
+            fragment.arguments = data
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frameLayout, fragment)
@@ -281,31 +265,39 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-    fun createNotification(
-        id: String,
-        title: String,
-        text: String,
-        channelName: String,
-        channelDescription: String,
-    ) {
-        val importance = NotificationManager.IMPORTANCE_HIGH
-        val channel = NotificationChannel(id, channelName, importance)
-        channel.description = channelDescription
-        this.notificationManager.getNotificationChannel(channel.id)
-            ?: this.notificationManager.createNotificationChannel(channel)
+
+
+
+
+
+    private fun createNotification(notifi: Notification) {
+        val intent1 = Intent(this, DeleteNotification::class.java)
+        intent1.putExtra("notificationID", notifi.id)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            intent1,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+
+
+        val importance = NotificationManager.IMPORTANCE_LOW
+        val channel = NotificationChannel(notifi.channelID, notifi.channelTitle, importance)
+        channel.description = notifi.channelDescr
+        notifManager?.getNotificationChannel(channel.id)
+            ?: notifManager?.createNotificationChannel(channel)
 
         val notification = NotificationCompat.Builder(this@MainActivity, channel.id)
-            .setContentTitle(title)
-            .setContentText(text)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setAutoCancel(true)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            .setContentTitle(notifi.title)
+            .setContentText(notifi.descr)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notifi.descr).setBigContentTitle(notifi.title))
             .setChannelId(channel.id)
+            .setDeleteIntent(pendingIntent)
             .build()
-        this.notificationManager.notify(Random(1000000).nextInt(), notification)
+        notifManager?.notify(Random(1000000).nextInt(), notification)
     }
-
-
 
 
 }

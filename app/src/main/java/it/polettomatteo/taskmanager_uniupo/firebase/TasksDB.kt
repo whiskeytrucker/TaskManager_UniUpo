@@ -87,6 +87,22 @@ class TasksDB {
                 }
         }
 
+        fun getTaskTitle(idProject: String, idTask: String, callback: (String?) -> Unit){
+            val db = FirebaseFirestore.getInstance()
+
+            db.collection("projects")
+                .document(idProject)
+                .collection("task")
+                .document(idTask)
+                .get()
+                .addOnSuccessListener { doc ->
+                    callback(doc["nome"].toString())
+                }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                }
+        }
+
 
         fun addTask(
             title: String,
@@ -103,34 +119,32 @@ class TasksDB {
                 "progress" to 0
             )
 
-            if (data != null) {
-                val doc =  FirebaseFirestore
-                    .getInstance()
-                    .collection("projects")
-                    .document(idPrj)
-                    .collection("task")
-                    .document()
+            val doc =  FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idPrj)
+                .collection("task")
+                .document()
 
-                doc.set(data)
-                .addOnSuccessListener {
-                    val task = Task(
-                        doc.id,
-                        idPrj,
-                        title,
-                        descr,
-                        assigned,
-                        expiring,
-                        0,
-                    )
-                    val bun = Bundle()
-                    bun.putSerializable("data", task)
-                    bun.putBoolean("result", true)
+            doc.set(data)
+            .addOnSuccessListener {
+                val task = Task(
+                    doc.id,
+                    idPrj,
+                    title,
+                    descr,
+                    assigned,
+                    expiring,
+                    0,
+                )
+                val bun = Bundle()
+                bun.putSerializable("data", task)
+                bun.putBoolean("result", true)
 
-                    callback(bun)
-                }.addOnFailureListener{
-                    it.printStackTrace()
-                    callback(null)
-                }
+                callback(bun)
+            }.addOnFailureListener{
+                it.printStackTrace()
+                callback(null)
             }
 
 
@@ -153,36 +167,33 @@ class TasksDB {
                 "scadenza" to expiring
             )
 
-            if (data != null) {
-                FirebaseFirestore
-                    .getInstance()
-                    .collection("projects")
-                    .document(idPrj)
-                    .collection("task")
-                    .document(idTask)
-                    .set(data)
-                    .addOnSuccessListener {
-                        val task = Task(
-                            idTask,
-                            idPrj,
-                            title,
-                            descr,
-                            assigned,
-                            expiring,
-                            progress,
-                        )
-                        val bun = Bundle()
-                        bun.putString("done", "mod")
-                        bun.putSerializable("data", task)
-                        bun.putBoolean("result", true)
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idPrj)
+                .collection("task")
+                .document(idTask)
+                .set(data)
+                .addOnSuccessListener {
+                    val task = Task(
+                        idTask,
+                        idPrj,
+                        title,
+                        descr,
+                        assigned,
+                        expiring,
+                        progress,
+                    )
+                    val bun = Bundle()
+                    bun.putString("done", "mod")
+                    bun.putSerializable("data", task)
+                    bun.putBoolean("result", true)
 
-                        callback(bun)
-                    }.addOnFailureListener {
-                        it.printStackTrace()
-                        callback(null)
-                    }
-            }
-
+                    callback(bun)
+                }.addOnFailureListener {
+                    it.printStackTrace()
+                    callback(null)
+                }
         }
 
         fun deleteTask(idProject: String, idTask: String, callback: (Boolean?) -> Unit) {
@@ -199,6 +210,20 @@ class TasksDB {
                 .addOnFailureListener {
                     it.printStackTrace()
                     callback(false)
+                }
+        }
+
+
+        fun updateTaskProgress(idProject: String, idTask: String, progressVal: Double){
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idProject)
+                .collection("task")
+                .document(idTask)
+                .update("progress", progressVal.toInt())
+                .addOnFailureListener {
+                    it.printStackTrace()
                 }
         }
     }

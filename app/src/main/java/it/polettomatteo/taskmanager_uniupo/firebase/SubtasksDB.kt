@@ -114,7 +114,7 @@ class SubtasksDB {
                     .collection("sotto_task")
                     .document()
 
-                doc.set(data)
+            doc.set(data)
                 .addOnSuccessListener {
                     val subtask = Subtask(
                         doc.id,
@@ -173,7 +173,7 @@ class SubtasksDB {
                         subDescr,
                         priority,
                         expiring,
-                        0,
+                        progresso,
                     )
                     val bun = Bundle()
                     bun.putString("done", "mod")

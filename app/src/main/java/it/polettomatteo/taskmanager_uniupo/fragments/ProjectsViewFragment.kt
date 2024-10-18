@@ -1,23 +1,33 @@
+@file:Suppress("OverrideDeprecatedMigration")
+
 package it.polettomatteo.taskmanager_uniupo.fragments
 
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
+import it.polettomatteo.taskmanager_uniupo.activities.ResultActivity
 import it.polettomatteo.taskmanager_uniupo.adapters.ProjectsAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
 class ProjectsViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
+    private var notificationManager: NotificationManager? = null
     private lateinit var recyclerView: RecyclerView
+    private lateinit var tmpBut: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,17 +41,15 @@ class ProjectsViewFragment: Fragment() {
         recyclerView = view.findViewById(R.id.recyclerView)
 
         val tmp = ArrayList<Project>()
-
         val bundle: Bundle?
+        var userType: String = ""
 
-        if(savedBundle != null && this.arguments == null){
-            bundle = savedBundle
-        }else{
-            bundle = this.arguments
-        }
+
+        if(savedBundle != null && this.arguments == null){bundle = savedBundle}
+        else{bundle = this.arguments}
+
 
         var listener: StartNewRecycler? = null
-
         if(bundle != null){
             if(bundle.getSerializable("task_interface") != null){
                 listener = bundle.getSerializable("task_interface") as StartNewRecycler
@@ -50,34 +58,33 @@ class ProjectsViewFragment: Fragment() {
 
 
             for(key in bundle.keySet()){
-                tmp.add(bundle.getSerializable(key) as Project)
+                if(key.compareTo("tipo") == 0){
+                    userType = bundle.getString("tipo")!!
+                    bundle.remove(key)
+                }else{
+                    tmp.add(bundle.getSerializable(key) as Project)
+                }
             }
         }
 
+        notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
 
         val customAdapter =
-            listener?.let { ProjectsAdapter(tmp, it) } // <-- Da cambiare con i dati presi da savedInstanceState
+            listener?.let { context?.let { it1 -> ProjectsAdapter(userType, it1, tmp, it) } }
         recyclerView.adapter = customAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
         return view
     }
 
+    override fun onStart() {
+        super.onStart()
+    }
+
     override fun onPause() {
         super.onPause()
         savedBundle = this.arguments
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                Log.d("TasksViewFragment", parentFragmentManager.toString())
-
-                parentFragmentManager.popBackStack()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
 }

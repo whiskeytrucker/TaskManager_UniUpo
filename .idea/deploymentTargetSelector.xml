@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-09-25T14:25:38.933796600Z">
+        <DropdownSelection timestamp="2024-10-15T15:01:36.637745Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=76ccbe0e" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=D:\Apps\Android\.android\avd\Paolino_Panino_v1.25_Pixel_3a_API_31_.avd" />
             </handle>
           </Target>
         </DropdownSelection>
