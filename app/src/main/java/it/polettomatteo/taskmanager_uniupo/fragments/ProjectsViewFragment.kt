@@ -42,6 +42,7 @@ class ProjectsViewFragment: Fragment() {
 
         val tmp = ArrayList<Project>()
         val bundle: Bundle?
+        var userType: String = ""
 
 
         if(savedBundle != null && this.arguments == null){bundle = savedBundle}
@@ -56,15 +57,21 @@ class ProjectsViewFragment: Fragment() {
             }
 
 
-            for(key in bundle.keySet()){tmp.add(bundle.getSerializable(key) as Project)}
+            for(key in bundle.keySet()){
+                if(key.compareTo("tipo") == 0){
+                    userType = bundle.getString("tipo")!!
+                    bundle.remove(key)
+                }else{
+                    tmp.add(bundle.getSerializable(key) as Project)
+                }
+            }
         }
 
-        tmpBut = view.findViewById(R.id.testNot)
         notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 
         val customAdapter =
-            listener?.let { ProjectsAdapter(tmp, it) } // <-- Da cambiare con i dati presi da savedInstanceState
+            listener?.let { context?.let { it1 -> ProjectsAdapter(userType, it1, tmp, it) } } // <-- Da cambiare con i dati presi da savedInstanceState
         recyclerView.adapter = customAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
@@ -73,10 +80,6 @@ class ProjectsViewFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-
-        tmpBut.setOnClickListener {
-            sendNotification()
-        }
     }
 
     override fun onPause() {
@@ -84,29 +87,4 @@ class ProjectsViewFragment: Fragment() {
         savedBundle = this.arguments
     }
 
-
-    private fun sendNotification(){
-        val notificationID = 101
-
-        val resultIntent = Intent(requireContext(), ResultActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            requireContext(),
-            0,
-            resultIntent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val channelID = "it.taskmanager.temp"
-
-        val notification = Notification.Builder(requireContext(), channelID)
-            .setContentTitle("AAA")
-            .setContentText("SOLO A DEV1")
-            .setSmallIcon(R.drawable.ic_notification)
-            .setChannelId(channelID)
-            .setContentIntent(pendingIntent)
-            .build()
-
-        notificationManager?.notify(notificationID, notification)
-        Log.d("Ema", "Notifica Mandata")
-    }
 }

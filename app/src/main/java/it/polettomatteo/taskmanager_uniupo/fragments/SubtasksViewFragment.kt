@@ -13,8 +13,6 @@ import it.polettomatteo.taskmanager_uniupo.adapters.SubtasksAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
 import it.polettomatteo.taskmanager_uniupo.interfaces.TempActivity
 
-val TAG = "SubtasksViewFragment"
-
 class SubtasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
     private lateinit var addStuffBtn: Button

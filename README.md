@@ -27,7 +27,7 @@ FUN:
 	NOTIFICHE
 	- [ ] **D** modifica progess di una sottotask, se questo completa una task --> Notifica verso il **PL**.
 	- [ ] Progetto completato --> Notifica al **PM**.
-	- [ ] Sollecito **PL** --> **D**  ||  **PM** --> **PL**.
+	- [X] Sollecito **PL** --> **D**  ||  **PM** --> **PL**.
 	
 	CHAT
 	- [X] Videata
@@ -60,7 +60,7 @@ VIEW:
 	- [X] Tasti Modifica e Cancella scompaiono poiché si "dimentica" del tipo utente
 - [X] Refreshare Task e Subtask ogni volta che si effettua la cancellazione
 - [X] Duplicazione messaggio in Chat
-- [ ] ID Notifica tiene salvata quella vecchia (?)
+- [x] ID Notifica tiene salvata quella vecchia --> Messi Flag corretti in PendingIntent
 - [ ] Aggiornare domain/company name del pacchetto
 - [ ] Aggiustare inversione chat:
 	- Esiste chat da A a B, ma io sono B e non posso accedere alla chat: B-A Chat = !(A-B Chat)

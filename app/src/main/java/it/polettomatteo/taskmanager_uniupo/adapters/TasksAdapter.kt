@@ -17,6 +17,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
+import it.polettomatteo.taskmanager_uniupo.firebase.NotificationDB
 import it.polettomatteo.taskmanager_uniupo.firebase.SubtasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
@@ -40,6 +41,7 @@ class TasksAdapter(private val userType: String, private val context: Context, p
         val seekBar: SeekBar
         val modifyBtn: Button
         val deleteBtn: Button
+        val promptBtn: Button
 
         init {
             nome = view.findViewById(R.id.name)
@@ -51,6 +53,7 @@ class TasksAdapter(private val userType: String, private val context: Context, p
 
             modifyBtn = view.findViewById(R.id.modifyTask)
             deleteBtn = view.findViewById(R.id.deleteTask)
+            promptBtn = view.findViewById(R.id.promptDev)
 
             seekBar.isEnabled = false
             seekBar.progress = 0
@@ -96,7 +99,7 @@ class TasksAdapter(private val userType: String, private val context: Context, p
             SubtasksDB.getSubtasks(idProject, idTask){bundle ->
                 if(bundle != null){
                     dataSet.clear()
-                    newFragment.onStartNewRecylcerView(bundle)
+                    newFragment.onStartNewRecyclerView(bundle)
                 }
             }
         }
@@ -105,6 +108,8 @@ class TasksAdapter(private val userType: String, private val context: Context, p
         if(userType.compareTo("pl") == 0){
             holder.modifyBtn.visibility = View.VISIBLE
             holder.deleteBtn.visibility = View.VISIBLE
+            holder.promptBtn.visibility = View.VISIBLE
+
 
 
             holder.modifyBtn.setOnClickListener{
@@ -131,6 +136,14 @@ class TasksAdapter(private val userType: String, private val context: Context, p
                     }
 
                 }
+            }
+
+            holder.promptBtn.setOnClickListener {
+                NotificationDB.promptUser(dataSet[position].dev, dataSet[position].nome){ result ->
+                    if(result == true)Toast.makeText(context, "Notifica inviata!", Toast.LENGTH_SHORT).show()
+                    else Toast.makeText(context, "Errore nel mandare la notifica", Toast.LENGTH_SHORT).show()
+                }
+
             }
 
         }

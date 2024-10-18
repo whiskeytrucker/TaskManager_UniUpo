@@ -4,5 +4,5 @@ import android.os.Bundle
 import java.io.Serializable
 
 interface StartNewRecycler : Serializable{
-    fun onStartNewRecylcerView(data: Bundle)
+    fun onStartNewRecyclerView(data: Bundle)
 }

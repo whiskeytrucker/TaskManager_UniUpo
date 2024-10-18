@@ -18,13 +18,13 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.dataclass.Notification
 import it.polettomatteo.taskmanager_uniupo.firebase.ChatDB
 import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
 import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.firebase.UsersDB
+import it.polettomatteo.taskmanager_uniupo.firebase.NotificationDB
 import it.polettomatteo.taskmanager_uniupo.fragments.ProjectsViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.SubtasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.fragments.ChatFragment
@@ -59,11 +59,10 @@ class MainActivity : AppCompatActivity(){
 
     override fun onStart(){
         super.onStart()
-        if(currentUser != null){
-            getNotifications{ notifications ->
+        currentUser?.email?.let {
+            NotificationDB.getNotifications(it){ notifications ->
                 if(notifications != null){
-                    for(notif in notifications)
-                        createNotification(notif)
+                    for(notf in notifications)createNotification(notf)
                 }
             }
         }
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity(){
                     if (bundle != null) {
                         userType = bundle.getString("tipo").toString()
 
-                        var user: String = currentUser!!.email.toString()
+                        val user: String = currentUser!!.email.toString()
 
                         if(userType.compareTo("NA") != 0){
                             if(userType.compareTo("d") == 0){
@@ -90,7 +89,7 @@ class MainActivity : AppCompatActivity(){
                                     if(idProject != null){
                                         TasksDB.getTasksAsDev(idProject, user){budnle ->
                                             if(budnle != null){
-                                                taskListener.onStartNewRecylcerView(budnle)
+                                                taskListener.onStartNewRecyclerView(budnle)
                                             }
 
                                         }
@@ -99,6 +98,7 @@ class MainActivity : AppCompatActivity(){
                             }else{
                                 ProjectsDB.getProjects(user, userType) { bundle2 ->
                                     if (bundle2 != null) {
+                                        bundle2.putString("tipo", userType)
                                         this.setupFragment(ProjectsViewFragment(), bundle2)
                                     }
                                 }
@@ -236,7 +236,7 @@ class MainActivity : AppCompatActivity(){
 
 
     val taskListener = object: StartNewRecycler{
-        override fun onStartNewRecylcerView(data: Bundle){
+        override fun onStartNewRecyclerView(data: Bundle){
             var fragment = TasksViewFragment()
 
             data.putSerializable("tipo", userType)
@@ -252,7 +252,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     val subtaskListener = object: StartNewRecycler{
-        override fun onStartNewRecylcerView(data: Bundle){
+        override fun onStartNewRecyclerView(data: Bundle){
             val fragment = SubtasksViewFragment()
 
             data.putSerializable("tipo", userType)
@@ -266,52 +266,19 @@ class MainActivity : AppCompatActivity(){
     }
 
 
-    private fun getNotifications(callback: (ArrayList<Notification>?) -> Unit){
-        val db = FirebaseFirestore.getInstance()
 
-        val qry = db.collection("notifiche")
-            .whereEqualTo("user", currentUser?.email)
-            .limit(1)
-
-            qry.get()
-            .addOnSuccessListener { docs ->
-                for(doc in docs){
-                    db.collection("notifiche")
-                        .document(doc.id)
-                        .collection("unseen")
-                        .get()
-                        .addOnSuccessListener { result ->
-                            val nots = ArrayList<Notification>()
-                            for(docUS in result){
-                                val data = docUS.data
-                                val tmp = Notification(
-                                    docUS.id,
-                                    data["title"].toString(),
-                                    data["descr"].toString(),
-                                    data["channel"].toString(),
-                                    data["channelTitle"].toString(),
-                                    data["channelDescr"].toString()
-                                )
-                                nots.add(tmp)
-                            }
-
-                            callback(nots)
-                        }
-                }
-            }
-    }
 
 
 
     private fun createNotification(notifi: Notification) {
         val intent1 = Intent(this, DeleteNotification::class.java)
-        intent1.putExtra("notification_id", notifi.id)
+        intent1.putExtra("notificationID", notifi.id)
 
         val pendingIntent = PendingIntent.getBroadcast(
             this,
             0,
             intent1,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
 
 
@@ -325,7 +292,7 @@ class MainActivity : AppCompatActivity(){
             .setContentTitle(notifi.title)
             .setContentText(notifi.descr)
             .setSmallIcon(R.drawable.ic_notification)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(notifi.title))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notifi.descr).setBigContentTitle(notifi.title))
             .setChannelId(channel.id)
             .setDeleteIntent(pendingIntent)
             .build()

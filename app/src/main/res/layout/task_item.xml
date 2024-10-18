@@ -28,14 +28,21 @@
 
     </TextView>
 
-
+    <Button
+        android:id="@+id/promptDev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:text="Sollecito" />
 
     <Button
         android:id="@+id/modifyTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/promptDev"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="8dp"
         android:visibility="gone"
         android:text="Modifica" />
 
@@ -75,10 +82,11 @@
         android:id="@+id/progressTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="0dp"
         android:layout_below="@id/expiring"
         android:layout_centerHorizontal="true"
-        android:textSize="16sp">
+        android:textSize="20sp">
 
     </TextView>
 

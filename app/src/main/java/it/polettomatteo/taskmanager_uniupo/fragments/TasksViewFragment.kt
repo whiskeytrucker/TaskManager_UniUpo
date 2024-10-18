@@ -1,7 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -119,13 +118,11 @@ class TasksViewFragment: Fragment() {
     }
 
     override fun onPause() {
-        Log.d(TAG, "onPause:")
         savedBundle = this.arguments
         super.onPause()
     }
 
     override fun onResume(){
-        Log.d(TAG, "onResume:")
         /*
         for(task in tmp){
             Log.d("AAAAAAAAAAAAAAAAAA", "${task.toString()}")
@@ -153,7 +150,6 @@ class TasksViewFragment: Fragment() {
 
     val deleteActivityListener = object: TempActivity{
         override fun onStartNewTempActivity(data: Bundle) {
-            Log.d(TAG, "onStartNewTempActivity(deleteActivityListener):")
             val position = data.getInt("pos")
             val id = data.getString("id")
             tmp.removeAt(position)

@@ -12,13 +12,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class DeleteNotification: BroadcastReceiver() {
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(context: Context, intentIn: Intent) {
         val currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-        val notification_id = intent.getStringExtra("notification_id")
-        Log.d("DeleteNotification", notification_id.toString())
+        val notificationID = intentIn.getStringExtra("notificationID")
+        intentIn.removeExtra("notificationID")
+        Log.d("DeleteNotification", notificationID.toString())
 
 
-        if (currentUser != null && notification_id != null) {
+        if (currentUser != null && notificationID != null) {
             val db = FirebaseFirestore.getInstance()
 
             db.collection("notifiche")
@@ -30,7 +31,7 @@ class DeleteNotification: BroadcastReceiver() {
                         db.collection("notifiche")
                             .document(doc.id)
                             .collection("unseen")
-                            .document(notification_id)
+                            .document(notificationID)
                             .delete()
                             .addOnSuccessListener {
                             }

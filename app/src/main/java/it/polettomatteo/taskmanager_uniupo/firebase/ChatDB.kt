@@ -1,14 +1,11 @@
 package it.polettomatteo.taskmanager_uniupo.firebase
 
 import android.os.Bundle
-import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import it.polettomatteo.taskmanager_uniupo.dataclass.Message
-import java.time.LocalDateTime
-import java.util.Locale
 
 class ChatDB {
     companion object{

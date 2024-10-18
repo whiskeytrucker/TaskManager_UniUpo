@@ -15,6 +15,14 @@
         android:paddingEnd="10sp">
     </TextView>
 
+    <Button
+        android:id="@+id/promptPL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:text="Sollecito" />
 
     <TextView
         android:id="@+id/content"
