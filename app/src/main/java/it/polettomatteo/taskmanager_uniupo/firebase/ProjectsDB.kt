@@ -77,25 +77,41 @@ class ProjectsDB {
                 }
         }
 
-        fun fetchPL(username: String, callback:(String) -> Unit){
-            val bundle = Bundle()
-
+        fun updateTaskProgress(idProject: String, progressVal: Double){
             FirebaseFirestore
                 .getInstance()
-                .collection("supervisore")
-                .whereEqualTo("dev", username)
+                .collection("projects")
+                .document(idProject)
+                .update("progress", progressVal.toInt())
+                .addOnFailureListener {
+                    it.printStackTrace()
+                }
+        }
+
+        fun fetchSupervisorWithProjectID(idProject: String, is_PM: Boolean, callback:(String) -> Unit){
+            FirebaseFirestore.getInstance()
+                .collection("projects")
+                .document(idProject)
                 .get()
-                .addOnSuccessListener { results ->
-                    val documents = results.documents
-                    for((index, doc) in documents.withIndex()){
-                        val data = doc.data
-                        if(data != null){
-                            bundle.putString("pl",data["pl"].toString())
-                            callback(data["pl"].toString())
-                        }
-                    }
+                .addOnSuccessListener { doc ->
+                    if(is_PM)callback(doc["autore"].toString())
+                    else callback(doc["assigned"].toString())
                 }
 
+        }
+
+        fun getProjectTitle(idProject: String, callback: (String?) -> Unit) {
+            FirebaseFirestore
+                .getInstance()
+                .collection("projects")
+                .document(idProject)
+                .get()
+                .addOnSuccessListener { data ->
+                    callback(data["titolo"].toString())
+                }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                }
         }
     }
 

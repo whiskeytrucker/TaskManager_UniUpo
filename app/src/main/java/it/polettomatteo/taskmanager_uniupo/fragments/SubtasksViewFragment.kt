@@ -1,6 +1,7 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.adapters.SubtasksAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Subtask
+import it.polettomatteo.taskmanager_uniupo.firebase.NotificationDB
+import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.interfaces.TempActivity
+import kotlin.math.ceil
 
 class SubtasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
@@ -129,7 +133,22 @@ class SubtasksViewFragment: Fragment() {
             tmp.add(subtask)
             tmp.sortWith(compareByDescending<Subtask>{it.priorita}.thenBy { it.scadenza })
             subtasksAdapter.notifyItemInserted(tmp.indexOf(subtask))
+
+
+            var med = 0.0
+            for(subTask in tmp){
+                med += subTask.progress
+            }
+
+            med = ceil(med/tmp.size)
+            TasksDB.updateTaskProgress(tmp[0].idPrg, tmp[0].idTask, med)
+
+            if(med >= 100){
+                NotificationDB.notifySuperior(tmp[0].idPrg, tmp[0].idTask)
+            }
         }
+
+
     }
 
 

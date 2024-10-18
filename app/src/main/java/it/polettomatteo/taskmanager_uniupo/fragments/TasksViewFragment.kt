@@ -12,8 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
 import it.polettomatteo.taskmanager_uniupo.adapters.TasksAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Task
+import it.polettomatteo.taskmanager_uniupo.firebase.NotificationDB
+import it.polettomatteo.taskmanager_uniupo.firebase.ProjectsDB
+import it.polettomatteo.taskmanager_uniupo.firebase.TasksDB
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 import it.polettomatteo.taskmanager_uniupo.interfaces.TempActivity
+import kotlin.math.ceil
 
 class TasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
@@ -113,6 +117,16 @@ class TasksViewFragment: Fragment() {
             tmp.add(task)
             tmp.sortWith(compareBy{it.nome})
             tasksAdapter.notifyItemInserted(tmp.indexOf(task))
+
+            var med = 0.0
+            for(taskArr in tmp){med += taskArr.progress}
+
+            med = ceil(med/tmp.size)
+            ProjectsDB.updateTaskProgress(tmp[0].idPrg, med)
+
+            if(med >= 100){
+                NotificationDB.notifySuperior(tmp[0].idPrg)
+            }
         }
 
     }
@@ -123,10 +137,6 @@ class TasksViewFragment: Fragment() {
     }
 
     override fun onResume(){
-        /*
-        for(task in tmp){
-            Log.d("AAAAAAAAAAAAAAAAAA", "${task.toString()}")
-        }*/
         super.onResume()
         recyclerView.adapter = tasksAdapter
     }

@@ -16,7 +16,6 @@ class DeleteNotification: BroadcastReceiver() {
         val currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         val notificationID = intentIn.getStringExtra("notificationID")
         intentIn.removeExtra("notificationID")
-        Log.d("DeleteNotification", notificationID.toString())
 
 
         if (currentUser != null && notificationID != null) {

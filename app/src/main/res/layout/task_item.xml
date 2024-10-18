@@ -82,7 +82,7 @@
         android:id="@+id/progressTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="24dp"
         android:layout_marginBottom="0dp"
         android:layout_below="@id/expiring"
         android:layout_centerHorizontal="true"

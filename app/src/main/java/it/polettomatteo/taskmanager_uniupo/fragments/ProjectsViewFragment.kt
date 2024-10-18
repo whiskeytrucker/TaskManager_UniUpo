@@ -71,7 +71,7 @@ class ProjectsViewFragment: Fragment() {
 
 
         val customAdapter =
-            listener?.let { context?.let { it1 -> ProjectsAdapter(userType, it1, tmp, it) } } // <-- Da cambiare con i dati presi da savedInstanceState
+            listener?.let { context?.let { it1 -> ProjectsAdapter(userType, it1, tmp, it) } }
         recyclerView.adapter = customAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 

@@ -25,8 +25,8 @@ FUN:
 	- [ ] I **PL** possono fare qualcosa di analogo ma relativo ai **task**, quindi filtrando per **stato**, **D**, **scadenza** o **priorità**
 		
 	NOTIFICHE
-	- [ ] **D** modifica progess di una sottotask, se questo completa una task --> Notifica verso il **PL**.
-	- [ ] Progetto completato --> Notifica al **PM**.
+	- [X] **D** modifica progess di una sottotask, se questo completa una task --> Notifica verso il **PL**.
+	- [X] Progetto completato --> Notifica al **PM**.
 	- [X] Sollecito **PL** --> **D**  ||  **PM** --> **PL**.
 	
 	CHAT
