@@ -240,7 +240,6 @@ class MainActivity : AppCompatActivity(){
             var fragment = TasksViewFragment()
 
             data.putSerializable("tipo", userType)
-            data.putSerializable("subtask_interface", subtaskListener)
             fragment.arguments = data
 
             supportFragmentManager.beginTransaction()
@@ -250,22 +249,6 @@ class MainActivity : AppCompatActivity(){
 
         }
     }
-
-    val subtaskListener = object: StartNewRecycler{
-        override fun onStartNewRecyclerView(data: Bundle){
-            val fragment = SubtasksViewFragment()
-
-            data.putSerializable("tipo", userType)
-            fragment.arguments = data
-
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.frameLayout, fragment)
-                .commit()
-
-        }
-    }
-
-
 
 
 

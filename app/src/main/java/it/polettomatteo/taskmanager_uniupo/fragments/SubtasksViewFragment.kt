@@ -156,7 +156,6 @@ class SubtasksViewFragment: Fragment() {
         savedBundle = this.arguments
         super.onPause()
     }
-
     private fun findIndex(toFind: Subtask):Int{
         for(subtask in tmp){
             if(subtask.id == toFind.id)return tmp.indexOf(subtask)

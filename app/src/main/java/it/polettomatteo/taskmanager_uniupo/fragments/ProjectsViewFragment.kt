@@ -25,15 +25,16 @@ import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
 class ProjectsViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
+    private lateinit var savedAdapter: ProjectsAdapter
     private var notificationManager: NotificationManager? = null
     private lateinit var recyclerView: RecyclerView
-    private lateinit var tmpBut: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("ProjectViewFragment", "onCreateView()")
         val view = inflater.inflate(R.layout.recycler_projectview, container, false)
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -51,17 +52,12 @@ class ProjectsViewFragment: Fragment() {
 
         var listener: StartNewRecycler? = null
         if(bundle != null){
-            if(bundle.getSerializable("task_interface") != null){
-                listener = bundle.getSerializable("task_interface") as StartNewRecycler
-                bundle.remove("task_interface")
-            }
-
-
             for(key in bundle.keySet()){
                 if(key.compareTo("tipo") == 0){
                     userType = bundle.getString("tipo")!!
-                    bundle.remove(key)
-                }else{
+                }else if(key.compareTo("task_interface") == 0){
+                    listener = bundle.getSerializable("task_interface") as StartNewRecycler
+                }else {
                     tmp.add(bundle.getSerializable(key) as Project)
                 }
             }
@@ -70,21 +66,27 @@ class ProjectsViewFragment: Fragment() {
         notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 
-        val customAdapter =
-            listener?.let { context?.let { it1 -> ProjectsAdapter(userType, it1, tmp, it) } }
-        recyclerView.adapter = customAdapter
+        val projectsAdapter =
+            listener?.let { context?.let { it1 -> ProjectsAdapter(userType, it1, tmp, it) } }!!
+        recyclerView.adapter = projectsAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
+
+        savedAdapter = projectsAdapter
 
         return view
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun onPause() {
+        Log.d("ProjectViewFragment", "onPause()")
         super.onPause()
         savedBundle = this.arguments
+        savedAdapter = recyclerView.adapter as ProjectsAdapter
+    }
+
+    override fun onResume() {
+        Log.d("ProjectViewFragment", "onResume()")
+        super.onResume()
+        recyclerView.adapter = savedAdapter
     }
 
 }

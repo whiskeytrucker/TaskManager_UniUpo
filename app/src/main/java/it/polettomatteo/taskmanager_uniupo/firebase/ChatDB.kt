@@ -10,8 +10,6 @@ import it.polettomatteo.taskmanager_uniupo.dataclass.Message
 class ChatDB {
     companion object{
         fun sendMessage(messageText: String, sender: String,callback: (Message?) -> Unit){
-
-
             val db = FirebaseFirestore
                     .getInstance()
             val msg = hashMapOf(
@@ -55,9 +53,8 @@ class ChatDB {
             val db = FirebaseFirestore
             .getInstance()
 
-
             db.collection("chat")
-                .whereIn(userMail, listOf("user0", "user1"))
+                .whereEqualTo("user0", userMail)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     if(!querySnapshot.isEmpty){

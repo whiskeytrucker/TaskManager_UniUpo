@@ -1,6 +1,7 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,9 @@ class TasksViewFragment: Fragment() {
     private var savedBundle: Bundle? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var addStuffBtn: Button
+    private lateinit var goBackBtn: Button
     private lateinit var tasksAdapter: TasksAdapter
+    private lateinit var userType: String
     private var tmp = ArrayList<Task>()
 
     override fun onCreateView(
@@ -31,11 +34,13 @@ class TasksViewFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("TasksViewFragment", "onCreateView()")
         val view = inflater.inflate(R.layout.recycler_taskview, container, false)
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         addStuffBtn = view.findViewById(R.id.addStuff)
+        goBackBtn = view.findViewById(R.id.goBack)
         recyclerView = view.findViewById(R.id.recyclerTaskView)
 
 
@@ -50,15 +55,9 @@ class TasksViewFragment: Fragment() {
         }
 
 
-
-        var listener: StartNewRecycler? = null
-        var userType: String = ""
-
         if(bundle != null){
-
             for(key in bundle.keySet()){
                 if(key.compareTo("tipo") == 0)userType = bundle.getString("tipo")!!
-                else if(key.compareTo("subtask_interface") == 0)listener = bundle["subtask_interface"] as StartNewRecycler
                 else tmp.add(bundle.getSerializable(key) as Task)
             }
 
@@ -71,9 +70,8 @@ class TasksViewFragment: Fragment() {
         tmp.sortWith(compareBy{it.nome})
 
 
-
         tasksAdapter =
-            listener?.let { context?.let { it1 ->
+            subtaskListener.let { context?.let { it1 ->
                 TasksAdapter(
                     userType,
                     it1,
@@ -91,7 +89,12 @@ class TasksViewFragment: Fragment() {
 
 
     override fun onStart(){
+        Log.d("TasksViewFragment", "onStart()")
         super.onStart()
+
+        goBackBtn.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack();
+        }
 
         addStuffBtn.setOnClickListener{
             parentFragmentManager.beginTransaction()
@@ -132,19 +135,38 @@ class TasksViewFragment: Fragment() {
     }
 
     override fun onPause() {
+        Log.d("TasksViewFragment", "onPause()")
         savedBundle = this.arguments
+        tasksAdapter = recyclerView.adapter as TasksAdapter
         super.onPause()
     }
 
     override fun onResume(){
-        super.onResume()
+        Log.d("TasksViewFragment", "onResume()")
         recyclerView.adapter = tasksAdapter
+        super.onResume()
     }
 
 
 
 
     /* LISTENER */
+    val subtaskListener = object: StartNewRecycler{
+        override fun onStartNewRecyclerView(data: Bundle){
+            val fragment = SubtasksViewFragment()
+
+            data.putSerializable("tipo", userType)
+            fragment.arguments = data
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .commit()
+
+        }
+    }
+
+
+
     val modifyActivityListener = object: TempActivity{
         override fun onStartNewTempActivity(data: Bundle) {
             val fragment = ModifyTaskFragment()
@@ -171,10 +193,6 @@ class TasksViewFragment: Fragment() {
             }else{
                 savedBundle?.remove(id?.let { findIndex(it, savedBundle!!) })
             }
-            /*
-            for(task in tmp){
-                Log.d("AAAAAAAAAAAAAAAAAA", "${task.toString()}")
-            }*/
 
         }
     }
@@ -198,21 +216,4 @@ class TasksViewFragment: Fragment() {
         }
         return ""
     }
-
-
-
-
-/*
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                Log.d("TasksViewFragment", parentFragmentManager.toString())
-
-                parentFragmentManager.popBackStack()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-*/
 }
