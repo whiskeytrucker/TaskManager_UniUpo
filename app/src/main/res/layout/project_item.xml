@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="8dp"
+        android:paddingEnd="10sp"
         android:visibility="gone"
         android:text="Sollecito" />
 

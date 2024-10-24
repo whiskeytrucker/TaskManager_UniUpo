@@ -2,23 +2,22 @@
 
 package it.polettomatteo.taskmanager_uniupo.fragments
 
-import android.app.Notification
+import android.app.AlertDialog
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polettomatteo.taskmanager_uniupo.R
-import it.polettomatteo.taskmanager_uniupo.activities.ResultActivity
 import it.polettomatteo.taskmanager_uniupo.adapters.ProjectsAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
@@ -29,17 +28,25 @@ class ProjectsViewFragment: Fragment() {
     private var notificationManager: NotificationManager? = null
     private lateinit var recyclerView: RecyclerView
 
+    private lateinit var resetBtn: Button
+    private lateinit var filterBtn: Button
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("ProjectViewFragment", "onCreateView()")
         val view = inflater.inflate(R.layout.recycler_projectview, container, false)
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         recyclerView = view.findViewById(R.id.recyclerView)
+
+        val searchbar = view.findViewById<SearchView>(R.id.search_bar)
+        resetBtn = view.findViewById(R.id.reset)
+        filterBtn = view.findViewById(R.id.filter)
+
+        initSearchView(searchbar)
 
         val tmp = ArrayList<Project>()
         val bundle: Bundle?
@@ -76,17 +83,75 @@ class ProjectsViewFragment: Fragment() {
         return view
     }
 
+    override fun onStart(){
+        super.onStart()
+
+        resetBtn.setOnClickListener {
+            val tmpAdp = recyclerView.adapter as ProjectsAdapter
+            tmpAdp.resetFilters()
+        }
+
+        filterBtn.setOnClickListener {
+            showFilterDialog()
+        }
+
+    }
+
     override fun onPause() {
-        Log.d("ProjectViewFragment", "onPause()")
         super.onPause()
         savedBundle = this.arguments
         savedAdapter = recyclerView.adapter as ProjectsAdapter
     }
 
     override fun onResume() {
-        Log.d("ProjectViewFragment", "onResume()")
         super.onResume()
         recyclerView.adapter = savedAdapter
     }
 
+
+    private fun initSearchView(searchView: SearchView){
+        searchView.queryHint = "Cerca qui..."
+        searchView.isIconified = false
+        searchView.clearFocus()
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let{
+                    performSearch(query)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let{
+                    performSearch(newText)
+                }
+
+                return true
+            }
+        })
+    }
+
+
+    private fun performSearch(query: String){
+
+    }
+
+
+    private fun showFilterDialog() {
+        val filters = arrayOf("Filtro 1", "Filtro 2", "Filtro 3")
+        val checkedItems = booleanArrayOf(false, false, false)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Seleziona Filtri")
+            .setMultiChoiceItems(filters, checkedItems) { _, which, isChecked ->
+                checkedItems[which] = isChecked
+            }
+            .setPositiveButton("Applica") { _, _ ->
+                val tmpAdp = recyclerView.adapter as ProjectsAdapter
+                Log.d("Lel", "AAA")
+            }
+            .setNegativeButton("Annulla", null)
+            .show()
+    }
 }
