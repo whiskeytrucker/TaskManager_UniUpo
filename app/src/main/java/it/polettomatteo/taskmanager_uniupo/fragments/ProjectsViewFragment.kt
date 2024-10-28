@@ -30,6 +30,7 @@ class ProjectsViewFragment: Fragment() {
 
     private lateinit var resetBtn: Button
     private lateinit var filterBtn: Button
+    private var arrProjects = ArrayList<Project>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,10 +49,8 @@ class ProjectsViewFragment: Fragment() {
 
         initSearchView(searchbar)
 
-        val tmp = ArrayList<Project>()
         val bundle: Bundle?
         var userType: String = ""
-
 
         if(savedBundle != null && this.arguments == null){bundle = savedBundle}
         else{bundle = this.arguments}
@@ -65,7 +64,7 @@ class ProjectsViewFragment: Fragment() {
                 }else if(key.compareTo("task_interface") == 0){
                     listener = bundle.getSerializable("task_interface") as StartNewRecycler
                 }else {
-                    tmp.add(bundle.getSerializable(key) as Project)
+                    arrProjects.add(bundle.getSerializable(key) as Project)
                 }
             }
         }
@@ -74,7 +73,7 @@ class ProjectsViewFragment: Fragment() {
 
 
         val projectsAdapter =
-            listener?.let { context?.let { it1 -> ProjectsAdapter(userType, it1, tmp, it) } }!!
+            listener?.let { context?.let { it1 -> ProjectsAdapter(userType, it1, arrProjects, it) } }!!
         recyclerView.adapter = projectsAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL ,false)
 
@@ -139,8 +138,18 @@ class ProjectsViewFragment: Fragment() {
 
 
     private fun showFilterDialog() {
-        val filters = arrayOf("Filtro 1", "Filtro 2", "Filtro 3")
-        val checkedItems = booleanArrayOf(false, false, false)
+        val temp: MutableSet<String> = mutableSetOf()
+
+        for(el in arrProjects){
+            temp.add(el.assigned)
+        }
+        temp.add("<50%")
+        temp.add(">50%")
+
+        val filters = temp.toTypedArray()
+
+        val checkedItems = BooleanArray(filters.size){false}
+
 
         AlertDialog.Builder(requireContext())
             .setTitle("Seleziona Filtri")
@@ -148,8 +157,11 @@ class ProjectsViewFragment: Fragment() {
                 checkedItems[which] = isChecked
             }
             .setPositiveButton("Applica") { _, _ ->
-                val tmpAdp = recyclerView.adapter as ProjectsAdapter
-                Log.d("Lel", "AAA")
+                if(checkedItems.contains(true)){
+                    val tmpAdp = recyclerView.adapter as ProjectsAdapter
+
+                    tmpAdp.applyFilter(filters, checkedItems)
+                }
             }
             .setNegativeButton("Annulla", null)
             .show()

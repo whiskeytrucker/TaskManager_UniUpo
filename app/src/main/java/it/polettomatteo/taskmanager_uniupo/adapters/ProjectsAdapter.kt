@@ -1,6 +1,7 @@
 package it.polettomatteo.taskmanager_uniupo.adapters
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -106,12 +107,37 @@ class ProjectsAdapter(private val userType: String, private val context: Context
         }
     }
 
-    fun filter(query: String){
-        filteredList = if (query.isEmpty()){
+    fun applyFilter(filters: Array<String>, checkedList: BooleanArray){
+        filteredList = if (checkedList.isEmpty()){
             dataSet.toMutableList()
         }else{
-            dataSet.toMutableList()
+            val tempFilters = ArrayList<String>()
+            val len = checkedList.size
+
+            var i = 0
+            while(i < len-2){
+                if(checkedList[i])tempFilters.add(filters[i])
+                i++
+            }
+            if(tempFilters.isNotEmpty()){
+                if(checkedList[len-2] || checkedList[len-1]){
+                    if(checkedList[len-2]){
+                        dataSet.filter{it.assigned in tempFilters && it.progress <= 50}.toMutableList()
+                    }else{
+                        dataSet.filter{it.assigned in tempFilters && it.progress >= 50}.toMutableList()
+                    }
+                }else{
+                    dataSet.filter{it.assigned in tempFilters}.toMutableList()
+                }
+            }else{
+                if(checkedList[len-2]){
+                    dataSet.filter{it.progress <= 50}.toMutableList()
+                }else{
+                    dataSet.filter{it.progress >= 50}.toMutableList()
+                }
+            }
         }
+
         notifyDataSetChanged()
     }
 
@@ -123,4 +149,5 @@ class ProjectsAdapter(private val userType: String, private val context: Context
 
 
     override fun getItemCount() = filteredList.size
+
 }
