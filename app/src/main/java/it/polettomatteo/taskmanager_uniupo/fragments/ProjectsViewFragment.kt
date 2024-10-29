@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -70,6 +71,11 @@ class ProjectsViewFragment: Fragment() {
         }
 
         notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if(userType.compareTo("pm") != 0){
+            val searchLayout = view.findViewById<RelativeLayout>(R.id.searchLayout)
+            searchLayout.visibility = View.GONE
+        }
 
 
         val projectsAdapter =
@@ -133,7 +139,9 @@ class ProjectsViewFragment: Fragment() {
 
 
     private fun performSearch(query: String){
+        val tmpAdp = recyclerView.adapter as ProjectsAdapter
 
+        tmpAdp.searchProject(query)
     }
 
 
@@ -147,7 +155,6 @@ class ProjectsViewFragment: Fragment() {
         temp.add(">50%")
 
         val filters = temp.toTypedArray()
-
         val checkedItems = BooleanArray(filters.size){false}
 
 

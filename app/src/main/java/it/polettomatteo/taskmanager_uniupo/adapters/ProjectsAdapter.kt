@@ -1,5 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
 import android.util.Log
@@ -20,35 +21,24 @@ import it.polettomatteo.taskmanager_uniupo.fragments.TasksViewFragment
 import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 
 
+@SuppressLint("NotifyDataSetChanged")
 class ProjectsAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Project>, private val listener: StartNewRecycler) : RecyclerView.Adapter<ProjectsAdapter.ViewHolder>(){
 
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title: TextView
-        val content: TextView
-        val author: TextView
-        val assigned: TextView
-        val progress: TextView
-        val seekBar: SeekBar
-        val promptPL: Button
+        val title: TextView = view.findViewById(R.id.title)
+        val content: TextView = view.findViewById(R.id.content)
+        val author: TextView = view.findViewById(R.id.authorProject)
+        val assigned: TextView = view.findViewById(R.id.assigned)
+        val progress: TextView = view.findViewById(R.id.progress)
+        val seekBar: SeekBar = view.findViewById(R.id.seekBar)
+        val promptPL: Button = view.findViewById(R.id.promptPL)
 
 
         init {
-            title = view.findViewById(R.id.title)
-            content = view.findViewById(R.id.content)
-            seekBar = view.findViewById(R.id.seekBar)
-            progress = view.findViewById(R.id.progress)
-            assigned = view.findViewById(R.id.assigned)
-            author = view.findViewById(R.id.authorProject)
-
-            promptPL = view.findViewById(R.id.promptPL)
-
             seekBar.isEnabled = false
             seekBar.progress = 0
-
-            val perc = seekBar.progress
-
         }
     }
 
@@ -119,22 +109,16 @@ class ProjectsAdapter(private val userType: String, private val context: Context
                 if(checkedList[i])tempFilters.add(filters[i])
                 i++
             }
+
+
             if(tempFilters.isNotEmpty()){
                 if(checkedList[len-2] || checkedList[len-1]){
-                    if(checkedList[len-2]){
-                        dataSet.filter{it.assigned in tempFilters && it.progress <= 50}.toMutableList()
-                    }else{
-                        dataSet.filter{it.assigned in tempFilters && it.progress >= 50}.toMutableList()
-                    }
+                    filterProgress(checkedList[len-2], tempFilters)
                 }else{
                     dataSet.filter{it.assigned in tempFilters}.toMutableList()
                 }
             }else{
-                if(checkedList[len-2]){
-                    dataSet.filter{it.progress <= 50}.toMutableList()
-                }else{
-                    dataSet.filter{it.progress >= 50}.toMutableList()
-                }
+                filterProgress(checkedList[len-2], tempFilters)
             }
         }
 
@@ -146,8 +130,23 @@ class ProjectsAdapter(private val userType: String, private val context: Context
         notifyDataSetChanged()
     }
 
+    fun searchProject(query: String){
+        if(query.isNotEmpty()){
+            filteredList = dataSet.filter{it.titolo.contains(query, ignoreCase = true)}.toMutableList()
+            notifyDataSetChanged()
+        }
+    }
 
 
     override fun getItemCount() = filteredList.size
 
+
+    private fun filterProgress(lessThan: Boolean, tempFilters: ArrayList<String>): MutableList<Project>{
+        val toRet = if(lessThan){
+            dataSet.filter{it.assigned in tempFilters && it.progress <= 50}.toMutableList()
+        }else{
+            dataSet.filter{it.assigned in tempFilters && it.progress >= 50}.toMutableList()
+        }
+        return toRet
+    }
 }
