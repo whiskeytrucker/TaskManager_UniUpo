@@ -24,8 +24,6 @@ import it.polettomatteo.taskmanager_uniupo.interfaces.StartNewRecycler
 @SuppressLint("NotifyDataSetChanged")
 class ProjectsAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Project>, private val listener: StartNewRecycler) : RecyclerView.Adapter<ProjectsAdapter.ViewHolder>(){
 
-
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.title)
         val content: TextView = view.findViewById(R.id.content)
@@ -45,7 +43,6 @@ class ProjectsAdapter(private val userType: String, private val context: Context
     private var filteredList: MutableList<Project> = dataSet.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // crea una nuova view, dove definisce la ui dell'elemento della lista
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.project_item, parent, false)
 
@@ -111,15 +108,18 @@ class ProjectsAdapter(private val userType: String, private val context: Context
             }
 
 
-            if(tempFilters.isNotEmpty()){
-                if(checkedList[len-2] || checkedList[len-1]){
-                    filterProgress(checkedList[len-2], tempFilters)
-                }else{
-                    dataSet.filter{it.assigned in tempFilters}.toMutableList()
-                }
-            }else{
-                filterProgress(checkedList[len-2], tempFilters)
+            var toRet: List<Project> = dataSet.toList()
+
+            if(tempFilters.isNotEmpty()) {
+                toRet = toRet.filter{it.assigned in tempFilters}
             }
+
+            if(checkedList[len-2] || checkedList[len-1]){
+                toRet = filterProgress(toRet, checkedList[len-2])
+            }
+
+
+            toRet.toMutableList()
         }
 
         notifyDataSetChanged()
@@ -141,11 +141,11 @@ class ProjectsAdapter(private val userType: String, private val context: Context
     override fun getItemCount() = filteredList.size
 
 
-    private fun filterProgress(lessThan: Boolean, tempFilters: ArrayList<String>): MutableList<Project>{
+    private fun filterProgress(toFilter: List<Project>, lessThan: Boolean): List<Project>{
         val toRet = if(lessThan){
-            dataSet.filter{it.assigned in tempFilters && it.progress <= 50}.toMutableList()
+            toFilter.filter{it.progress <= 50}
         }else{
-            dataSet.filter{it.assigned in tempFilters && it.progress >= 50}.toMutableList()
+            toFilter.filter{it.progress >= 50}
         }
         return toRet
     }

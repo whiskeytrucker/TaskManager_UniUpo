@@ -174,49 +174,6 @@ class TasksViewFragment: Fragment() {
 
 
 
-
-    // Ricerca
-    private fun showFilterDialog() {
-        val temp: MutableSet<String> = mutableSetOf()
-        for(el in arrTasks){
-            temp.add(el.dev)
-        }
-        val currentDate = Date()
-
-        val ms = 24 * 60 * 60 * 1000
-
-        temp.add(formatTimestamp(currentDate)) // Oggi
-        currentDate.time += 30L * ms
-        temp.add(formatTimestamp(currentDate)) // Oggi + 1 mese
-        currentDate.time += 60L * ms
-        temp.add(formatTimestamp(currentDate)) // Oggi + 3 mesi
-
-        temp.add("<50%")
-        temp.add(">50%")
-
-        val filters = temp.toTypedArray()
-        val checkedItems = BooleanArray(filters.size){false}
-
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("Seleziona Filtri")
-            .setMultiChoiceItems(filters, checkedItems) { _, which, isChecked ->
-                checkedItems[which] = isChecked
-            }
-            .setPositiveButton("Applica") { _, _ ->
-                if(checkedItems.contains(true)){
-                    val tmpAdp = recyclerView.adapter as ProjectsAdapter
-
-                    tmpAdp.applyFilter(filters, checkedItems)
-                }
-            }
-            .setNegativeButton("Annulla", null)
-            .show()
-    }
-
-
-
-
     /* LISTENER */
     val subtaskListener = object: StartNewRecycler{
         override fun onStartNewRecyclerView(data: Bundle){
@@ -310,8 +267,42 @@ class TasksViewFragment: Fragment() {
     }
 
     private fun performSearch(query: String){
-        val tmpAdp = recyclerView.adapter as TasksAdapter
-        tmpAdp.searchTask(query)
+        tasksAdapter.searchTask(query)
+    }
+
+    private fun showFilterDialog() {
+        val temp: MutableSet<String> = mutableSetOf()
+        for(el in arrTasks){
+            temp.add(el.dev)
+        }
+        val currentDate = Date()
+
+        val ms = 24 * 60 * 60 * 1000
+
+        temp.add(formatTimestamp(currentDate)) // Oggi
+        currentDate.time += 30L * ms
+        temp.add(formatTimestamp(currentDate)) // Oggi + 1 mese
+
+        temp.add("<50%")
+        temp.add(">50%")
+
+        val filters = temp.toTypedArray()
+        val checkedItems = BooleanArray(filters.size){false}
+
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Seleziona Filtri")
+            .setMultiChoiceItems(filters, checkedItems) { _, which, isChecked ->
+                checkedItems[which] = isChecked
+            }
+            .setPositiveButton("Applica") { _, _ ->
+                if(checkedItems.contains(true)){
+                    val tmpAdp = recyclerView.adapter as TasksAdapter
+                    tmpAdp.applyFilter(filters, checkedItems)
+                }
+            }
+            .setNegativeButton("Annulla", null)
+            .show()
     }
 
 
