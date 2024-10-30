@@ -129,7 +129,7 @@ class ChatDB {
                                     val data = docIn.data
                                     if(data != null){
                                         var sender = data["sender"].toString().toBoolean()
-                                        if(fieldUser.compareTo("user0") != 0)sender = !sender
+                                        if(fieldUser.compareTo("user1") == 0)sender = !sender
 
                                         val tmp = Message(
                                             sender,

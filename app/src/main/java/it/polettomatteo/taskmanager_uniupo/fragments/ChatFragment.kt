@@ -117,7 +117,9 @@ class ChatFragment: Fragment() {
             if(msg.trim().compareTo("") == 0)Toast.makeText(requireContext(), "Il messaggio è vuoto!!", Toast.LENGTH_LONG).show()
             else{
                 ChatDB.sendMessage(msg, sender, fieldUser){ result ->
-                    if(result == null)Toast.makeText(requireContext(), "Impossibile inviare il messaggio!", Toast.LENGTH_SHORT).show()
+                    if(result == null){
+                        Toast.makeText(requireContext(), "Impossibile inviare il messaggio!", Toast.LENGTH_SHORT).show()
+                    }
                     else {toSend.setText(getString(R.string.empty))}
                 }
             }
@@ -161,7 +163,7 @@ class ChatFragment: Fragment() {
                                 if (document.type == DocumentChange.Type.ADDED) {
                                     val data = document.document.data
                                     var sender = data["sender"].toString().toBoolean()
-                                    if(fieldUser.compareTo("user0") != 0)sender = !sender
+                                    if(fieldUser.compareTo("user1") == 0)sender = !sender
 
                                     val tmp = Message(
                                         sender,
@@ -170,6 +172,8 @@ class ChatFragment: Fragment() {
                                     )
 
                                     chatArr.add(tmp)
+
+
 
                                     val chatAdapter = ChatAdapter(chatArr, requireContext())
                                     recyclerView.adapter = chatAdapter
