@@ -134,8 +134,10 @@ class ChatFragment: Fragment() {
     fun listenForMessages(user0: String, user1: String) {
         val db = FirebaseFirestore.getInstance()
         var fieldToGet = ""
+
+        var boolSender = true
         if(fieldUser.compareTo("user0") == 0)fieldToGet = "user1"
-        else if(fieldUser.compareTo("user1") == 0)fieldToGet = "user0"
+        else if(fieldUser.compareTo("user1") == 0){ fieldToGet = "user0"; boolSender = false}
 
 
         db.collection("chat")
@@ -161,12 +163,13 @@ class ChatFragment: Fragment() {
                                     val data = document.document.data
 
                                     val tmp = Message(
-                                        !data["sender"].toString().toBoolean(),
+                                        boolSender,
                                         data["text"].toString(),
                                         data["timestamp"] as Timestamp
                                     )
 
                                     chatArr.add(tmp)
+
                                     val chatAdapter = ChatAdapter(chatArr, requireContext())
                                     recyclerView.adapter = chatAdapter
                                     recyclerView.adapter?.notifyItemChanged(chatArr.size - 1)
