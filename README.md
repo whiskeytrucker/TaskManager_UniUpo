@@ -21,8 +21,12 @@ FUN:
 		- Aggiornabile su modifica
 	
 	RICERCA
-	- [ ] Il **PM** può fare ricerche sui progetti mettendo filtri in base allo **stato**, al **PL** e alla **scadenza**.
-	- [ ] I **PL** possono fare qualcosa di analogo ma relativo ai **task**, quindi filtrando per **stato**, **D**, **scadenza** o **priorità**
+	- [X] Il **PM** può fare ricerche sui progetti mettendo filtri in base allo **stato**, al **PL** e alla ~~scadenza~~.
+		- Per **stato** penso intenda se il progetto è sopra a una certa percentuale (Progetti > o < di 50%)
+	- [X] I **PL** possono fare qualcosa di analogo ma relativo ai **task**, quindi filtrando per **stato**, **D**, **scadenza** o **priorità**
+		- Filtro su **stato** analogo alla ricerca sui progetti
+		- Filtro sulla **scadenza** in base alla giornata di oggi + 1 mese & oggi + 3 mesi
+		- Filtro sulla **priorità**, boh
 		
 	NOTIFICHE
 	- [X] **D** modifica progess di una sottotask, se questo completa una task --> Notifica verso il **PL**.
@@ -46,6 +50,7 @@ VIEW:
 	- [X] Mostrare SOLO Lista Task se Dev
 - [X] Lista Sotto Task una volta clickata una Task
 - [ ] Tasto indietro per tornare alla "pagina" precedente
+	- [ ] Task --> Progetti OK | Sottotask --> Task Errore
 
 - [X] Pagina Utente -- Giusto da visualizzare il tipo di utente
 

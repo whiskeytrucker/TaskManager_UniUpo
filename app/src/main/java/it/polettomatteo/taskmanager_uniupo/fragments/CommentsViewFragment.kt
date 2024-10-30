@@ -47,7 +47,6 @@ class CommentsViewFragment: Fragment()  {
         super.onStart()
 
         goBackBtn.setOnClickListener{
-            Log.d("CommentsViewFragment", requireActivity().supportFragmentManager.getBackStackEntryAt(0).toString())
             requireActivity().supportFragmentManager.popBackStack()
         }
     }

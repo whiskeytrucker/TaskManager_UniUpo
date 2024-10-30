@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
@@ -48,11 +49,11 @@ class MainActivity : AppCompatActivity(){
         FirebaseApp.initializeApp(applicationContext)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
+
         auth = FirebaseAuth.getInstance()
         currentUser = auth.currentUser
 
         notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
 
         initToolbar(toolbar)
     }
@@ -66,9 +67,6 @@ class MainActivity : AppCompatActivity(){
                 }
             }
         }
-
-
-
 
         this.createFragment()
     }
@@ -234,13 +232,12 @@ class MainActivity : AppCompatActivity(){
 
 
 
-
+    // ------------ LISTENER ------------
     val taskListener = object: StartNewRecycler{
         override fun onStartNewRecyclerView(data: Bundle){
             var fragment = TasksViewFragment()
 
             data.putSerializable("tipo", userType)
-            data.putSerializable("subtask_interface", subtaskListener)
             fragment.arguments = data
 
             supportFragmentManager.beginTransaction()
@@ -250,22 +247,6 @@ class MainActivity : AppCompatActivity(){
 
         }
     }
-
-    val subtaskListener = object: StartNewRecycler{
-        override fun onStartNewRecyclerView(data: Bundle){
-            val fragment = SubtasksViewFragment()
-
-            data.putSerializable("tipo", userType)
-            fragment.arguments = data
-
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.frameLayout, fragment)
-                .commit()
-
-        }
-    }
-
-
 
 
 
