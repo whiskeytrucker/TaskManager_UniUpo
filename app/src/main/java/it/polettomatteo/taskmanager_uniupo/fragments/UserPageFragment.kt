@@ -5,13 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import it.polettomatteo.taskmanager_uniupo.R
 
 class UserPageFragment: Fragment() {
-    private lateinit var text1:TextView
-    private lateinit var textType: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -20,8 +19,12 @@ class UserPageFragment: Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.userpage, container, false)
 
-        text1 = view.findViewById(R.id.username)
-        textType = view.findViewById(R.id.textType)
+        val text1 = view.findViewById<TextView>(R.id.username)
+        val textType = view.findViewById<TextView>(R.id.textType)
+        val imgUser = view.findViewById<ImageView>(R.id.userImage)
+
+        imgUser.setImageResource(R.drawable.ic_user)
+
 
         val bundle = this.arguments
         if(bundle != null){

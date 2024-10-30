@@ -26,6 +26,7 @@ import it.polettomatteo.taskmanager_uniupo.adapters.ChatAdapter
 import it.polettomatteo.taskmanager_uniupo.dataclass.Message
 import it.polettomatteo.taskmanager_uniupo.firebase.ChatDB
 import it.polettomatteo.taskmanager_uniupo.R
+import it.polettomatteo.taskmanager_uniupo.dataclass.Task
 
 class ChatFragment: Fragment() {
     private var TAG = "ChatFragment"
@@ -172,12 +173,11 @@ class ChatFragment: Fragment() {
                                     )
 
                                     chatArr.add(tmp)
-
-
+                                    chatArr.sortWith(compareBy{it.timestamp})
 
                                     val chatAdapter = ChatAdapter(chatArr, requireContext())
                                     recyclerView.adapter = chatAdapter
-                                    recyclerView.adapter?.notifyItemChanged(chatArr.size - 1)
+                                    recyclerView.adapter?.notifyItemChanged(findIndex(tmp))
                                 }
                             }
                         }
@@ -190,4 +190,16 @@ class ChatFragment: Fragment() {
 
     }
 
+
+
+
+
+
+    // AUSILIARIE
+    private fun findIndex(toFind: Message):Int{
+        for(task in chatArr){
+            if(task.timestamp == toFind.timestamp)return chatArr.indexOf(task)
+        }
+        return -1
+    }
 }
