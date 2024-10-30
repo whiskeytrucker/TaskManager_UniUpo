@@ -69,6 +69,8 @@ VIEW:
 - [ ] Aggiornare domain/company name del pacchetto
 - [X] Aggiustare inversione chat:
 	- Esiste chat da A a B, ma io sono B e non posso accedere alla chat: B-A Chat = !(A-B Chat)
+- [ ] Le notifiche vengono sovrascritte
+	- Se esistono 2 notifiche nel DB, visualizza solo l'ultima
 
 
 ## Testo Progetto

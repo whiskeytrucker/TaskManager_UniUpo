@@ -135,9 +135,8 @@ class ChatFragment: Fragment() {
         val db = FirebaseFirestore.getInstance()
         var fieldToGet = ""
 
-        var boolSender = true
         if(fieldUser.compareTo("user0") == 0)fieldToGet = "user1"
-        else if(fieldUser.compareTo("user1") == 0){ fieldToGet = "user0"; boolSender = false}
+        else if(fieldUser.compareTo("user1") == 0)fieldToGet = "user0"
 
 
         db.collection("chat")
@@ -161,9 +160,11 @@ class ChatFragment: Fragment() {
                             for (document in snapshot!!.documentChanges) {
                                 if (document.type == DocumentChange.Type.ADDED) {
                                     val data = document.document.data
+                                    var sender = data["sender"].toString().toBoolean()
+                                    if(fieldUser.compareTo("user0") != 0)sender = !sender
 
                                     val tmp = Message(
-                                        boolSender,
+                                        sender,
                                         data["text"].toString(),
                                         data["timestamp"] as Timestamp
                                     )
