@@ -12,7 +12,6 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.core.snap
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,7 +47,6 @@ class ChatFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.recycler_chat, container, false)
-        setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         auth = FirebaseAuth.getInstance()
@@ -121,7 +119,7 @@ class ChatFragment: Fragment() {
                 ChatDB.sendMessage(msg, sender){ result ->
                     if(result == null)Toast.makeText(requireContext(), "Impossibile inviare il messaggio!", Toast.LENGTH_SHORT).show()
                     else {
-                        toSend.setText("")
+                        toSend.setText(getString(R.string.empty))
                     }
                 }
             }

@@ -48,7 +48,7 @@ class AuthActivity : AppCompatActivity() {
 
 
 
-    fun login(
+    private fun login(
         email: String,
         password: String,
         callback: (Boolean?) -> Unit

@@ -11,18 +11,9 @@ import it.polettomatteo.taskmanager_uniupo.dataclass.Comment
 
 class CommentsAdapter(private var dataSet: ArrayList<Comment>) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textFrom: TextView
-        val textComment: TextView
-        val textVote: TextView
-
-
-        init {
-            textFrom = view.findViewById(R.id.textFrom)
-            textComment = view.findViewById(R.id.textComment)
-            textVote = view.findViewById(R.id.textVote)
-        }
-
-
+        val textFrom: TextView = view.findViewById(R.id.textFrom)
+        val textComment: TextView = view.findViewById(R.id.textComment)
+        val textVote: TextView = view.findViewById(R.id.textVote)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,8 +30,5 @@ class CommentsAdapter(private var dataSet: ArrayList<Comment>) : RecyclerView.Ad
         holder.textComment.text = "Commento: ${dataSet[position].text}"
         holder.textVote.text = "Voto: ${dataSet[position].vote}/10"
     }
-
-
-
     override fun getItemCount() = dataSet.size
 }

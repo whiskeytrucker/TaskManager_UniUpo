@@ -12,9 +12,60 @@
     <string name="logout">Logout</string>
     <string name="wb">Bentornato</string>
     <string name="lorem_30w">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ac tortor dolor. Ut pharetra sollicitudin orci quis maximus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit. "</string>
+    <string name="userType">Tipo Utente:</string>
 
     <string name="default_notification_channelID">"Canale Default Notifiche"</string>
     <string name="msg_token_fmt">Token: %s</string>
+
+    <!-- Progetti -->
+    <string name="project_manager">Project Manager: %1$s</string>
+    <string name="project_leader">Project Leader: %1$s</string>
+    <string name="prompt">Sollecito</string>
+
+
+    <string name="progressText">Progresso: </string>
+    <string name="progressPerc">%1s%</string>
+    <string name="empty" />
+    <string name="welcome_back_user">Bentornato %1$s!</string>
+    <string name="type_user">Sei un %1$s.</string>
+
+    <!-- Task -->
+    <string name="title">Titolo: </string>
+    <string name="ins_title">Inserire il titolo: </string>
+    <string name="assigned">Persona Assegnata: </string>
+    <string name="ins_assigned">Inserire il nome della persona assegnata. </string>
+
+    <string name="modifyTxt">Modifica</string>
+    <string name="deleteTxt">Cancella</string>
+    <string name="commentTxt">Cancella</string>
+
+    <!-- Subtask -->
+    <string name="descr">Descrizione:</string>
+    <string name="ins_descr">Inserisci la descrizione.</string>
+
+    <string name="priority">Priorità:</string>
+    <string name="state">Stato:</string>
+
+    <string name="expirationText">Data di Scadenza:</string>
+
+    <string name="submitSave">Salva i Dati</string>
+
+
+    <!-- Chat -->
+    <string name="receivedTitle">Messaggi Ricevuti:</string>
+    <string name="writeMsg">Scrivi un messaggio</string>
+    <string name="sendText">Invia</string>
+
+
+    <!-- Search -->
+    <string name="search">Cerca…</string>
+    <string name="reset">Reset</string>
+    <string name="filter">Filtri</string>
+
+
+    <string name="goBackTxt">←</string>
+    <string name="addStuff">+</string>
+
 
 
     <string-array name="stati_subtask">

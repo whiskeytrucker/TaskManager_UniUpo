@@ -10,17 +10,12 @@ import it.polettomatteo.taskmanager_uniupo.dataclass.Project
 class ProjectsDB {
     companion object{
         fun getProjects(username: String, usertype: String, callback: (Bundle?) -> Unit) {
-            var field: String = ""
+            var field = ""
 
             if(usertype.isNotEmpty() && usertype.isNotBlank()) {
-                if (usertype.compareTo("pm") == 0) {
-                    field = "autore"
-                } else if (usertype.compareTo("pl") == 0) {
-                    field = "assigned"
-                }
-            }else{
-                callback(null)
-            }
+                if (usertype.compareTo("pm") == 0) { field = "autore" }
+                else if (usertype.compareTo("pl") == 0) { field = "assigned" }
+            }else{ callback(null) }
 
             FirebaseFirestore
                 .getInstance()
@@ -29,6 +24,7 @@ class ProjectsDB {
                 .get()
                 .addOnSuccessListener {results ->
                     val bundle = Bundle()
+
                     if(results.size() > 0){
                         val documents = results.documents
                         for((index, doc) in documents.withIndex()){

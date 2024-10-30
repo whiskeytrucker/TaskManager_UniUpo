@@ -12,11 +12,11 @@
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:title="Cerca" />
+                android:title="@string/search" />
 
             <Button
                 android:id="@+id/reset"
-                android:text="Reset"
+                android:text="@string/reset"
                 android:layout_below="@id/search_bar"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
 
             <Button
                 android:id="@+id/filter"
-                android:text="Filtri"
+                android:text="@string/filter"
                 android:layout_margin="5dp"
                 android:layout_toEndOf="@id/reset"
                 android:layout_alignBaseline="@id/reset"

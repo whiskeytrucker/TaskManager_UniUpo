@@ -134,9 +134,6 @@ class TasksAdapter(private val userType: String, private val context: Context, p
 
                 }
             }
-        }else{
-            Log.e("TasksAdapter", "Indice fuori limite: $position, dimensione lista: ${filteredList.size}")
-            for(el in filteredList)Log.e("TasksAdapter", el.nome)
         }
 
     }
@@ -161,17 +158,11 @@ class TasksAdapter(private val userType: String, private val context: Context, p
 
             var toRet: List<Task> = dataSet.toList()
 
-            if(tempFilters.isNotEmpty()){
-                toRet = toRet.filter{it.dev in tempFilters}
-            }
+            if(tempFilters.isNotEmpty()){toRet = toRet.filter{it.dev in tempFilters} }
 
-            if(checkedList[len-2] || checkedList[len-1]){
-                toRet = filterProgress(toRet, checkedList[len-2])
-            }
+            if(checkedList[len-2] || checkedList[len-1]){toRet = filterProgress(toRet, checkedList[len-2]) }
 
-            if(checkedList[len-4] || checkedList[len-3]){
-                toRet = filterDate(toRet, checkedList[len-4])
-            }
+            if(checkedList[len-4] || checkedList[len-3]){toRet = filterDate(toRet, checkedList[len-4])}
 
             toRet.toMutableList()
         }
@@ -196,27 +187,22 @@ class TasksAdapter(private val userType: String, private val context: Context, p
     override fun getItemCount() = filteredList.size
 
 
-
     private fun formatTimestamp(timestamp: Date): String{
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         return sdf.format(timestamp)
     }
 
     private fun filterProgress(toFilter: List<Task>, lessThan: Boolean): List<Task>{
-        val toRet = if(lessThan){
-            toFilter.filter{it.progress <= 50}
-        }else{
-            toFilter.filter{it.progress >= 50}
-        }
+        val toRet = if(lessThan){toFilter.filter{it.progress <= 50} }
+        else{ toFilter.filter{it.progress >= 50} }
         return toRet
     }
 
     private fun filterDate(toFilter: List<Task>, now: Boolean): List<Task>{
         val currentMS = Timestamp.now()
 
-        val toRet = if(now){
-            toFilter.filter{ it.expire <= currentMS }
-        }else{
+        val toRet = if(now){ toFilter.filter{ it.expire <= currentMS } }
+        else{
             val calendar = Calendar.getInstance()
             calendar.time = currentMS.toDate()
             calendar.add(Calendar.MONTH, 1)

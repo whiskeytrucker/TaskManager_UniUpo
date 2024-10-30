@@ -1,5 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +29,6 @@ class AddSubtaskFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.new_subtask, container, false)
-        setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val submitBtn = view.findViewById<Button>(R.id.submitSubButton)
@@ -37,20 +37,19 @@ class AddSubtaskFragment: Fragment() {
 
 
         // Progress
-        progressText.text = "0%"
+        "0%".also { progressText.text = it }
         seekBar.progress = 0
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            @SuppressLint("SetTextI18n")
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                progressText.text = "${progress.toString()}%"
+                progressText.text = "${progress}%"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                // Optional: azione quando l'utente inizia a muovere la SeekBar
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // Optional: azione quando l'utente smette di muovere la SeekBar
             }
         })
 

@@ -193,10 +193,7 @@ class MainActivity : AppCompatActivity(){
                                 if(bundle != null){
                                     mainLayout.closeDrawer(navigationView)
                                     setupFragment(ChatFragment(), bundle, true)
-                                }else{
-                                    Toast.makeText(baseContext, "Nun ce stanno messaggi cumpà", Toast.LENGTH_SHORT).show()
                                 }
-
                             }
                         }
                     }
@@ -212,7 +209,7 @@ class MainActivity : AppCompatActivity(){
 
 
 
-    fun updateUI(
+    private fun updateUI(
         navigationView: NavigationView
     ){
         val isLoggedIn = currentUser != null
@@ -251,9 +248,9 @@ class MainActivity : AppCompatActivity(){
 
 
 
-    private fun createNotification(notifi: Notification) {
+    private fun createNotification(notify: Notification) {
         val intent1 = Intent(this, DeleteNotification::class.java)
-        intent1.putExtra("notificationID", notifi.id)
+        intent1.putExtra("notificationID", notify.id)
 
         val pendingIntent = PendingIntent.getBroadcast(
             this,
@@ -264,16 +261,16 @@ class MainActivity : AppCompatActivity(){
 
 
         val importance = NotificationManager.IMPORTANCE_LOW
-        val channel = NotificationChannel(notifi.channelID, notifi.channelTitle, importance)
-        channel.description = notifi.channelDescr
+        val channel = NotificationChannel(notify.channelID, notify.channelTitle, importance)
+        channel.description = notify.channelDescr
         notifManager?.getNotificationChannel(channel.id)
             ?: notifManager?.createNotificationChannel(channel)
 
         val notification = NotificationCompat.Builder(this@MainActivity, channel.id)
-            .setContentTitle(notifi.title)
-            .setContentText(notifi.descr)
+            .setContentTitle(notify.title)
+            .setContentText(notify.descr)
             .setSmallIcon(R.drawable.ic_notification)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(notifi.descr).setBigContentTitle(notifi.title))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notify.descr).setBigContentTitle(notify.title))
             .setChannelId(channel.id)
             .setDeleteIntent(pendingIntent)
             .build()

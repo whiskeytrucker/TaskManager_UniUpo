@@ -39,14 +39,10 @@ class SubtasksViewFragment: Fragment() {
 
         val bundle: Bundle?
 
-        if(savedBundle != null && this.arguments == null){
-            bundle = savedBundle
-        }else{
-            bundle = this.arguments
-        }
+        if(savedBundle != null && this.arguments == null){bundle = savedBundle}
+        else{ bundle = this.arguments }
 
         tmp = ArrayList()
-
         if(bundle != null){
             if(bundle.getString("tipo") != null){
                 userType = bundle.getString("tipo")!!
@@ -54,14 +50,10 @@ class SubtasksViewFragment: Fragment() {
             }
 
 
-            for(key in bundle.keySet()){
-                tmp.add(bundle.getSerializable(key) as Subtask)
-            }
+            for(key in bundle.keySet()){ tmp.add(bundle.getSerializable(key) as Subtask) }
 
 
-            if(userType.compareTo("d") == 0 || userType.compareTo("pl") == 0){
-                addStuffBtn.visibility = View.VISIBLE
-            }
+            if(userType.compareTo("d") == 0 || userType.compareTo("pl") == 0){ addStuffBtn.visibility = View.VISIBLE }
 
         }
 
@@ -104,9 +96,7 @@ class SubtasksViewFragment: Fragment() {
     override fun onStart(){
         super.onStart()
 
-        goBackBtn.setOnClickListener{
-            requireActivity().supportFragmentManager.popBackStack()
-        }
+        goBackBtn.setOnClickListener{ requireActivity().supportFragmentManager.popBackStack() }
 
         addStuffBtn.setOnClickListener{
             parentFragmentManager.beginTransaction()

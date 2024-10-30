@@ -19,9 +19,6 @@ class RegisterActivity: AppCompatActivity()  {
         setContentView(R.layout.register_activity)
 
         auth = FirebaseAuth.getInstance()
-
-
-
     }
 
 
@@ -44,12 +41,12 @@ class RegisterActivity: AppCompatActivity()  {
             if(currentUser == null && validPass(pass) && controlloMail(email) && pass.compareTo(conf) == 0){
                 registerUser(email, pass){ result ->
                     if(result == true){
-                        when(tipoSpinner.selectedItemPosition){
-                            0 -> tipo = "d"
-                            1 -> tipo = "pl"
-                            2 -> tipo = "pm"
+                        tipo = when(tipoSpinner.selectedItemPosition){
+                            0 -> "d"
+                            1 -> "pl"
+                            2 -> "pm"
                             else -> {
-                                tipo = "na"
+                                "na"
                             }
                         }
 
@@ -75,7 +72,7 @@ class RegisterActivity: AppCompatActivity()  {
         }
     }
 
-    fun registerUser(email: String, password: String, callback: (Boolean?) -> Unit) {
+    private fun registerUser(email: String, password: String, callback: (Boolean?) -> Unit) {
         val auth = FirebaseAuth.getInstance()
 
         auth.createUserWithEmailAndPassword(email, password)

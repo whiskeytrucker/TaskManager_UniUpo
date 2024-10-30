@@ -14,7 +14,7 @@
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Titolo:"
+            android:text="@string/title"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -30,7 +30,7 @@
             android:layout_below="@id/modTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Descrizione:"
+            android:text="@string/descr"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -46,7 +46,7 @@
             android:layout_below="@id/modDescr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Persona assegnata:"
+            android:text="@string/assigned"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
             android:layout_below="@id/modAssigned"
-            android:text="Progresso:"
+            android:text="@string/progressText"
             android:textSize="16sp"/>
 
         <TextView
@@ -91,7 +91,7 @@
             android:layout_below="@id/seekBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Data di scadenza:"
+            android:text="@string/expirationText"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -117,6 +117,6 @@
             android:layout_marginBottom="8sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Salva i Dati" />
+            android:text="@string/submitSave" />
     </RelativeLayout>
 </ScrollView>

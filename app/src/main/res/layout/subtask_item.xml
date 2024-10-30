@@ -19,7 +19,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="8dp"
         android:visibility="gone"
-        android:text="Modifica" />
+        android:text="@string/modifyTxt" />
 
     <Button
         android:id="@+id/deleteSubtask"
@@ -29,7 +29,7 @@
         android:layout_below="@id/modifySubtask"
         android:layout_marginTop="2dp"
         android:visibility="gone"
-        android:text="Cancella" />
+        android:text="@string/deleteTxt" />
 
     <TextView
         android:id="@+id/priority"
@@ -97,7 +97,7 @@
         android:layout_centerHorizontal="true"
         android:paddingStart="12sp"
         android:paddingEnd="12sp"
-        android:text="Commenti" />
+        android:text="@string/commentTxt" />
 
 
     <View

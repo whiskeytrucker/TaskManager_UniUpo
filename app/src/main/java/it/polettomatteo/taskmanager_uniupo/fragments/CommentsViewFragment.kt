@@ -22,7 +22,7 @@ class CommentsViewFragment: Fragment()  {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.recycler_projectview, container, false)
+        val view = inflater.inflate(R.layout.recycler_commentview, container, false)
         recyclerView = view.findViewById(R.id.recyclerView)
 
         goBackBtn = view.findViewById(R.id.goBack)
@@ -35,6 +35,7 @@ class CommentsViewFragment: Fragment()  {
                 tmp.add(bundle.getSerializable(key) as Comment)
             }
         }
+
 
         val commentsAdapter = CommentsAdapter(tmp)
 

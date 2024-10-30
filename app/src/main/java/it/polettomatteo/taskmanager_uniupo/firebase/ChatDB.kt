@@ -12,6 +12,7 @@ class ChatDB {
         fun sendMessage(messageText: String, sender: String,callback: (Message?) -> Unit){
             val db = FirebaseFirestore
                     .getInstance()
+
             val msg = hashMapOf(
                 "sender" to true,
                 "text" to messageText,
@@ -71,7 +72,6 @@ class ChatDB {
                         callback(receivers)
                     }
                 }
-
 
                 .addOnFailureListener{
                     it.printStackTrace()

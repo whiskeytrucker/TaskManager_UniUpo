@@ -1,5 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,13 +24,13 @@ import java.util.Date
 
 class ModifySubtaskFragment() : Fragment() {
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.modify_subtask, container, false)
-        setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
@@ -68,13 +69,8 @@ class ModifySubtaskFragment() : Fragment() {
                         progressText.text = "${progress}%"
                     }
 
-                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                        // Optional: azione quando l'utente inizia a muovere la SeekBar
-                    }
-
-                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                        // Optional: azione quando l'utente smette di muovere la SeekBar
-                    }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?){}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?){}
                 })
 
 
@@ -129,27 +125,20 @@ class ModifySubtaskFragment() : Fragment() {
     }
 
     private fun getTimestamp(dp: DatePicker, time: TimePicker): Timestamp {
-        // Ottieni la data dal DatePicker
         val day = dp.dayOfMonth
         val month = dp.month
         val year = dp.year
 
-        // Ottieni l'ora dal TimePicker
         val hour = time.hour
         val minute = time.minute
 
-        // Crea un oggetto Calendar e imposta la data e l'ora
         val calendar = Calendar.getInstance()
         calendar.set(year, month, day, hour, minute, 0)
         calendar.set(Calendar.MILLISECOND, 0)
 
-        // Ottieni l'oggetto Date dalla Calendar
         val date = calendar.time
 
-        // Converti l'oggetto Date in un Timestamp di Firebase
-        val timestamp = Timestamp(date)
-
-        return timestamp
+        return Timestamp(date)
     }
 
 }

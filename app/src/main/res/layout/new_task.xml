@@ -15,7 +15,7 @@
             android:id="@+id/addTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Titolo"
+            android:text="@string/title"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -24,7 +24,7 @@
             android:id="@+id/addTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Inserisci il titolo" />
+            android:hint="@string/ins_title" />
 
         <!-- Descrizione -->
         <TextView
@@ -32,7 +32,7 @@
             android:layout_below="@id/addTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Descrizione"
+            android:text="@string/descr"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -41,7 +41,7 @@
             android:id="@+id/addDescr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Inserisci la descrizione" />
+            android:hint="@string/ins_descr" />
 
         <!-- A chi è assegnato -->
         <TextView
@@ -49,7 +49,7 @@
             android:layout_below="@id/addDescr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="A chi è assegnato?"
+            android:text="@string/assigned"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -58,7 +58,7 @@
             android:layout_below="@+id/addAssignedText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Inserisci il nome della persona assegnata" />
+            android:hint="@string/ins_assigned" />
 
         <!-- Data di scadenza -->
         <TextView
@@ -66,7 +66,7 @@
             android:layout_below="@id/addAssigned"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Data di scadenza"
+            android:text="@string/expirationText"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -91,6 +91,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/addTime"
             android:layout_marginTop="5sp"
-            android:text="Salva i Dati" />
+            android:text="@string/submitSave" />
     </RelativeLayout>
 </ScrollView>

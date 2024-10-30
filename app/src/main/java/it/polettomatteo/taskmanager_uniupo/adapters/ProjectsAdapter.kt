@@ -50,6 +50,7 @@ class ProjectsAdapter(private val userType: String, private val context: Context
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var id = filteredList[position].id
         var auth = FirebaseAuth.getInstance()
@@ -62,10 +63,10 @@ class ProjectsAdapter(private val userType: String, private val context: Context
         if (currentUser != null) {
             if(currentUser.email?.compareTo(filteredList[position].assigned) == 0) {
                 holder.assigned.visibility = View.GONE
-                holder.author.text = "Project Manager: ${filteredList[position].autore}"
+                holder.author.text = context.getString(R.string.project_manager, filteredList[position].autore)
             }else{
                 holder.author.visibility = View.GONE
-                holder.assigned.text = "Project Leader: ${filteredList[position].assigned}"
+                holder.assigned.text = context.getString(R.string.project_leader, filteredList[position].assigned)
             }
         }
         holder.progress.text = "${filteredList[position].progress}%"
@@ -142,11 +143,8 @@ class ProjectsAdapter(private val userType: String, private val context: Context
 
 
     private fun filterProgress(toFilter: List<Project>, lessThan: Boolean): List<Project>{
-        val toRet = if(lessThan){
-            toFilter.filter{it.progress <= 50}
-        }else{
-            toFilter.filter{it.progress >= 50}
-        }
+        val toRet = if(lessThan){toFilter.filter{it.progress <= 50} }
+        else{ toFilter.filter{it.progress >= 50} }
         return toRet
     }
 }

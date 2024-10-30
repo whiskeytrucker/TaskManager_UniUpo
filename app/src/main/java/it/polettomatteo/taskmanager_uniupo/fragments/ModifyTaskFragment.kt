@@ -1,5 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +22,8 @@ import java.util.Calendar
 import java.util.Date
 
 class ModifyTaskFragment() : Fragment() {
+
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,22 +51,16 @@ class ModifyTaskFragment() : Fragment() {
                 modDescr.hint = data.getString("descr")
                 modAssigned.hint = data.getString("dev")
 
-                // Progress
                 progressText.text = "${data.getInt("progress")}%"
                 seekBar.progress = data.getInt("progress")
 
                 seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                        progressText.text = "${progress.toString()}%"
+                        progressText.text = "${progress}%"
                     }
 
-                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                        // Optional: azione quando l'utente inizia a muovere la SeekBar
-                    }
-
-                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                        // Optional: azione quando l'utente smette di muovere la SeekBar
-                    }
+                    override fun onStartTrackingTouch(seekBar: SeekBar?){}
+                    override fun onStopTrackingTouch(seekBar: SeekBar?){}
                 })
 
 
@@ -75,7 +72,6 @@ class ModifyTaskFragment() : Fragment() {
 
                 modDate.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
 
-                // Imposta l'ora nel TimePicker
                 modTime.hour = calendar.get(Calendar.HOUR_OF_DAY)
                 modTime.minute = calendar.get(Calendar.MINUTE)
 
@@ -115,40 +111,27 @@ class ModifyTaskFragment() : Fragment() {
 
             }
 
-        }else{
-            Log.e("ModifyTaskFragment", "Error @ Line 31 in ModifyTaskFragment.kt")
-
         }
-
-
-
         return view
     }
 
 
 
     private fun getTimestamp(dp: DatePicker, time: TimePicker): Timestamp {
-        // Ottieni la data dal DatePicker
         val day = dp.dayOfMonth
         val month = dp.month
         val year = dp.year
 
-        // Ottieni l'ora dal TimePicker
         val hour = time.hour
         val minute = time.minute
 
-        // Crea un oggetto Calendar e imposta la data e l'ora
         val calendar = Calendar.getInstance()
         calendar.set(year, month, day, hour, minute, 0)
         calendar.set(Calendar.MILLISECOND, 0)
 
-        // Ottieni l'oggetto Date dalla Calendar
         val date = calendar.time
 
-        // Converti l'oggetto Date in un Timestamp di Firebase
-        val timestamp = Timestamp(date)
-
-        return timestamp
+        return Timestamp(date)
     }
 }
 

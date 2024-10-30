@@ -15,7 +15,7 @@
             android:id="@+id/subDescrText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Descrizione"
+            android:text="@string/descr"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -24,7 +24,7 @@
             android:layout_below="@id/subDescrText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Inserisci la descrizione" />
+            android:hint="@string/ins_descr" />
 
         <!-- Priorita -->
         <TextView
@@ -32,7 +32,7 @@
             android:layout_below="@id/modSubDescr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Priorità"
+            android:text="@string/priority"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -50,7 +50,7 @@
             android:layout_below="@id/spinPriority"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Stato"
+            android:text="@string/state"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
             android:layout_below="@id/spinState"
-            android:text="Progresso:"
+            android:text="@string/progressText"
             android:textSize="16sp"/>
 
         <TextView
@@ -98,7 +98,7 @@
             android:layout_below="@id/seekBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Data di scadenza"
+            android:text="@string/expirationText"
             android:textSize="18sp"
             android:layout_marginTop="16dp" />
 
@@ -124,7 +124,7 @@
             android:layout_marginBottom="8sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Salva i Dati" />
+            android:text="@string/submitSave" />
     </RelativeLayout>
 
 </ScrollView>

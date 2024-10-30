@@ -1,7 +1,6 @@
 package it.polettomatteo.taskmanager_uniupo.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View

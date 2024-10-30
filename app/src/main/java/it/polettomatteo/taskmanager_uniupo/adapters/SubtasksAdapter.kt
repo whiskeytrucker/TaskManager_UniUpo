@@ -25,29 +25,18 @@ import java.util.Locale
 class SubtasksAdapter(private val userType: String, private val context: Context, private var dataSet: ArrayList<Subtask>, private var modListener: TempActivity, private var commentListener: TempActivity): RecyclerView.Adapter<SubtasksAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val state: TextView
-        val subDescr: TextView
-        val priority: TextView
-        val expiring: TextView
-        val progress: TextView
-        val seekBar: SeekBar
-        val modifyBtn: Button
-        val deleteBtn: Button
-        val commentBtn: Button
+        val state: TextView = view.findViewById(R.id.state)
+        val subDescr: TextView = view.findViewById(R.id.subDescr)
+        val priority: TextView = view.findViewById(R.id.priority)
+        val expiring: TextView = view.findViewById(R.id.expiringSubtask)
+        val progress: TextView = view.findViewById(R.id.progressSubtask)
+        val seekBar: SeekBar = view.findViewById(R.id.seekBar)
+
+        val modifyBtn: Button = view.findViewById(R.id.modifySubtask)
+        val deleteBtn: Button = view.findViewById(R.id.deleteSubtask)
+        val commentBtn: Button = view.findViewById(R.id.viewSubComment)
 
         init{
-            state = view.findViewById(R.id.state)
-            subDescr = view.findViewById(R.id.subDescr)
-            priority = view.findViewById(R.id.priority)
-            expiring = view.findViewById(R.id.expiringSubtask)
-            progress = view.findViewById(R.id.progressSubtask)
-            seekBar = view.findViewById(R.id.seekBar)
-
-            modifyBtn = view.findViewById(R.id.modifySubtask)
-            deleteBtn = view.findViewById(R.id.deleteSubtask)
-
-            commentBtn = view.findViewById(R.id.viewSubComment)
-
             seekBar.isEnabled = false
         }
     }
@@ -68,18 +57,18 @@ class SubtasksAdapter(private val userType: String, private val context: Context
 
         val ms = sec * 1000 + ns /  1000000
 
-        var subpriority:String = ""
-        var subState: String = ""
+        var subpriority = ""
+        var subState = ""
 
 
-        when(dataSet[position].priorita){
-            0 -> subpriority = "Nessuna"
-            1 -> subpriority = "Bassa"
-            2 -> subpriority = "Media"
-            3 -> subpriority = "Alta"
-            4 -> subpriority = "URGENTE"
+        subpriority = when(dataSet[position].priorita){
+            0 -> "Nessuna"
+            1 -> "Bassa"
+            2 -> "Media"
+            3 -> "Alta"
+            4 -> "URGENTE"
             else -> {
-                subpriority = "Errore"
+                "Errore"
             }
         }
 
@@ -93,9 +82,9 @@ class SubtasksAdapter(private val userType: String, private val context: Context
         }
 
 
-        holder.state.text = "Stato: ${subState}"
+        holder.state.text = "Stato: $subState"
         holder.subDescr.text = "\"${dataSet[position].subDescr}\""
-        holder.priority.text = "Priorita': ${subpriority}"
+        holder.priority.text = "Priorita': $subpriority"
         holder.expiring.text = "Scadenza: ${formatTimestamp(Date(ms))}"
 
 
@@ -149,9 +138,6 @@ class SubtasksAdapter(private val userType: String, private val context: Context
                 }
             }
         }
-
-
-
     }
 
 

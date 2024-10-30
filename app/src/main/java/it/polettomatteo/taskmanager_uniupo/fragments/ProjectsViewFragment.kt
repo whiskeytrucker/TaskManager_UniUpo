@@ -39,7 +39,6 @@ class ProjectsViewFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.recycler_projectview, container, false)
-        setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         recyclerView = view.findViewById(R.id.recyclerView)
@@ -51,7 +50,7 @@ class ProjectsViewFragment: Fragment() {
         initSearchView(searchbar)
 
         val bundle: Bundle?
-        var userType: String = ""
+        var userType = ""
 
         if(savedBundle != null && this.arguments == null){bundle = savedBundle}
         else{bundle = this.arguments}
@@ -121,17 +120,12 @@ class ProjectsViewFragment: Fragment() {
 
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let{
-                    performSearch(query)
-                }
+                query?.let{ performSearch(query) }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let{
-                    performSearch(newText)
-                }
-
+                newText?.let{ performSearch(newText) }
                 return true
             }
         })
@@ -148,9 +142,8 @@ class ProjectsViewFragment: Fragment() {
     private fun showFilterDialog() {
         val temp: MutableSet<String> = mutableSetOf()
 
-        for(el in arrProjects){
-            temp.add(el.assigned)
-        }
+        for(el in arrProjects)temp.add(el.assigned)
+
         temp.add("<50%")
         temp.add(">50%")
 
@@ -166,7 +159,6 @@ class ProjectsViewFragment: Fragment() {
             .setPositiveButton("Applica") { _, _ ->
                 if(checkedItems.contains(true)){
                     val tmpAdp = recyclerView.adapter as ProjectsAdapter
-
                     tmpAdp.applyFilter(filters, checkedItems)
                 }
             }

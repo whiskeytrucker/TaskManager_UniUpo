@@ -25,16 +25,18 @@ class UserPageFragment: Fragment() {
 
         val bundle = this.arguments
         if(bundle != null){
-            text1.text = "Bentornato ${bundle.getString("username").toString().substringBefore('@')}!"
+            text1.text = getString(
+                R.string.welcome_back_user,
+                bundle.getString("username").toString().substringBefore('@')
+            )
 
             val tipo = bundle.getString("tipo").toString()
 
-            val ty: String
-            ty = if(tipo.compareTo("pm") == 0) "Project Manager"
+            val ty: String = if(tipo.compareTo("pm") == 0) "Project Manager"
             else if(tipo.compareTo("pl") == 0) "Project Leader"
             else "Developer"
 
-            textType.text = "Sei un $ty."
+            textType.text = getString(R.string.type_user, ty)
         }
 
         return view
