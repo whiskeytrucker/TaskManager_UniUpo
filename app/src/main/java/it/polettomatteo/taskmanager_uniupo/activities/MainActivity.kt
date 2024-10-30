@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity(){
                 R.id.chat -> {
                     if(currentUser != null){
                         currentUser?.email?.let {
-                            ChatDB.getReceivers(it){ bundle ->
+                            ChatDB.getReceivers("user0", it){ bundle ->
                                 if(bundle != null){
                                     mainLayout.closeDrawer(navigationView)
                                     setupFragment(ChatFragment(), bundle, true)

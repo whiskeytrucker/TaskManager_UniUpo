@@ -47,7 +47,6 @@ class TasksViewFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.recycler_taskview, container, false)
-        setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         addStuffBtn = view.findViewById(R.id.addStuff)
@@ -135,18 +134,20 @@ class TasksViewFragment: Fragment() {
             val task = bundle.getSerializable("data") as Task
             val done = bundle.getString("done")
 
+            val tmpAdp = recyclerView.adapter as TasksAdapter
+
             if (done?.compareTo("mod") == 0){
                 val i = findIndex(task)
                 if(i != -1){
                     arrTasks.removeAt(i)
-                    tasksAdapter.notifyItemRemoved(i)
+                    tmpAdp.notifyItemRemoved(i)
                 }
 
             }
 
             arrTasks.add(task)
             arrTasks.sortWith(compareBy{it.nome})
-            tasksAdapter.notifyItemInserted(arrTasks.indexOf(task))
+            tmpAdp.notifyItemInserted(arrTasks.indexOf(task))
 
             var med = 0.0
             for(taskArr in arrTasks){med += taskArr.progress}
@@ -224,26 +225,6 @@ class TasksViewFragment: Fragment() {
 
 
 
-
-
-    // AUSILIARIE
-    private fun findIndex(toFind: Task):Int{
-        for(task in arrTasks){
-            if(task.id == toFind.id)return arrTasks.indexOf(task)
-        }
-        return -1
-    }
-
-    private fun findIndex(toFind: String, bundle: Bundle):String{
-        for(key in bundle.keySet()){
-            if(key.compareTo("tipo") != 0 && key.compareTo("subtask_interface") != 0){
-                val task = bundle.getSerializable(key) as Task
-                if(task.id == toFind)return key
-            }
-        }
-        return ""
-    }
-
     private fun initSearchView(searchView: SearchView){
         searchView.queryHint = "Cerca qui..."
         searchView.isIconified = false
@@ -309,5 +290,23 @@ class TasksViewFragment: Fragment() {
     private fun formatTimestamp(timestamp: Date): String{
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         return sdf.format(timestamp)
+    }
+
+    // AUSILIARIE
+    private fun findIndex(toFind: Task):Int{
+        for(task in arrTasks){
+            if(task.id == toFind.id)return arrTasks.indexOf(task)
+        }
+        return -1
+    }
+
+    private fun findIndex(toFind: String, bundle: Bundle):String{
+        for(key in bundle.keySet()){
+            if(key.compareTo("tipo") != 0 && key.compareTo("subtask_interface") != 0){
+                val task = bundle.getSerializable(key) as Task
+                if(task.id == toFind)return key
+            }
+        }
+        return ""
     }
 }

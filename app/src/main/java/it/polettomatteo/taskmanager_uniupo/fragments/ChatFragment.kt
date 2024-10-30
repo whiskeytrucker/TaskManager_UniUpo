@@ -38,6 +38,7 @@ class ChatFragment: Fragment() {
     private lateinit var spinUser1: Spinner
     private lateinit var sendBtn: Button
     private lateinit var toSend: EditText
+    private lateinit var fieldUser: String
 
     private var chatArr = ArrayList<Message>()
 
@@ -59,7 +60,8 @@ class ChatFragment: Fragment() {
 
         if(bundle != null){
             for(key in bundle.keySet()){
-                bundle.getString(key)?.let { receiversArr.add(it) }
+                if(key.compareTo("field") == 0) { fieldUser = bundle.getString(key).toString()}
+                else { bundle.getString(key)?.let { receiversArr.add(it) } }
             }
         }
 
@@ -89,7 +91,7 @@ class ChatFragment: Fragment() {
 
                 if(currentUser != null){
                     currentUser!!.email?.let {
-                        ChatDB.getOldMessages(it, userQuery){ results ->
+                        ChatDB.getOldMessages(fieldUser, it, userQuery){ results ->
                             if(results != null){
                                 chatArr.clear()
                                 for(key in results.keySet()){
@@ -104,9 +106,7 @@ class ChatFragment: Fragment() {
                 }
             }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-
-            }
+            override fun onNothingSelected(p0: AdapterView<*>?) { }
 
         }
 
@@ -116,11 +116,9 @@ class ChatFragment: Fragment() {
             val msg = toSend.text.toString()
             if(msg.trim().compareTo("") == 0)Toast.makeText(requireContext(), "Il messaggio è vuoto!!", Toast.LENGTH_LONG).show()
             else{
-                ChatDB.sendMessage(msg, sender){ result ->
+                ChatDB.sendMessage(msg, sender, fieldUser){ result ->
                     if(result == null)Toast.makeText(requireContext(), "Impossibile inviare il messaggio!", Toast.LENGTH_SHORT).show()
-                    else {
-                        toSend.setText(getString(R.string.empty))
-                    }
+                    else {toSend.setText(getString(R.string.empty))}
                 }
             }
 
@@ -134,11 +132,15 @@ class ChatFragment: Fragment() {
 
 
     fun listenForMessages(user0: String, user1: String) {
-
         val db = FirebaseFirestore.getInstance()
+        var fieldToGet = ""
+        if(fieldUser.compareTo("user0") == 0)fieldToGet = "user1"
+        else if(fieldUser.compareTo("user1") == 0)fieldToGet = "user0"
+
+
         db.collection("chat")
-            .whereEqualTo("user0", user0)
-            .whereEqualTo("user1", user1)
+            .whereEqualTo(fieldUser, user0)
+            .whereEqualTo(fieldToGet, user1)
             .limit(1)
             .get()
             .addOnSuccessListener { docs ->
@@ -159,7 +161,7 @@ class ChatFragment: Fragment() {
                                     val data = document.document.data
 
                                     val tmp = Message(
-                                        data["sender"].toString().toBoolean(),
+                                        !data["sender"].toString().toBoolean(),
                                         data["text"].toString(),
                                         data["timestamp"] as Timestamp
                                     )

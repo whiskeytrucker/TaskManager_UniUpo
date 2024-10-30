@@ -1,6 +1,7 @@
 package it.polettomatteo.taskmanager_uniupo.firebase
 
 import android.os.Bundle
+import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,22 +10,30 @@ import it.polettomatteo.taskmanager_uniupo.dataclass.Message
 
 class ChatDB {
     companion object{
-        fun sendMessage(messageText: String, sender: String,callback: (Message?) -> Unit){
+        fun sendMessage(messageText: String, sender: String, fieldUser: String, callback: (Message?) -> Unit){
             val db = FirebaseFirestore
                     .getInstance()
 
+            var fieldToSend = ""
+            var senderBool = true
+
+            if(fieldUser.compareTo("user0") == 0)fieldToSend = "user1"
+            else if(fieldUser.compareTo("user1") == 0){fieldToSend = "user0"; senderBool = false}
+            else callback(null)
+
             val msg = hashMapOf(
-                "sender" to true,
+                "sender" to senderBool,
                 "text" to messageText,
                 "timestamp" to Timestamp.now()
             )
 
             val currentUser = FirebaseAuth.getInstance().currentUser
 
+
             if(currentUser != null){
                 db.collection("chat")
-                    .whereEqualTo("user0", currentUser.email)
-                    .whereEqualTo("user1", sender)
+                    .whereEqualTo(fieldUser, currentUser.email)
+                    .whereEqualTo(fieldToSend, sender)
                     .get()
                     .addOnSuccessListener { docs ->
                         for (doc in docs.documents) {
@@ -35,7 +44,7 @@ class ChatDB {
                                 .set(msg)
                                 .addOnSuccessListener {
                                     val tmp = Message(
-                                        true,
+                                        senderBool,
                                         messageText,
                                         Timestamp.now()
                                     )
@@ -50,12 +59,18 @@ class ChatDB {
 
         }
 
-        fun getReceivers(userMail: String, callback: (Bundle?) -> Unit) {
+        fun getReceivers(fieldUser: String, userMail: String, callback: (Bundle?) -> Unit) {
             val db = FirebaseFirestore
             .getInstance()
 
+            var fieldToGet = ""
+
+            if(fieldUser.compareTo("user0") == 0)fieldToGet = "user1"
+            else if(fieldUser.compareTo("user1") == 0)fieldToGet = "user0"
+            else callback(null)
+
             db.collection("chat")
-                .whereEqualTo("user0", userMail)
+                .whereEqualTo(fieldUser, userMail)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     if(!querySnapshot.isEmpty){
@@ -65,11 +80,15 @@ class ChatDB {
                         for((i, doc) in docs.withIndex()){
                             val data = doc.data
                             if(data != null){
-                                receivers.putString(i.toString(), data["user1"].toString())
-                            }
+                                receivers.putString(i.toString(), data[fieldToGet].toString())}
                         }
 
+                        receivers.putString("field", fieldUser)
                         callback(receivers)
+                    }else{
+                        getReceivers("user1", userMail){ rec ->
+                            callback(rec)
+                        }
                     }
                 }
 
@@ -81,13 +100,18 @@ class ChatDB {
 
 
 
-        fun getOldMessages(user0: String, user1: String, callback: (Bundle?) -> Unit){
+        fun getOldMessages(fieldUser: String, user0: String, user1: String, callback: (Bundle?) -> Unit){
             val db = FirebaseFirestore
                 .getInstance()
 
+            var fieldToGet = ""
+
+            if(fieldUser.compareTo("user0") == 0)fieldToGet = "user1"
+            else if(fieldUser.compareTo("user1") == 0)fieldToGet = "user0"
+
             db.collection("chat")
-                .whereEqualTo("user0", user0)
-                .whereEqualTo("user1", user1)
+                .whereEqualTo(fieldUser, user0)
+                .whereEqualTo(fieldToGet, user1)
                 .get()
                 .addOnSuccessListener { docs ->
                     for(doc in docs.documents){
@@ -100,11 +124,15 @@ class ChatDB {
                                 val documents = result.documents
                                 val bundle = Bundle()
 
+
                                 for ((i, docIn) in documents.withIndex()) {
                                     val data = docIn.data
                                     if(data != null){
+                                        var sender = data["sender"].toString().toBoolean()
+                                        if(fieldUser.compareTo("user0") != 0)sender = !sender
+
                                         val tmp = Message(
-                                            data["sender"].toString().toBoolean(),
+                                            sender,
                                             data["text"].toString(),
                                             data["timestamp"] as Timestamp
                                         )

@@ -112,17 +112,19 @@ class SubtasksViewFragment: Fragment() {
             val subtask = bundle.getSerializable("data") as Subtask
             val done = bundle.getString("done")
 
+            val tmpAdp = recyclerView.adapter as SubtasksAdapter
+
             if (done?.compareTo("mod") == 0){
                 val i = findIndex(subtask)
                 if(i != -1){
                     tmp.removeAt(i)
-                    subtasksAdapter.notifyItemRemoved(i)
+                    tmpAdp.notifyItemRemoved(i)
                 }
             }
 
             tmp.add(subtask)
             tmp.sortWith(compareByDescending<Subtask>{it.priorita}.thenBy { it.scadenza })
-            subtasksAdapter.notifyItemInserted(tmp.indexOf(subtask))
+            tmpAdp.notifyItemInserted(tmp.indexOf(subtask))
 
 
             var med = 0.0

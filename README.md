@@ -67,7 +67,7 @@ VIEW:
 - [X] Duplicazione messaggio in Chat
 - [x] ID Notifica tiene salvata quella vecchia --> Messi Flag corretti in PendingIntent
 - [ ] Aggiornare domain/company name del pacchetto
-- [ ] Aggiustare inversione chat:
+- [X] Aggiustare inversione chat:
 	- Esiste chat da A a B, ma io sono B e non posso accedere alla chat: B-A Chat = !(A-B Chat)
 
 
