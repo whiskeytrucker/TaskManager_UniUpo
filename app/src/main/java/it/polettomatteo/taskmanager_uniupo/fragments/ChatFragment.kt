@@ -178,10 +178,13 @@ class ChatFragment: Fragment() {
                                     val chatAdapter = ChatAdapter(chatArr, requireContext())
                                     recyclerView.adapter = chatAdapter
                                     recyclerView.adapter?.notifyItemChanged(findIndex(tmp))
+                                    if(sender && fieldUser.compareTo("user0") == 0)recyclerView.scrollToPosition(chatArr.size - 1)
+                                    else if(!sender && fieldUser.compareTo("user1") == 0)recyclerView.scrollToPosition(chatArr.size - 1)
                                 }
                             }
                         }
                 }
+
 
             }
             .addOnFailureListener {
