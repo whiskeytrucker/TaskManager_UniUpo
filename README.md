@@ -12,7 +12,7 @@ PRINCIPALI
 FUN:
 - [X] Login / Logout / Registrazione e relativi tasti
 	- [X] Controllo input mail + password NO vuoto etc.
-- [X] Autenticazione e separazioni utenti (PM, PL, D, e il cristo di dio)
+- [X] Autenticazione e separazioni utenti (PM, PL, D)
 - [X] Separazioni utenti (pescare dal db utente <--> tipo e segnare su currentUser)
 - [X] Un **task** e sui relativi **sottotask** possono essere: **aggiunti/eliminati/aggiornati**
 	- [X] Un **task** può essere modificato solo da un PL
